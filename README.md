@@ -44,5 +44,9 @@ WeiSCNET_proxy
 ~~~
 
 ~~~
+设置控制台编码为chcp 65001
+~~~
+
+~~~
 java -server -Xmx8196M -Xms1024M -jar SCNET_proxy.jar
 ~~~
