@@ -18,9 +18,7 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>3.4.2</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -34,19 +32,6 @@
                         <encoding>utf-8</encoding>
                     </archiverConfig>
                 </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.codehaus.plexus</groupId>
-                        <artifactId>plexus-archiver</artifactId>
-                        <version>4.6.1</version>
-                        <exclusions>
-                            <exclusion>
-                                <groupId>org.codehaus.plexus</groupId>
-                                <artifactId>plexus-component-api</artifactId>
-                            </exclusion>
-                        </exclusions>
-                    </dependency>
-                </dependencies>
             </plugin>
         </plugins>
     </build>
