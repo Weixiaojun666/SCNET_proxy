@@ -4,8 +4,8 @@ import com.weiservers.Base.Client;
 import com.weiservers.Base.Motd;
 import com.weiservers.Base.Server;
 import com.weiservers.Cloud.Check;
-import com.weiservers.Console.Console;
 import com.weiservers.Core.ThreadPool;
+import com.weiservers.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +36,7 @@ public class Receive extends Thread {
         try {
             DatagramSocket to_server_socket;
 
-            if (!Console.Clients.containsKey(ClientAddress + ":" + ClientPort)) {
+            if (!Main.Clients.containsKey(ClientAddress + ":" + ClientPort)) {
                 //新连接 判断是否是查询请求
                 byte[] ans = new byte[packet.getLength()];
                 System.arraycopy(packet.getData(), 0, ans, 0, packet.getLength());
@@ -49,24 +49,24 @@ public class Receive extends Thread {
                     to_server_socket = new DatagramSocket(0);
                     Client client = new Client(to_server_socket, to_client_socket, server, ClientAddress, ClientPort);
                     client.setTime(System.currentTimeMillis());
-                    Console.Clients.put(ClientAddress + ":" + ClientPort, client);
+                    Main.Clients.put(ClientAddress + ":" + ClientPort, client);
                     ThreadPool.execute(new ReceiveServer(client));
                     ThreadPool.execute(new ReceiveClient(packet, client));
                     logger.info("[新客户端连接]   {}  {}  =>  {}  {} 连接到[{}]", ClientAddress, ClientPort, server.address(), server.port(), server.name());
-                    ThreadPool.execute(new Check(ClientAddress, client, string.substring(78, 110)));
-                    Console.info.getNormal_ip().add(ClientAddress);
-                    Console.info.addNormal();
+                    ThreadPool.execute(new Check(client, string.substring(78, 110)));
+                    Main.info.getNormal_ip().add(ClientAddress);
+                    Main.info.addNormal();
                 } else {
                     //其他请求不予建立连接
-                    logger.info("来自  {}  {} 的非法数据包已丢弃",  ClientAddress, ClientPort);
-                    Console.info.addInvalid();
+                    logger.info("来自  {}  {} 的非法数据包已丢弃", ClientAddress, ClientPort);
+                    Main.info.addInvalid();
                 }
             } else {
-                Client client = Console.Clients.get(ClientAddress + ":" + ClientPort);
+                Client client = Main.Clients.get(ClientAddress + ":" + ClientPort);
                 ThreadPool.execute(new ReceiveClient(packet, client));
             }
         } catch (Exception e) {
-            logger.error("处理时来自  {}  {} 的数据包发生错误 {}",  ClientAddress, ClientPort, e);
+            logger.error("处理时来自  {}  {} 的数据包发生错误 {}", ClientAddress, ClientPort, e);
         }
     }
 }

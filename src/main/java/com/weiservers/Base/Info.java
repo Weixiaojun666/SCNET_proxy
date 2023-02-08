@@ -5,9 +5,10 @@ import java.util.HashSet;
 
 public class Info {
     //正常ip列表
-    private HashSet<InetAddress> normal_ip = new HashSet<>();
+    private final HashSet<InetAddress> normal_ip = new HashSet<>();
     //异常ip列表
-    private HashSet<InetAddress> abnormal_ip = new HashSet<>();
+    private final HashSet<InetAddress> abnormal_ip = new HashSet<>();
+    private final long time;
     //正常请求
     private int normal;
     //异常请求
@@ -18,7 +19,6 @@ public class Info {
     private int respond;
     //缓存刷新
     private int refresh;
-    private long time;
 
     public Info(long time) {
         this.time = time;

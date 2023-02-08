@@ -2,8 +2,7 @@ package com.weiservers.Thread.Child;
 
 import com.weiservers.Base.Motd;
 import com.weiservers.Base.Server;
-import com.weiservers.Console.Console;
-import com.weiservers.GetConfig;
+import com.weiservers.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,9 +30,9 @@ public class ReceiveCache extends Thread {
 
     public void run() {
         try {
-            if ((motd.getTime() + (int) GetConfig.getSetting().get("time_out") * 5000L) < System.currentTimeMillis()) {
+            if ((motd.getTime() + (int) Main.getSetting().get("cache_time") * 1000L) < System.currentTimeMillis()) {
                 //刷新缓存
-                Console.info.addRefresh();
+                Main.info.addRefresh();
                 byte[] ans = new byte[packet.getLength()];
                 System.arraycopy(packet.getData(), 0, ans, 0, packet.getLength());
                 DatagramPacket motd_packet = new DatagramPacket(ans, packet.getLength(), InetAddress.getByName(server.address()), server.port());
@@ -44,7 +43,7 @@ public class ReceiveCache extends Thread {
                 motd.setMotd(bytes);
                 motd.setTime(System.currentTimeMillis());
             }
-            Console.info.addRespond();
+            Main.info.addRespond();
             //直接回复
             byte[] bytes = motd.getMotd();
             DatagramPacket datagramPacket = new DatagramPacket(bytes, bytes.length, clientAddress, clientPort);
