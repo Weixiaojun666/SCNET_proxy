@@ -127,6 +127,7 @@ public class Check extends Thread {
         }
         return true;
     }
+
     public void run() {
         String state = "登录成功";
         if (!check()) {

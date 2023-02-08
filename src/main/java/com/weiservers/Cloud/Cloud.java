@@ -163,7 +163,7 @@ public class Cloud {
     }
 
     public static String postloguser(String userid, String username, String ip, String servername, String reason, String state) {
-        if(!(boolean)Main.getSetting().get("cloud"))  return "0";
+        if (!(boolean) Main.getSetting().get("cloud")) return "0";
         if (access_token == null) return "0";
         try {
             String url = "token=" + access_token + "&userid=" + userid + "&name=" + username + "&ip=" + ip + "&server=" + servername + "&reason=" + reason + "&state=" + state;

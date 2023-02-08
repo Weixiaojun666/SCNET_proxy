@@ -16,13 +16,14 @@ public class Tools {
         if (client.getTo_server_socket() != null) client.getTo_server_socket().close();
         client.setTime(0);
     }
-    public static void ReloadCache(Motd motd,Server server){
-        try{
+
+    public static void ReloadCache(Motd motd, Server server) {
+        try {
             Main.info.addRefresh();
             byte[] ans = Tools.hexStringToByteArray("0804");
             DatagramPacket motd_packet = new DatagramPacket(ans, ans.length, InetAddress.getByName(server.address()), server.port());
             motd.getSocket().send(motd_packet);
-        }catch (Exception e){
+        } catch (Exception e) {
         }
     }
 

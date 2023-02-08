@@ -7,16 +7,18 @@ import org.slf4j.LoggerFactory;
 
 import java.net.DatagramPacket;
 
-public class Cache extends Thread{
+public class Cache extends Thread {
     private static final Logger logger = LoggerFactory.getLogger(Cache.class);
 
     private final Motd motd;
+
     public Cache(Motd motd) {
-        this.motd=motd;
+        this.motd = motd;
     }
+
     public void run() {
         motd.setThread(this);
-        try{
+        try {
             while (!isInterrupted()) {
                 byte[] buf = new byte[1024];
                 DatagramPacket packet = new DatagramPacket(buf, buf.length);  //创建DatagramPacket对象
@@ -26,9 +28,9 @@ public class Cache extends Thread{
                 motd.setMotd(bytes);
                 motd.setTime(System.currentTimeMillis());
             }
-        }catch (Exception e){
-            if(!isInterrupted()) {
-                logger.error("尝试刷新缓存时出现错误 在端口{} : {}",motd.getSocket().getPort(),e);
+        } catch (Exception e) {
+            if (!isInterrupted()) {
+                logger.error("尝试刷新缓存时出现错误 在端口{} : {}", motd.getSocket().getPort(), e);
                 logger.error("=========================================");
                 logger.error("已尝试自动重启");
                 motd.getSocket().close();

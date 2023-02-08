@@ -65,7 +65,7 @@ public class Command extends Thread {
                 }
                 case "clean" -> {
                     System.out.println("========================回收垃圾=========================");
-                    ThreadPool.execute( new Clean());
+                    ThreadPool.execute(new Clean());
                     System.out.println("======================================================");
                 }
                 case "reload" -> {
@@ -88,12 +88,12 @@ public class Command extends Thread {
                     System.out.println("======================================================");
                 }
                 case "cache" -> {
-                        System.out.println("====================刷新缓存[被动]=========================");
-                        for (ServerThread serverThread : Main.serverThreads) {
-                            ReloadCache(serverThread.getMotd(),serverThread.getServer());
-                        }
-                        System.out.println("缓存刷新请求已发出");
-                        System.out.println("======================================================");
+                    System.out.println("====================刷新缓存[被动]=========================");
+                    for (ServerThread serverThread : Main.serverThreads) {
+                        ReloadCache(serverThread.getMotd(), serverThread.getServer());
+                    }
+                    System.out.println("缓存刷新请求已发出");
+                    System.out.println("======================================================");
 
                 }
                 case "list" -> {
@@ -105,7 +105,7 @@ public class Command extends Thread {
                             System.out.println("=====================在线连接列表======================");
                             System.out.printf("当前存在%s个连接%n", Main.Clients.size());
                             for (Map.Entry<String, Client> client : Main.Clients.entrySet()) {
-                                System.out.printf("%s 登录用户名 %s 社区ID %s 通过 %s 连接到 %s %n", client.getKey(),client.getValue().getUsername(), client.getValue().getUserid(), client.getValue().getTo_server_socket().getLocalPort(), client.getValue().getServer().name());
+                                System.out.printf("%s 登录用户名 %s 社区ID %s 通过 %s 连接到 %s %n", client.getKey(), client.getValue().getUsername(), client.getValue().getUserid(), client.getValue().getTo_server_socket().getLocalPort(), client.getValue().getServer().name());
                             }
                             System.out.println("======================================================");
                         }

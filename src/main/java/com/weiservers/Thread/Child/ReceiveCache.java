@@ -21,7 +21,7 @@ public class ReceiveCache extends Thread {
     final DatagramSocket toClientSocket;
     final Server server;
 
-    public ReceiveCache( InetAddress clientAddress, int clientPort, DatagramSocket toClientSocket, Server server, Motd motd) {
+    public ReceiveCache(InetAddress clientAddress, int clientPort, DatagramSocket toClientSocket, Server server, Motd motd) {
         this.clientAddress = clientAddress;
         this.clientPort = clientPort;
         this.toClientSocket = toClientSocket;
@@ -33,14 +33,14 @@ public class ReceiveCache extends Thread {
         try {
             if ((motd.getTime() + (int) Main.getSetting().get("cache_time") * 1000L) < System.currentTimeMillis()) {
                 //刷新缓存
-                ReloadCache(motd,server);
+                ReloadCache(motd, server);
             }
             //直接回复
             Main.info.addRespond();
             byte[] bytes = motd.getMotd();
-            if(bytes==null){
-                ReloadCache(motd,server);
-            }  else {
+            if (bytes == null) {
+                ReloadCache(motd, server);
+            } else {
                 DatagramPacket datagramPacket = new DatagramPacket(bytes, bytes.length, clientAddress, clientPort);
                 toClientSocket.send(datagramPacket);
             }

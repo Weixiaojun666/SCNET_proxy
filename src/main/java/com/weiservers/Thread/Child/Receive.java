@@ -9,7 +9,6 @@ import com.weiservers.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -59,8 +58,7 @@ public class Receive extends Thread {
                     Main.info.addNormal();
                 } else {
                     //其他请求不予建立连接
-                    logger.info("来自  {}  {} 的非法数据包已丢弃", ClientAddress, ClientPort);
-                    Main.info.addInvalid();
+                    ThreadPool.execute(new Discard(ClientAddress));
                 }
             } else {
                 Client client = Main.Clients.get(ClientAddress + ":" + ClientPort);

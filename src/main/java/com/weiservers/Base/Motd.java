@@ -34,7 +34,7 @@ public class Motd {
         return socket;
     }
 
-    public Thread getThread(){
+    public Thread getThread() {
         return thread;
     }
 

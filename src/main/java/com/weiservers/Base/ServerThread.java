@@ -9,12 +9,13 @@ public class ServerThread {
     private final Motd motd;
     private final Server server;
 
-    public ServerThread(Thread thread, DatagramSocket datagramSocket, Motd motd, Server server){
-        this.thread=thread;
-        this.datagramSocket=datagramSocket;
-        this.motd=motd;
-        this.server=server;
+    public ServerThread(Thread thread, DatagramSocket datagramSocket, Motd motd, Server server) {
+        this.thread = thread;
+        this.datagramSocket = datagramSocket;
+        this.motd = motd;
+        this.server = server;
     }
+
     public DatagramSocket getDatagramSocket() {
         return datagramSocket;
     }
