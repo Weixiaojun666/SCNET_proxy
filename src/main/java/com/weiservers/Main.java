@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.weiservers.Base.Client;
 import com.weiservers.Base.Info;
 import com.weiservers.Base.Server;
+import com.weiservers.Base.ServerThread;
 import com.weiservers.Cloud.Cloud;
 import com.weiservers.Console.Console;
 import com.weiservers.Core.ThreadPool;
@@ -15,6 +16,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -27,6 +30,7 @@ public class Main {
     public final static Info info = new Info(System.currentTimeMillis());
     private final static Logger logger = LoggerFactory.getLogger(Main.class);
     private static List<Server> serverlist;
+    public static List<ServerThread> serverThreads =new ArrayList<>();
     private static Map<String, Object> setting;
 
     public static void ConfigLoad() {
@@ -44,14 +48,13 @@ public class Main {
     }
 
     public static void ServerLoad() {
-
         logger.info("已加载{}个服务器", serverlist.size());
         logger.info("======================================================");
-        logger.info(String.format("%-16s %-24s %-24s %-16s %-16s", "序号", "服务器名称", "服务器地址", "服务器端口", "转发端口"));
+        logger.info(String.format("%-8s %-18s %-12s %-8s %-8s", "序号", "服务器名称", "服务器地址", "服务器端口", "转发端口"));
         int num = 0;
         for (Server server : serverlist) {
             num++;
-            logger.info(String.format("%-16s %-24s %-24s %-16s %-16s", num + "", server.name(), server.address(), server.port() + "", server.proxy_port() + ""));
+            logger.info(String.format("%-12s %-18s %-18s %-12s %-12s", num + "", server.name(), server.address(), server.port() + "", server.proxy_port() + ""));
             ThreadPool.execute(new Listening(server));
         }
         logger.info("======================================================");
@@ -71,7 +74,6 @@ public class Main {
         logger.info("加载中...");
         LoadThreadPool();
         ConfigLoad();
-
         Cloud.Load();
         ServerLoad();
         ThreadPool.execute(new Console());

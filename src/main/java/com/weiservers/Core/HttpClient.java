@@ -42,10 +42,10 @@ public class HttpClient {
         connManager.setDefaultMaxPerRoute(1000);
         final CloseableHttpClient httpClient = HttpClients.custom().setConnectionManager(connManager).setConnectionManagerShared(true).build();
 
-        int num = -1;
+        int num = 0;
         while (true) {
             num++;
-            if (num == (int) Main.getSetting().get("timeout_retry")) {
+            if (num > (int) Main.getSetting().get("timeout_retry")) {
                 return null;
             }
             try (httpClient) {
@@ -67,6 +67,7 @@ public class HttpClient {
                         }
                     } else return rootNode;
                 }
+                return null;
             } catch (Exception ignored) {
             }
         }

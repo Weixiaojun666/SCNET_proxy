@@ -8,7 +8,6 @@ import java.util.Scanner;
 
 
 public class Console extends Thread {
-    private final static Logger logger = LoggerFactory.getLogger(Console.class);
 
     public void run() {
         while (!isInterrupted()) {

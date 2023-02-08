@@ -1,13 +1,29 @@
 package com.weiservers.Core;
 
 import com.weiservers.Base.Client;
+import com.weiservers.Base.Motd;
+import com.weiservers.Base.Server;
+import com.weiservers.Main;
+
+import java.net.DatagramPacket;
+import java.net.InetAddress;
 
 public class Tools {
+
 
     public static void disconnect(Client client) {
         if (client.getThread() != null) client.getThread().interrupt();
         if (client.getTo_server_socket() != null) client.getTo_server_socket().close();
         client.setTime(0);
+    }
+    public static void ReloadCache(Motd motd,Server server){
+        try{
+            Main.info.addRefresh();
+            byte[] ans = Tools.hexStringToByteArray("0804");
+            DatagramPacket motd_packet = new DatagramPacket(ans, ans.length, InetAddress.getByName(server.address()), server.port());
+            motd.getSocket().send(motd_packet);
+        }catch (Exception e){
+        }
     }
 
     public static String getDatePoor(Long startTime, Long endTime) {
