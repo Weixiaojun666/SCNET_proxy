@@ -1,7 +1,10 @@
 {
   "connection_limit": 1,
   "time_out": 8,
+  "cache_time": 60,
   "token": "",
+  "timeout_retry":5,
+  "cloud": true,
   "server_list": [
     {
       "name": "测试",

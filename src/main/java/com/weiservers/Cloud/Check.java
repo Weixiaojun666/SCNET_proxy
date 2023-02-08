@@ -28,7 +28,24 @@ public class Check extends Thread {
         Check.token = token.substring(6, 8) + token.substring(4, 6) + token.substring(2, 4) + token.substring(0, 2) + token.substring(10, 12) + token.substring(8, 10) + token.substring(14, 16) + token.substring(12, 14) + token.substring(16);
     }
 
-    public static boolean checklimit() {
+    public boolean check() {
+        reason = "正常登录";
+        //社区验证
+        JsonNode rootNode = HttpClient("https://m.schub.top/com/checkuser?token=" + token, false);
+        if (rootNode == null) {
+            logger.error("{}社区认证失败 无法连接到社区 将默认放行", client.getAddress());
+            return true;
+        }
+        String code = rootNode.at("/code").toString();
+        if (!code.equals("200")) {
+            reason = "未通过社区验证";
+            logger.warn("{}社区验证失败", client.getAddress());
+            return false;
+        }
+        client.setUserid(rootNode.at("/data/id").toString().replace("\"", ""));
+        client.setUsername(rootNode.at("/data/nickname").toString().replace("\"", ""));
+
+        //判断是否IP多登或者一号多登
         try {
             int num = 0;
             int numuser = 0;
@@ -57,66 +74,17 @@ public class Check extends Thread {
         } catch (Exception e) {
             logger.info("来自{}的连接,检查失败,此次请求检查已临时停止,此次将被默认允许{}", client.getAddress(), e);
         }
-        return true;
-    }
-
-    public boolean checkuser() {
-        //社区验证
-        JsonNode rootNode = HttpClient("https://m.schub.top/com/checkuser?token=" + token, false);
-        if (rootNode == null) {
-            logger.error("{}社区认证失败 无法连接到社区 将默认放行", client.getAddress());
-            return true;
-        }
-        String code = rootNode.at("/code").toString();
-        if (!code.equals("200")) {
-            reason = "未通过社区验证";
-            logger.warn("{}社区验证失败", client.getAddress());
-            return false;
-        }
-        client.setUserid(rootNode.at("/data/id").toString().replace("\"", ""));
-        client.setUsername(rootNode.at("/data/nickname").toString().replace("\"", ""));
-        return true;
-    }
-
-    public boolean checkip() {
-        JsonNode rootNode = HttpClient("https://api.weiservers.com/scnet/index/checkip?ip=" + client.getAddress().toString().substring(1), false);
-        if (rootNode == null) {
-            logger.error("{}检查失败 无法连接到WeiServers 将默认放行", client.getAddress());
-            return true;
-        }
-        String code = rootNode.at("/code").toString();
-        String info1 = rootNode.at("/data/info1").toString();
-        String info2 = rootNode.at("/data/info2").toString();
-        String info3 = rootNode.at("/data/info3").toString();
-        String isp = rootNode.at("/data/isp").toString();
-        switch (code) {
-            case "200", "950", "954", "951", "952", "953" -> {
-                IP_info = info1 + info2 + info3 + isp;
-                //logger.warn("{}来自 {} {} {} 运营商{} 已被封禁 封禁代码{}", client.getAddress(), info1, info2, info3, isp, code);
-                reason = "在区域封禁范围内";
-                return false;
-            }
-            default -> logger.error("获取{}详细信息时发生错误：接口返回值不是预期 将默认放行", client.getAddress());
-        }
-        return true;
-    }
-
-    public boolean checkstate() {
-        JsonNode rootNode = HttpClient("https://api.weiservers.com/scnet/index/checkuser?userid=" + client.getUserid(), false);
-        if (rootNode == null) {
+        //判断是否被黑名单或者是否有白名单
+        JsonNode user_rootNode = HttpClient("https://api.weiservers.com/scnet/index/checkuser?userid=" + client.getUserid(), false);
+        if (user_rootNode == null) {
             logger.error("{}检查失败 无法连接到WeiServers 将默认放行", client.getUsername());
             return true;
         }
-        String code = rootNode.at("/code").toString();
-        switch (code) {
-            case "200" -> {
-                userstate = "普通用户";
-                return true;
-            }
+        String user_code = user_rootNode.at("/code").toString();
+        switch (user_code) {
             case "220" -> {
                 userstate = "白名单用户";
                 whitename = true;
-                return true;
             }
             case "403" -> {
                 userstate = "黑名单用户";
@@ -124,22 +92,52 @@ public class Check extends Thread {
                 //logger.warn("{}  {} {} 为黑名单用户", client.getAddress(), client.getUserid(), client.getUsername());
                 return false;
             }
+            default -> {
+                userstate = "普通用户";
+            }
         }
-        return false;
-    }
 
+        //IP和区域封禁检查
+        JsonNode ip_rootNode = HttpClient("https://api.weiservers.com/scnet/index/checkip?ip=" + client.getAddress().toString().substring(1), false);
+        if (ip_rootNode == null) {
+            logger.error("{}检查失败 无法连接到WeiServers 将默认放行", client.getAddress());
+            return true;
+        }
+        String ip_code = ip_rootNode.at("/code").toString();
+        String info1 = ip_rootNode.at("/data/info1").toString();
+        String info2 = ip_rootNode.at("/data/info2").toString();
+        String info3 = ip_rootNode.at("/data/info3").toString();
+        String isp = ip_rootNode.at("/data/isp").toString();
+        IP_info = info1;
+        if (!info2.equals("null")) IP_info = IP_info + " " + info2;
+        if (!info3.equals("null")) IP_info = IP_info + " " + info3;
+        if (!isp.equals("null")) IP_info = IP_info + " 运营商:" + isp;
+        switch (ip_code) {
+            case "950", "954", "951", "952", "953" -> {
+                reason = "使用白名单跳过区域封禁";
+                if (!whitename) {
+                    reason = "在区域封禁范围内";
+                    return false;
+                }
+            }
+            case "200" -> {
+
+            }
+            default -> logger.error("获取{}详细信息时发生错误：接口返回值不是预期 将默认放行", client.getAddress());
+        }
+        return true;
+    }
     public void run() {
         String state = "登录成功";
-        if (checkuser() && checkstate() && checklimit() && (checkip() || whitename)) {
-            reason = "正常登录";
-            if ((!checkip())&&whitename) reason = "使用白名单跳过区域封禁";
-        } else{
+        if (!check()) {
             state = "登录失败";
             disconnect(client);
             Main.info.getAbnormal_ip().add(client.getAddress());
             Main.info.addAbnormal();
-      }
-        logger.info("{} 玩家 {} ID{} 状态{} 来自{} {}", client.getAddress(), client.getUsername(), client.getUserid(), userstate, IP_info, reason, state);
+            logger.warn("{} 玩家 [{}] ID [{}] {} 来自 {} {} {}", client.getAddress(), client.getUsername(), client.getUserid(), userstate, IP_info, reason, state);
+        } else {
+            logger.info("{} 玩家 [{}] ID [{}] {} 来自 {} {} {}", client.getAddress(), client.getUsername(), client.getUserid(), userstate, IP_info, reason, state);
+        }
         client.setWeiid(Cloud.postloguser(client.getUserid(), client.getUsername(), client.getAddress().toString(), client.getServer().name(), reason, state));
     }
 }

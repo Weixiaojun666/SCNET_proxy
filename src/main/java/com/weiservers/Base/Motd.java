@@ -3,11 +3,11 @@ package com.weiservers.Base;
 import java.net.DatagramSocket;
 
 public class Motd {
-
-
     private final DatagramSocket socket;
     private long time;
     private byte[] motd;
+
+    private Thread thread;
 
     public Motd(DatagramSocket socket) {
         time = 0;
@@ -32,5 +32,13 @@ public class Motd {
 
     public DatagramSocket getSocket() {
         return socket;
+    }
+
+    public Thread getThread(){
+        return thread;
+    }
+
+    public void setThread(Thread thread) {
+        this.thread = thread;
     }
 }

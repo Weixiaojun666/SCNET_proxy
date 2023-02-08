@@ -1,15 +1,17 @@
 package com.weiservers.Console;
 
 import com.weiservers.Base.Client;
+import com.weiservers.Base.ServerThread;
 import com.weiservers.Cloud.Cloud;
+import com.weiservers.Core.ThreadPool;
 import com.weiservers.Main;
 import com.weiservers.Thread.Child.Clean;
 
 import java.util.Map;
 
 import static com.weiservers.Cloud.Cloud.*;
-import static com.weiservers.Core.Tools.disconnect;
-import static com.weiservers.Core.Tools.getDatePoor;
+import static com.weiservers.Core.Tools.*;
+import static com.weiservers.Main.*;
 
 public class Command extends Thread {
     private final String command;
@@ -22,6 +24,14 @@ public class Command extends Thread {
         try {
             String[] commands = command.split("\\s+");
 
+            String command2 = "";
+            String command3 = "";
+            if (commands.length > 1) {
+                command2 = commands[1];
+            }
+            if (commands.length > 2) {
+                command3 = commands[2];
+            }
             switch (commands[0]) {
                 case "" -> {
                 }
@@ -34,6 +44,7 @@ public class Command extends Thread {
                     System.out.printf("\u001B[33m%-36s \u001B[32m%s\u001B[0m%n", "auth", "查看高级菜单");
                     System.out.printf("\u001B[33m%-36s \u001B[32m%s\u001B[0m%n", "kick user [user]", "踢出此用户");
                     System.out.printf("\u001B[33m%-36s \u001B[32m%s\u001B[0m%n", "kick ip [ip]", "断开此IP的所有连接");
+                    System.out.printf("\u001B[33m%-36s \u001B[32m%s\u001B[0m%n", "reload", "重载配置文件");
                     System.out.printf("\u001B[33m%-36s \u001B[32m%s\u001B[0m%n", "stop", "停止");
                     System.out.println("======================================================");
                 }
@@ -54,28 +65,42 @@ public class Command extends Thread {
                 }
                 case "clean" -> {
                     System.out.println("========================回收垃圾=========================");
-                    Clean clean = new Clean();
-                    clean.start();
+                    ThreadPool.execute( new Clean());
+                    System.out.println("======================================================");
+                }
+                case "reload" -> {
+                    System.out.println("========================重载配置文件=========================");
+                    for (ServerThread serverThread : Main.serverThreads) {
+                        serverThread.getThread().interrupt();
+                        serverThread.getMotd().getThread().interrupt();
+                        serverThread.getMotd().getSocket().close();
+                        serverThread.getDatagramSocket().close();
+                    }
+                    serverThreads.clear();
+                    for (Map.Entry<String, Client> client : Main.Clients.entrySet()) {
+                        disconnect(client.getValue());
+                    }
+                    ThreadPool.execute(new Clean());
+                    sleep(5000);
+                    ConfigLoad();
+                    Cloud.Load();
+                    ServerLoad();
                     System.out.println("======================================================");
                 }
                 case "cache" -> {
-                    System.out.println("========================刷新缓存=========================");
-                    //目前没做
-                    System.out.println("======================================================");
+                        System.out.println("====================刷新缓存[被动]=========================");
+                        for (ServerThread serverThread : Main.serverThreads) {
+                            ReloadCache(serverThread.getMotd(),serverThread.getServer());
+                        }
+                        System.out.println("缓存刷新请求已发出");
+                        System.out.println("======================================================");
+
                 }
                 case "list" -> {
-                    String command2 = "";
-                    int command3 = 1;
-                    if (commands.length > 1) {
-                        command2 = commands[1];
-                    }
-                    if (commands.length > 2) {
-                        command3 = Integer.parseInt(commands[2]);
-                    }
                     switch (command2) {
-                        case "area" -> getBanArea(command3);
-                        case "user" -> getBanUser(command3);
-                        case "ip" -> getBanIp(command3);
+                        case "area" -> getBanArea(Integer.parseInt(command3));
+                        case "user" -> getBanUser(Integer.parseInt(command3));
+                        case "ip" -> getBanIp(Integer.parseInt(command3));
                         default -> {
                             System.out.println("=====================在线连接列表======================");
                             System.out.printf("当前存在%s个连接%n", Main.Clients.size());
@@ -101,14 +126,6 @@ public class Command extends Thread {
                     System.exit(0);
                 }
                 case "kick" -> {
-                    String command2 = "";
-                    String command3 = "";
-                    if (commands.length > 1) {
-                        command2 = commands[1];
-                    }
-                    if (commands.length > 2) {
-                        command3 = commands[2];
-                    }
                     switch (command2) {
                         case "user" -> {
 

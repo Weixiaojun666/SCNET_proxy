@@ -9,6 +9,7 @@ import com.weiservers.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -43,7 +44,7 @@ public class Receive extends Thread {
                 String string = bytesToHexString(ans);
                 if (string.equals("0804")) {
                     //查询请求交给缓存类处理
-                    ThreadPool.execute(new ReceiveCache(packet, ClientAddress, ClientPort, to_client_socket, server, motd));
+                    ThreadPool.execute(new ReceiveCache(ClientAddress, ClientPort, to_client_socket, server, motd));
                 } else if (string.startsWith("050b000000")) {
                     //客户端连接请求打到服务器
                     to_server_socket = new DatagramSocket(0);
