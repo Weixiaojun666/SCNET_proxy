@@ -129,28 +129,17 @@ public class Check extends Thread {
     }
 
     public void run() {
-        boolean flag = false;
-        if (checkuser() && checkstate() && checklimit() && (checkip() || whitename)) {
-            if (!whitename) {
-                reason = "正常登录";
-            }
-            if (checkip()) {
-                flag = true;
-            } else if (whitename) {
-                reason = "使用白名单跳过区域封禁";
-                flag = true;
-            }
-        }
         String state = "登录成功";
-        if (!flag) {
+        if (checkuser() && checkstate() && checklimit() && (checkip() || whitename)) {
+            reason = "正常登录";
+            if ((!checkip())&&whitename) reason = "使用白名单跳过区域封禁";
+        } else{
             state = "登录失败";
             disconnect(client);
             Main.info.getAbnormal_ip().add(client.getAddress());
             Main.info.addAbnormal();
-        } else {
-            if (!whitename) reason = "正常登录";
-            logger.info("{} 玩家 {} ID{} 状态{} 来自{} {}", client.getAddress(), client.getUsername(), client.getUserid(), userstate, IP_info, reason, state);
-        }
+      }
+        logger.info("{} 玩家 {} ID{} 状态{} 来自{} {}", client.getAddress(), client.getUsername(), client.getUserid(), userstate, IP_info, reason, state);
         client.setWeiid(Cloud.postloguser(client.getUserid(), client.getUsername(), client.getAddress().toString(), client.getServer().name(), reason, state));
     }
 }
