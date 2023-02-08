@@ -1,6 +1,6 @@
 package com.weiservers;
 
-import Base.Server;
+import com.weiservers.Base.Server;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,7 +28,7 @@ public class GetConfig {
             serverlist = objectMapper.readValue(rootNode.get("server_list").toString(), new TypeReference<>() {
             });
         } catch (Exception e) {
-            logger.error("{}读取配置文件失败{} {}", "\033[31m", e, "\033[0m");
+            logger.error("读取配置文件失败{}", e);
             System.exit(0);
         }
     }

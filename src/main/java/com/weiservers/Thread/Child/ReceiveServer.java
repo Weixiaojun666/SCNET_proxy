@@ -1,6 +1,6 @@
-package Thread.Child;
+package com.weiservers.Thread.Child;
 
-import Base.Client;
+import com.weiservers.Base.Client;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

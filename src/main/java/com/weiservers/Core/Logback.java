@@ -1,4 +1,4 @@
-package com.weiservers;
+package com.weiservers.Core;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.ILoggingEvent;

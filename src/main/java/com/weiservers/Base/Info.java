@@ -1,4 +1,4 @@
-package Base;
+package com.weiservers.Base;
 
 import java.net.InetAddress;
 import java.util.HashSet;

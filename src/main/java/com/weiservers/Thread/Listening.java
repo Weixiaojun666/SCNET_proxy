@@ -1,8 +1,9 @@
-package Thread;
+package com.weiservers.Thread;
 
-import Base.Motd;
-import Base.Server;
-import Thread.Child.Receive;
+import com.weiservers.Base.Motd;
+import com.weiservers.Base.Server;
+import com.weiservers.Core.ThreadPool;
+import com.weiservers.Thread.Child.Receive;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,7 +31,7 @@ public class Listening extends Thread {
                 ThreadPool.execute(new Receive(packet, to_client_socket, server, motd));
             }
         } catch (IOException e) {
-            logger.error("{}无法继续建立监听在端口{} : {} {}", "\033[31m", this.server.proxy_port(), e, "\033[0m");
+            logger.error("无法继续建立监听在端口{} : {}", this.server.proxy_port(), e);
             logger.error("=========================================");
             logger.error("已尝试自动重启");
             ThreadPool.execute(new Listening(this.server));

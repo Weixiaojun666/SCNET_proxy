@@ -1,4 +1,4 @@
-package Base;
+package com.weiservers.Base;
 
 import java.net.DatagramSocket;
 import java.net.InetAddress;

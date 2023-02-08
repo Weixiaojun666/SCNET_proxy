@@ -1,6 +1,6 @@
-package Thread.Child;
+package com.weiservers.Thread.Child;
 
-import Base.Client;
+import com.weiservers.Base.Client;
 
 import java.net.DatagramPacket;
 import java.net.InetAddress;

@@ -1,11 +1,12 @@
-package Thread;
+package com.weiservers.Console;
 
-import Base.Client;
-import Base.Info;
-import Base.Server;
-import Thread.Child.Command;
-import com.weiservers.Cloud;
+import com.weiservers.Base.Client;
+import com.weiservers.Base.Info;
+import com.weiservers.Base.Server;
+import com.weiservers.Cloud.Cloud;
 import com.weiservers.GetConfig;
+import com.weiservers.Thread.Listening;
+import com.weiservers.Core.ThreadPool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,6 +33,9 @@ public class Console extends Thread {
         }
         logger.info("======================================================");
         logger.info("所有服务器监听均已启动");
+    }
+    public static void println(String str){
+        System.out.println(str);
     }
 
     public void run() {

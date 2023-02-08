@@ -1,4 +1,4 @@
-package Thread;
+package com.weiservers.Core;
 
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;

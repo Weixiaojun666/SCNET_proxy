@@ -1,8 +1,8 @@
-package Thread.Child;
+package com.weiservers.Thread.Child;
 
-import Base.Motd;
-import Base.Server;
-import Thread.Console;
+import com.weiservers.Base.Motd;
+import com.weiservers.Base.Server;
+import com.weiservers.Console.Console;
 import com.weiservers.GetConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,8 +11,8 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
-public class Cache extends Thread {
-    private final static Logger logger = LoggerFactory.getLogger(Cache.class);
+public class ReceiveCache extends Thread {
+    private final static Logger logger = LoggerFactory.getLogger(ReceiveCache.class);
     final Motd motd;
     final DatagramPacket packet;
     final InetAddress clientAddress;
@@ -20,7 +20,7 @@ public class Cache extends Thread {
     final DatagramSocket toClientSocket;
     final Server server;
 
-    public Cache(DatagramPacket packet, InetAddress clientAddress, int clientPort, DatagramSocket toClientSocket, Server server, Motd motd) {
+    public ReceiveCache(DatagramPacket packet, InetAddress clientAddress, int clientPort, DatagramSocket toClientSocket, Server server, Motd motd) {
         this.packet = packet;
         this.clientAddress = clientAddress;
         this.clientPort = clientPort;
@@ -50,7 +50,7 @@ public class Cache extends Thread {
             DatagramPacket datagramPacket = new DatagramPacket(bytes, bytes.length, clientAddress, clientPort);
             toClientSocket.send(datagramPacket);
         } catch (Exception e) {
-            logger.error("\033[31m获取服务器信息时出现错误：{} {} {}", server.name(), e, "\033[0m");
+            logger.error("获取服务器信息时出现错误：{} {}", server.name(), e);
         }
     }
 }

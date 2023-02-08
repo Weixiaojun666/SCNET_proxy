@@ -1,6 +1,6 @@
-package com.weiservers;
+package com.weiservers.Core;
 
-import Base.Client;
+import com.weiservers.Base.Client;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.hc.client5.http.classic.methods.HttpGet;

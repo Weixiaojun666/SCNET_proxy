@@ -1,8 +1,8 @@
-package Thread.Child;
+package com.weiservers.Thread.Child;
 
-import Base.Client;
-import Thread.Console;
-import com.weiservers.Cloud;
+import com.weiservers.Base.Client;
+import com.weiservers.Console.Console;
+import com.weiservers.Cloud.Cloud;
 import com.weiservers.GetConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +22,7 @@ public class Clean extends Thread {
             while (it.hasNext()) {
                 Map.Entry<String, Client> client = it.next();
                 if ((client.getValue().getTime() + (int) GetConfig.getSetting().get("time_out") * 1000L) < System.currentTimeMillis()) {
-                    logger.info("{} [断开连接]   {} {}", "\033[33m", client.getKey(), "\033[0m");
+                    logger.info("[断开连接]   {}", client.getKey());
                     if (client.getValue().getThread() != null) client.getValue().getThread().interrupt();
                     if (client.getValue().getTo_server_socket() != null)
                         client.getValue().getTo_server_socket().close();
@@ -31,7 +31,7 @@ public class Clean extends Thread {
                 }
             }
         } catch (Exception e) {
-            logger.error("{}断开连接时出现错误：{} {}", "\033[31m", e, "\033[0m");
+            logger.error("断开连接时出现错误：{} ", e);
         }
     }
 }
