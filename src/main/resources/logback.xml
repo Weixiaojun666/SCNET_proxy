@@ -18,9 +18,7 @@
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <!-- encoder class为空时, 默认也为 ch.qos.logback.classic.encoder.PatternLayoutEncoder -->
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>%green(%date{yyyy-MM-dd HH:mm:ss}) %highlightex(%-5level) %red([%thread]) %boldMagenta(%logger{50})
-                %highlightex(%msg%n))
-            </pattern>
+            <pattern>%green(%date{yyyy-MM-dd HH:mm:ss}) %highlightex(%-5level) %red([%thread]) %boldMagenta(%logger{50})%highlightex(%msg%n))</pattern>
         </encoder>
     </appender>
 
