@@ -22,7 +22,8 @@ public class Cloud {
     public Cloud() {
     }
 
-    public static void getBanArea(int page) {
+    public static void getBanArea(String page) {
+        if (page.equals("")) page="1";
         if (access_token == null) {
             System.out.println("\033[33m 请登录后使用此功能  \033[0m");
             return;
@@ -48,7 +49,8 @@ public class Cloud {
         }
     }
 
-    public static void getBanUser(int page) {
+    public static void getBanUser(String page) {
+        if (page.equals("")) page="1";
         if (access_token == null) {
             System.out.println("\033[33m 请登录后使用此功能  \033[0m");
             return;
@@ -75,7 +77,8 @@ public class Cloud {
         }
     }
 
-    public static void getBanIp(int page) {
+    public static void getBanIp(String page) {
+        if (page.equals("")) page="1";
         if (access_token == null) {
             System.out.println("\033[33m 请登录后使用此功能  \033[0m");
             return;
@@ -156,7 +159,15 @@ public class Cloud {
         }
     }
 
+    public static void postloginvalid(String ip,long start_time,long end_time,int num){
+        if (!(boolean) Main.getSetting().get("cloud")) return ;
+        if (access_token == null) return;
+        String url = "token=" + access_token + "&ip=" + ip+"&start_time="+start_time+"&end_time="+end_time+"&num="+num;
+        HttpClient("https://api.weiservers.com/scnet/log/invalid?" + url);
+    }
+
     public static void postloguser(String id) {
+        if (!(boolean) Main.getSetting().get("cloud")) return ;
         if (access_token == null) return;
         String url = "token=" + access_token + "&id=" + id;
         HttpClient("https://api.weiservers.com/scnet/log/user?" + url);

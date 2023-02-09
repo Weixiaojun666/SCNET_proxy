@@ -52,7 +52,7 @@ public class Receive extends Thread {
                     Main.Clients.put(ClientAddress + ":" + ClientPort, client);
                     ThreadPool.execute(new ReceiveServer(client));
                     ThreadPool.execute(new ReceiveClient(packet, client));
-                    logger.info("[新客户端连接]   {}  {}  =>  {}  {} 连接到[{}]", ClientAddress, ClientPort, server.address(), server.port(), server.name());
+                    logger.info("[新客户端连接]   {}  {}  =>  {}  {} 通过端口{} 连接到[{}]", ClientAddress, ClientPort, server.address(), server.port(), to_server_socket.getLocalPort(),server.name());
                     ThreadPool.execute(new Check(client, string.substring(78, 110)));
                     Main.info.getNormal_ip().add(ClientAddress);
                     Main.info.addNormal();

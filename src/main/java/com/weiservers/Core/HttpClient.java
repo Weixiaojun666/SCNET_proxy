@@ -50,7 +50,7 @@ public class HttpClient {
             }
             try (httpClient) {
                 final HttpGet httpGet = new HttpGet(encodeChinese(url, "UTF-8"));
-                //System.out.println(encodeChinese(url, "UTF-8"));
+               System.out.println(encodeChinese(url, "UTF-8"));
                 httpGet.addHeader("Accept-Charset", "utf-8");
                 final String responseBody = httpClient.execute(httpGet, new BasicHttpClientResponseHandler());
                 ObjectMapper mapper = new ObjectMapper();

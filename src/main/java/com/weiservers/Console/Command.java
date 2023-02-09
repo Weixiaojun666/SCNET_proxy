@@ -98,9 +98,9 @@ public class Command extends Thread {
                 }
                 case "list" -> {
                     switch (command2) {
-                        case "area" -> getBanArea(Integer.parseInt(command3));
-                        case "user" -> getBanUser(Integer.parseInt(command3));
-                        case "ip" -> getBanIp(Integer.parseInt(command3));
+                        case "area" -> getBanArea(command3);
+                        case "user" -> getBanUser(command3);
+                        case "ip" -> getBanIp(command3);
                         default -> {
                             System.out.println("=====================在线连接列表======================");
                             System.out.printf("当前存在%s个连接%n", Main.Clients.size());
