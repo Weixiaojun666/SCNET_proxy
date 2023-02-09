@@ -26,7 +26,7 @@ public class Clean extends Thread {
             while (it.hasNext()) {
                 Map.Entry<String, Client> client = it.next();
                 if ((client.getValue().getTime() + (int) Main.getSetting().get("time_out") * 1000L) < System.currentTimeMillis()) {
-                    logger.info("[断开连接]   {} {}", client.getKey(),client.getValue().getUsername());
+                    logger.info("[断开连接]   {} {}", client.getKey(), client.getValue().getUsername());
                     if (client.getValue().getThread() != null) client.getValue().getThread().interrupt();
                     if (client.getValue().getTo_server_socket() != null)
                         client.getValue().getTo_server_socket().close();
@@ -41,11 +41,12 @@ public class Clean extends Thread {
                 if (invalidEntry.getValue().getUpdate_time() + 8000L < System.currentTimeMillis()) {
                     logger.info("收到来自 {} 的无效包,数量{} 开始时间 {} 持续 {}", invalidEntry.getKey(), invalidEntry.getValue().getNum(), format.format(invalidEntry.getValue().getCreate_time()), getDatePoor(invalidEntry.getValue().getCreate_time(), invalidEntry.getValue().getUpdate_time()));
                     it0.remove();
-                    Cloud.postloginvalid(String.valueOf(invalidEntry.getKey()),invalidEntry.getValue().getCreate_time(),invalidEntry.getValue().getUpdate_time(),invalidEntry.getValue().getNum());
+                    Cloud.postloginvalid(String.valueOf(invalidEntry.getKey()), invalidEntry.getValue().getCreate_time(), invalidEntry.getValue().getUpdate_time(), invalidEntry.getValue().getNum());
                 }
-                if (invalidEntry.getValue().getCreate_time() + 120000L < System.currentTimeMillis()) {
+                if (invalidEntry.getValue().getCheck_time() + 60000L < System.currentTimeMillis()) {
+                    invalidEntry.getValue().setCheck_time(System.currentTimeMillis());
                     logger.warn("收到来自 {} 的无效包,数量{} 开始时间 {} 持续 {}", invalidEntry.getKey(), invalidEntry.getValue().getNum(), format.format(invalidEntry.getValue().getCreate_time()), getDatePoor(invalidEntry.getValue().getCreate_time(), invalidEntry.getValue().getUpdate_time()));
-                    Cloud.postloginvalid(String.valueOf(invalidEntry.getKey()),invalidEntry.getValue().getCreate_time(),0L,invalidEntry.getValue().getNum());
+                    Cloud.postloginvalid(String.valueOf(invalidEntry.getKey()), invalidEntry.getValue().getCreate_time(), 0L, invalidEntry.getValue().getNum());
                 }
             }
         } catch (Exception e) {

@@ -11,7 +11,8 @@ import java.util.Map;
 
 import static com.weiservers.Cloud.Cloud.*;
 import static com.weiservers.Core.Tools.*;
-import static com.weiservers.Main.*;
+import static com.weiservers.Main.ConfigLoad;
+import static com.weiservers.Main.ServerLoad;
 
 public class Command extends Thread {
     private final String command;
@@ -70,18 +71,7 @@ public class Command extends Thread {
                 }
                 case "reload" -> {
                     System.out.println("========================重载配置文件=========================");
-                    for (ServerThread serverThread : Main.serverThreads) {
-                        serverThread.getThread().interrupt();
-                        serverThread.getMotd().getThread().interrupt();
-                        serverThread.getMotd().getSocket().close();
-                        serverThread.getDatagramSocket().close();
-                    }
-                    serverThreads.clear();
-                    for (Map.Entry<String, Client> client : Main.Clients.entrySet()) {
-                        disconnect(client.getValue());
-                    }
-                    ThreadPool.execute(new Clean());
-                    sleep(5000);
+                    stopservice();
                     ConfigLoad();
                     Cloud.Load();
                     ServerLoad();
@@ -123,6 +113,8 @@ public class Command extends Thread {
                 }
                 case "stop" -> {
                     System.out.println("========================停止程序=========================");
+                    stopservice();
+                    sleep(5000);
                     System.exit(0);
                 }
                 case "kick" -> {

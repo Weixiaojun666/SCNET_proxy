@@ -1,14 +1,33 @@
 package com.weiservers.Core;
 
-import com.weiservers.Base.Client;
-import com.weiservers.Base.Motd;
-import com.weiservers.Base.Server;
+import com.weiservers.Base.*;
 import com.weiservers.Main;
+import com.weiservers.Thread.Child.Clean;
 
 import java.net.DatagramPacket;
 import java.net.InetAddress;
+import java.util.Map;
+
+import static com.weiservers.Main.serverThreads;
 
 public class Tools {
+
+    public static void stopservice() {
+        for (ServerThread serverThread : Main.serverThreads) {
+            serverThread.getThread().interrupt();
+            serverThread.getMotd().getThread().interrupt();
+            serverThread.getMotd().getSocket().close();
+            serverThread.getDatagramSocket().close();
+        }
+        serverThreads.clear();
+        for (Map.Entry<String, Client> client : Main.Clients.entrySet()) {
+            disconnect(client.getValue());
+        }
+        for (Map.Entry<InetAddress, Invalid> Invalids : Main.Invalids.entrySet()) {
+            Invalids.getValue().setCheck_time(0);
+        }
+        ThreadPool.execute(new Clean());
+    }
 
 
     public static void disconnect(Client client) {
