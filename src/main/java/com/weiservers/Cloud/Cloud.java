@@ -20,6 +20,11 @@ public class Cloud {
     private static String access_token;
 
     public Cloud() {
+
+    }
+
+    public static void ReloadToken() {
+        access_token = null;
     }
 
     public static void getBanArea(String page) {
@@ -195,6 +200,13 @@ public class Cloud {
                 String username = rootNode.at("/data/username").toString();
                 access_token = rootNode.at("/data/access_token").toString().replace("\"", "");
                 logger.info("已成功登录WeiServers 登录用户名{}", username);
+
+                JsonNode rootNode0 = HttpClient("https://api.weiservers.com/scnet/admin/getServerList?token=" + access_token);
+                if (rootNode0 != null) {
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    Main.serverlist = objectMapper.readValue(rootNode0.at("/data").toString(), new TypeReference<>() {
+                    });
+                }
             }
         } catch (Exception e) {
             logger.error("尝试登录WeiServers平台时出现错误", e);

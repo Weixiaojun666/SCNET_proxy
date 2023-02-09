@@ -29,7 +29,7 @@ public class Main {
     public final static Info info = new Info(System.currentTimeMillis());
     private final static Logger logger = LoggerFactory.getLogger(Main.class);
     public static List<ServerThread> serverThreads = new ArrayList<>();
-    private static List<Server> serverlist;
+    public static List<Server> serverlist;
     private static Map<String, Object> setting;
 
     public static void ConfigLoad() {
@@ -46,7 +46,7 @@ public class Main {
         }
     }
 
-    public static void ServerLoad() {
+    public static void ServerLoad(List<Server> serverlist) {
         logger.info("已加载{}个服务器", serverlist.size());
         logger.info("======================================================");
         logger.info(String.format("%-8s %-18s %-12s %-8s %-8s", "序号", "服务器名称", "服务器地址", "服务器端口", "转发端口"));
@@ -60,10 +60,6 @@ public class Main {
         logger.info("所有服务器监听均已启动");
     }
 
-    public static List<Server> getServerlist() {
-        return serverlist;
-    }
-
     public static Map<String, Object> getSetting() {
         return setting;
     }
@@ -74,7 +70,7 @@ public class Main {
         LoadThreadPool();
         ConfigLoad();
         Cloud.Load();
-        ServerLoad();
+        ServerLoad(serverlist);
         ThreadPool.execute(new Console());
         ThreadPool.execute(new TimeTask());
     }

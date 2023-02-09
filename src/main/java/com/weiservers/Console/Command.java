@@ -1,6 +1,7 @@
 package com.weiservers.Console;
 
 import com.weiservers.Base.Client;
+import com.weiservers.Base.Motd;
 import com.weiservers.Base.ServerThread;
 import com.weiservers.Cloud.Cloud;
 import com.weiservers.Core.ThreadPool;
@@ -11,8 +12,7 @@ import java.util.Map;
 
 import static com.weiservers.Cloud.Cloud.*;
 import static com.weiservers.Core.Tools.*;
-import static com.weiservers.Main.ConfigLoad;
-import static com.weiservers.Main.ServerLoad;
+import static com.weiservers.Main.*;
 
 public class Command extends Thread {
     private final String command;
@@ -42,6 +42,7 @@ public class Command extends Thread {
                     System.out.printf("\u001B[33m%-36s \u001B[32m%s\u001B[0m%n", "clean", "立即回收垃圾");
                     System.out.printf("\u001B[33m%-36s \u001B[32m%s\u001B[0m%n", "cache", "立即刷新缓存");
                     System.out.printf("\u001B[33m%-36s \u001B[32m%s\u001B[0m%n", "info", "查看统计信息");
+                    System.out.printf("\u001B[33m%-36s \u001B[32m%s\u001B[0m%n", "servers", "查看服务器缓存信息");
                     System.out.printf("\u001B[33m%-36s \u001B[32m%s\u001B[0m%n", "auth", "查看高级菜单");
                     System.out.printf("\u001B[33m%-36s \u001B[32m%s\u001B[0m%n", "kick user [user]", "踢出此用户");
                     System.out.printf("\u001B[33m%-36s \u001B[32m%s\u001B[0m%n", "kick ip [ip]", "断开此IP的所有连接");
@@ -74,7 +75,7 @@ public class Command extends Thread {
                     stopservice();
                     ConfigLoad();
                     Cloud.Load();
-                    ServerLoad();
+                    ServerLoad(serverlist);
                     System.out.println("======================================================");
                 }
                 case "cache" -> {
@@ -111,10 +112,19 @@ public class Command extends Thread {
                     System.out.printf("\u001B[33m丢弃无效数据包\u001B[0m \u001B[31m%s\u001B[0m%n", Main.info.getInvalid());
                     System.out.println("======================================================");
                 }
+                case "servers" -> {
+                    System.out.println("=====================服务器信息======================");
+                    System.out.printf("\u001B[32m %-18s\u001B[0m \u001B[33m%-8s \u001B[0m \u001B[32m %-6s %-6s\u001B[0m  \u001B[32m %-8s\u001B[0m%n", "名称", "模式", "在线玩家", "最大玩家", "版本");
+                    for (ServerThread serverThread : Main.serverThreads) {
+                        Motd motd = serverThread.getMotd();
+                        System.out.printf("\u001B[32m %-18s\u001B[0m \u001B[33m%-8s \u001B[0m \u001B[32m %-6s %-6s\u001B[0m  \u001B[32m %-8s\u001B[0m%n", motd.getServername(), motd.getModel(), motd.getOnlineplayer(), motd.getMaxplayer(), motd.getVersion());
+                    }
+                    System.out.println("======================================================");
+                }
                 case "stop" -> {
                     System.out.println("========================停止程序=========================");
                     stopservice();
-                    sleep(5000);
+                    ThreadPool.shutdown();
                     System.exit(0);
                 }
                 case "kick" -> {

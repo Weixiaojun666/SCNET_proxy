@@ -7,10 +7,13 @@ import org.slf4j.LoggerFactory;
 
 import java.net.DatagramPacket;
 
+import static com.weiservers.Core.Tools.getServerInfo;
+
 public class Cache extends Thread {
     private static final Logger logger = LoggerFactory.getLogger(Cache.class);
 
     private final Motd motd;
+
 
     public Cache(Motd motd) {
         this.motd = motd;
@@ -27,13 +30,14 @@ public class Cache extends Thread {
                 System.arraycopy(packet.getData(), 0, bytes, 0, packet.getLength());
                 motd.setMotd(bytes);
                 motd.setTime(System.currentTimeMillis());
+                getServerInfo(motd);
             }
         } catch (Exception e) {
             if (!isInterrupted()) {
                 logger.error("尝试刷新缓存时出现错误 在端口{} : {}", motd.getSocket().getPort(), e);
                 logger.error("=========================================");
                 logger.error("已尝试自动重启");
-                motd.getSocket().close();
+                if (!motd.getSocket().isClosed()) motd.getSocket().close();
                 ThreadPool.execute(new Cache(motd));
             }
         }

@@ -27,8 +27,8 @@ public class Clean extends Thread {
                 Map.Entry<String, Client> client = it.next();
                 if ((client.getValue().getTime() + (int) Main.getSetting().get("time_out") * 1000L) < System.currentTimeMillis()) {
                     logger.info("[断开连接]   {} {}", client.getKey(), client.getValue().getUsername());
-                    if (client.getValue().getThread() != null) client.getValue().getThread().interrupt();
-                    if (client.getValue().getTo_server_socket() != null)
+                    if (!client.getValue().getThread().isAlive()) client.getValue().getThread().interrupt();
+                    if (!client.getValue().getTo_server_socket().isClosed())
                         client.getValue().getTo_server_socket().close();
                     Cloud.postloguser(client.getValue().getWeiid());
                     it.remove();

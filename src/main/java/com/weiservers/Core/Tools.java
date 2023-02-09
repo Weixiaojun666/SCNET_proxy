@@ -6,18 +6,63 @@ import com.weiservers.Thread.Child.Clean;
 
 import java.net.DatagramPacket;
 import java.net.InetAddress;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
+import static com.weiservers.Cloud.Cloud.ReloadToken;
 import static com.weiservers.Main.serverThreads;
 
+
 public class Tools {
+    public static String hexStringToString(String s) {
+        if (s == null || s.equals("")) {
+            return null;
+        }
+        s = s.replace(" ", "");
+        byte[] baKeyword = new byte[s.length() / 2];
+        for (int i = 0; i < baKeyword.length; i++) {
+            try {
+                baKeyword[i] = (byte) (0xff & Integer.parseInt(s.substring(i * 2, i * 2 + 2), 16));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            s = new String(baKeyword, StandardCharsets.UTF_8);
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+        return s;
+    }
+
+    public static void getServerInfo(Motd motd) {
+        try {
+            String info = bytesToHexString(motd.getMotd());
+            int length = info.length();
+            String model = "未知";
+            switch (info.substring(length - 14, length - 12)) {
+                case "00" -> model = "创造";
+                case "01" -> model = "无害";
+                case "02" -> model = "挑战";
+                case "03" -> model = "残酷";
+                case "04" -> model = "冒险";
+                default -> model = "未知";
+            }
+            int maxplayer = Integer.parseInt((info.substring(length - 16, length - 14) + info.substring(length - 18, length - 16)), 16);
+            int onlineplayer = Integer.parseInt((info.substring(length - 20, length - 18) + info.substring(length - 22, length - 20)), 16);
+            String version = hexStringToString(info.substring(12, length - 22));
+            motd.setString(model, onlineplayer, maxplayer, version);
+        } catch (Exception e) {
+        }
+    }
+
 
     public static void stopservice() {
         for (ServerThread serverThread : Main.serverThreads) {
-            serverThread.getThread().interrupt();
-            serverThread.getMotd().getThread().interrupt();
-            serverThread.getMotd().getSocket().close();
-            serverThread.getDatagramSocket().close();
+            if (!serverThread.getThread().isAlive()) serverThread.getThread().interrupt();
+            if (!serverThread.getMotd().getThread().isAlive()) serverThread.getMotd().getThread().interrupt();
+            if (!serverThread.getMotd().getSocket().isClosed()) serverThread.getMotd().getSocket().close();
+            if (!serverThread.getDatagramSocket().isClosed()) serverThread.getDatagramSocket().close();
         }
         serverThreads.clear();
         for (Map.Entry<String, Client> client : Main.Clients.entrySet()) {
@@ -27,6 +72,7 @@ public class Tools {
             Invalids.getValue().setCheck_time(0);
         }
         ThreadPool.execute(new Clean());
+        ReloadToken();
     }
 
 
@@ -53,11 +99,8 @@ public class Tools {
         long ns = 1000;
         // 获得两个时间的毫秒时间差异
         long diff = endTime - startTime;
-
         long day = diff / nd;
-
         long hour = diff % nd / nh;
-
         long min = diff % nd % nh / nm;
         long sec = diff % nd % nh % nm / ns;
         return day + "天" + hour + "小时" + min + "分钟" + sec + "秒";
@@ -84,5 +127,4 @@ public class Tools {
         }
         return bytes;
     }
-
 }

@@ -27,7 +27,7 @@ public class Listening extends Thread {
     public void run() {
         try {
             to_client_socket = new DatagramSocket(this.server.proxy_port());
-            motd = new Motd(new DatagramSocket(0));
+            motd = new Motd(new DatagramSocket(0), server.name());
             motd.setTime(0);
             Main.serverThreads.add(new ServerThread(this, to_client_socket, motd, server));
             ThreadPool.execute(new Cache(motd));
@@ -42,9 +42,15 @@ public class Listening extends Thread {
                 logger.error("无法继续建立监听在端口{} : {}", this.server.proxy_port(), e);
                 logger.error("=========================================");
                 logger.error("已尝试自动重启");
-                to_client_socket.close();
-                motd.getThread().interrupt();
-                motd.getSocket().close();
+                if (!to_client_socket.isClosed()) to_client_socket.close();
+                if (motd != null) {
+                    if (!motd.getThread().isAlive()) motd.getThread().interrupt();
+                    if (!motd.getSocket().isClosed()) motd.getSocket().close();
+                }
+                try {
+                    sleep(1000);
+                } catch (InterruptedException ex) {
+                }
                 ThreadPool.execute(new Listening(this.server));
             }
         }
