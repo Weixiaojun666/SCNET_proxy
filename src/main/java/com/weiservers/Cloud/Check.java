@@ -2,6 +2,8 @@ package com.weiservers.Cloud;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.weiservers.Base.Client;
+import com.weiservers.Base.Whitelist;
+import com.weiservers.Core.Tools;
 import com.weiservers.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +19,7 @@ public class Check extends Thread {
     private static String token;
 
     private static boolean whitename = false;
+    private static boolean whitename_0 = false;
     private static String reason = "";
 
     private static String IP_info = "";
@@ -58,14 +61,12 @@ public class Check extends Thread {
                 }
             }
             if (numuser > (int) Main.getSetting().get("connection_limit")) {
-                logger.warn("{}用户名 {} ID{} 存在一号多登行为，此次连接将被拒绝", client.getAddress(), client.getUsername(), client.getUserid());
                 reason = "存在一号多登行为";
                 disconnect(client);
                 Main.info.addAbnormal();
                 return false;
             }
             if (num > (int) Main.getSetting().get("connection_limit")) {
-                logger.warn("{}的连接数达到{} 超过上限，此次连接将被拒绝 使用用户名{} ID{}", client.getAddress(), num, client.getUsername(), client.getUserid());
                 reason = "连接数超过" + Main.getSetting().get("connection_limit");
                 disconnect(client);
                 Main.info.addAbnormal();
@@ -74,6 +75,25 @@ public class Check extends Thread {
         } catch (Exception e) {
             logger.info("来自{}的连接,检查失败,此次请求检查已临时停止,此次将被默认允许{}", client.getAddress(), e);
         }
+
+        //读取本地白名单列表
+        for (Whitelist whitelist : Tools.readWhitelist()) {
+            if ((client.getUserid()).equals(whitelist.id() + "")) {
+                whitename_0 = true;
+                break;
+            }
+        }
+
+        //开启只限白名单进入
+        if ((boolean) Main.getSetting().get("whitelist")) if (!whitename_0) {
+            reason = "服务器只允许本地白名单进入";
+            return false;
+        }
+
+        //关闭验证一下验证将不会继续执行
+        if (!(boolean) Main.getSetting().get("verification")) return true;
+
+
         //判断是否被黑名单或者是否有白名单
         JsonNode user_rootNode = HttpClient("https://api.weiservers.com/scnet/index/checkuser?userid=" + client.getUserid(), false);
         if (user_rootNode == null) {
@@ -115,10 +135,11 @@ public class Check extends Thread {
         switch (ip_code) {
             case "950", "954", "951", "952", "953" -> {
                 reason = "使用白名单跳过区域封禁";
-                if (!whitename) {
+                if (!(whitename || whitename_0)) {
                     reason = "在区域封禁范围内";
                     return false;
                 }
+
             }
             case "200" -> {
 

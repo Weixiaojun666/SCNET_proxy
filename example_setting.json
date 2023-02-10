@@ -5,6 +5,7 @@
   "token": "",
   "timeout_retry":5,
   "cloud": true,
+  "verification": true,
   "server_list": [
     {
       "name": "测试",

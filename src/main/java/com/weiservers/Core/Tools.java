@@ -1,12 +1,17 @@
 package com.weiservers.Core;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.weiservers.Base.*;
 import com.weiservers.Main;
 import com.weiservers.Thread.Child.Clean;
 
+import java.io.File;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Map;
 
 import static com.weiservers.Cloud.Cloud.ReloadToken;
@@ -14,6 +19,19 @@ import static com.weiservers.Main.serverThreads;
 
 
 public class Tools {
+    public static List<Whitelist> readWhitelist() {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode rootNode = objectMapper.readTree(new File("./whitelist.json"));
+            List<Whitelist> whitelists = objectMapper.readValue(rootNode.toString(), new TypeReference<>() {
+            });
+            return whitelists;
+        } catch (Exception e) {
+
+        }
+        return null;
+    }
+
     public static String hexStringToString(String s) {
         if (s == null || s.equals("")) {
             return null;

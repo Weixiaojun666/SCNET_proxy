@@ -5,6 +5,8 @@
   "token": "nnDlUhHQIpyMDTDfYMlGmFEzJCrZp1ew",
   "timeout_retry":5,
   "cloud": true,
+  "verification": true,
+  "whitelist": true,
   "server_list": [
     {
       "name": "测试",

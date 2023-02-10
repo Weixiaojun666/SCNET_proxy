@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.weiservers.Base.BanArea;
 import com.weiservers.Base.BanIp;
 import com.weiservers.Base.BanUser;
+import com.weiservers.Base.Motd;
 import com.weiservers.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -124,7 +125,7 @@ public class Cloud {
             if (rootNode != null)
                 System.out.printf("操作成功:%s%n", rootNode.at("/msg").toString());
             else
-                System.out.print("操作失败");
+                System.out.println("操作失败");
         } catch (Exception e) {
             System.out.printf("操作失败:%s%n", e);
         }
@@ -141,7 +142,7 @@ public class Cloud {
             if (rootNode != null)
                 System.out.printf("操作成功:%s%n", rootNode.at("/msg").toString());
             else
-                System.out.print("操作失败");
+                System.out.println("操作失败");
         } catch (Exception e) {
             System.out.printf("操作失败:%s%n", e);
         }
@@ -158,10 +159,18 @@ public class Cloud {
             if (rootNode != null)
                 System.out.printf("操作成功:%s%n", rootNode.at("/msg").toString());
             else
-                System.out.print("操作失败");
+                System.out.println("操作失败");
         } catch (Exception e) {
             System.out.printf("操作失败:%s%n", e);
         }
+    }
+
+    public static void postserverinfo(Motd motd) {
+        if (!(boolean) Main.getSetting().get("cloud")) return;
+        if (access_token == null) return;
+        if (motd.getModel().equals("未知")) return;
+        String url = "token=" + access_token + "&id=" + motd.getId() + "&onlineplayer=" + motd.getOnlineplayer() + "&maxplayer=" + motd.getMaxplayer() + "&model=" + motd.getModel() + "&version=" + motd.getVersion();
+        HttpClient("https://api.weiservers.com/scnet/admin/saveServerInfo?" + url);
     }
 
     public static void postloginvalid(String ip, long start_time, long end_time, int num) {

@@ -6,6 +6,8 @@ public class Motd {
     private final DatagramSocket socket;
     private final String servername;
     private long time;
+
+    private final int id;
     private byte[] motd;
     private Thread thread;
     private String model;
@@ -14,10 +16,11 @@ public class Motd {
     private String version;
 
 
-    public Motd(DatagramSocket socket, String servername) {
+    public Motd(DatagramSocket socket, String servername, int id) {
         time = 0;
         this.socket = socket;
         this.servername = servername;
+        this.id = id;
     }
 
     public void setString(String model, int onlineplayer, int maxplayer, String version) {
@@ -73,5 +76,9 @@ public class Motd {
 
     public String getServername() {
         return servername;
+    }
+
+    public int getId() {
+        return id;
     }
 }
