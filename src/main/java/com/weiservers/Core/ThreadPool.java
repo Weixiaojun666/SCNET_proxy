@@ -10,7 +10,7 @@ public class ThreadPool {
     public static void LoadThreadPool() {
         executor = new ThreadPoolExecutor(16, 16000, 30L, TimeUnit.SECONDS, new SynchronousQueue<>());
 
-        //executor.allowCoreThreadTimeOut(true);
+        executor.allowCoreThreadTimeOut(true);
     }
 
     public static void execute(Runnable task) {

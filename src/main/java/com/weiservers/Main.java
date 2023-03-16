@@ -69,7 +69,6 @@ public class Main {
         logger.info("加载中...");
         LoadThreadPool();
         ConfigLoad();
-        Cloud.Load();
         ServerLoad(serverlist);
         ThreadPool.execute(new Console());
         ThreadPool.execute(new TimeTask());

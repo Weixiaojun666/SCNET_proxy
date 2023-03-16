@@ -25,6 +25,7 @@ public class Client {
         this.server = server;
         this.address = address;
         this.port = port;
+        this.userid="0";
     }
 
     public long getTime() {

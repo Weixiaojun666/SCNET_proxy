@@ -27,7 +27,7 @@ public class Listening extends Thread {
     public void run() {
         try {
             to_client_socket = new DatagramSocket(this.server.proxy_port());
-            motd = new Motd(new DatagramSocket(0), server.name(), server.id());
+            motd = new Motd(new DatagramSocket(0), server.name());
             motd.setTime(0);
             Main.serverThreads.add(new ServerThread(this, to_client_socket, motd, server));
             ThreadPool.execute(new Cache(motd));
