@@ -6,7 +6,7 @@
   "timeout_retry":5,
   "cloud": true,
   "verification": true,
-  "whitelist": true,
+  "whitelist": false,
   "server_list": [
     {
       "name": "测试",

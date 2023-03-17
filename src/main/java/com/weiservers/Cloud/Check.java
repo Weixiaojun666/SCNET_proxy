@@ -8,24 +8,18 @@ import com.weiservers.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
-
 import static com.weiservers.Core.HttpClient.HttpClient;
 import static com.weiservers.Core.Tools.disconnect;
 
 public class Check extends Thread {
     private final static Logger logger = LoggerFactory.getLogger(Check.class);
+    private static final String userstate = "";
     private static Client client;
     private static String token;
-
     private static boolean whitename = false;
     private static String reason = "";
-
     private static String IP_info = "";
-
-    private static final String userstate = "";
-
-    private String checkid = "";
+    private final String checkid = "";
 
     public Check(Client client, String token) {
         Check.client = client;
@@ -33,45 +27,36 @@ public class Check extends Thread {
     }
 
     public boolean check() {
-        reason="正常登录";
-        String url= "https://api.weiservers.com/scnet/apply/check?token="+token+"&ip="+client.getAddress().toString().substring(1);
-        JsonNode rootNode = HttpClient(url, false);
-        if (rootNode == null) {
-            logger.error("{}检查失败 无法连接到WeiServers 将默认放行", client.getUsername());
-            return true;
+        reason = "正常登录";
+        //先连接社区获取玩家信息
+        JsonNode rootNodeUser = HttpClient("https://m.schub.top/com/checkuser?token=" + token);
+        if (rootNodeUser == null) {
+            reason = "社区检查失败";
+            logger.error("{} 社区检查失败", client.getAddress().toString());
+            return false;
         }
-        String code = rootNode.at("/code").toString();
-        String info1 = rootNode.at("/data/info1").toString();
-        String info2 = rootNode.at("/data/info2").toString();
-        String info3 = rootNode.at("/data/info3").toString();
-        String isp = rootNode.at("/data/isp").toString();
+        client.setUserid(rootNodeUser.at("/data/id").toString().replace("\"", ""));
+        client.setUsername(rootNodeUser.at("/data/nickname").toString().replace("\"", ""));
 
-        client.setWeiid(rootNode.at("/data/check").toString());
+        //连接到公开IP地址API获取IP信息[不再从WeiServer拉取]  接口由VORE-API(https://api.vore.top/)免费提供
+        JsonNode rootNodeIp = HttpClient("https://api.vore.top/api/IPdata?ip=" + client.getAddress().toString().substring(1), false);
+        if (rootNodeIp != null) {
+            String info1 = rootNodeIp.at("/ipdata/info1").toString().replace("\"", "");
+            String info2 = rootNodeIp.at("/ipdata/info2").toString().replace("\"", "");
+            String info3 = rootNodeIp.at("/ipdata/info3").toString().replace("\"", "");
+            String isp = rootNodeIp.at("/ipdata/isp").toString().replace("\"", "");
 
-        IP_info = info1;
-        if (!info2.equals("null")) IP_info = IP_info + " " + info2;
-        if (!info3.equals("null")) IP_info = IP_info + " " + info3;
-        if (!isp.equals("null")) IP_info = IP_info + " 运营商:" + isp;
+            IP_info = info1;
+            if (info2 != "") IP_info = IP_info + " " + info2;
+            if (info3 != "") IP_info = IP_info + " " + info3;
+            if (isp != "") IP_info = IP_info + " 运营商:" + isp;
+        } else logger.warn("{} 拉取IP地址信息失败！不影响WeiServer的区域封禁", client.getAddress().toString());
 
-        client.setUserid(rootNode.at("/data/userid").toString().replace("\"", ""));
-        client.setUsername(rootNode.at("/data/username").toString().replace("\"", ""));
-        reason = rootNode.at("/msg").toString();
-
-
+        //读取白名单
         for (Whitelist whitelist : Tools.readWhitelist()) {
             if ((client.getUserid()).equals(whitelist.id() + "")) {
                 whitename = true;
                 break;
-            }
-        }
-        if (code != "200") {
-            if ((boolean) Main.getSetting().get("verification")) {
-                //如果判断失败,就读取白名单判断是否在白名单内
-                reason = rootNode.at("/msg").toString();;
-                if(!whitename) {
-                    reason="使用本地白名单跳过检查";
-                    return false;
-                }
             }
         }
         //开启只限白名单进入
@@ -79,7 +64,30 @@ public class Check extends Thread {
             reason = "服务器只允许本地白名单进入";
             return false;
         }
+        if ((boolean) Main.getSetting().get("verification")) {
+            //连接WeiServers 询问是否可放行
+            String url = "https://api.weiservers.com/scnet/apply/check?userid=" + client.getUserid() + "&username=" + client.getUsername() + "&ip=" + client.getAddress().toString().substring(1);
+            JsonNode rootNode = HttpClient(url, false);
+            if (rootNode == null) {
+                logger.error("{} 检查失败 无法连接到WeiServers 将默认放行", client.getUsername());
+                return true;
+            }
+            int code = rootNode.at("/code").intValue();
+            client.setWeiid(rootNode.at("/data/check").toString());
 
+            reason = rootNode.at("/msg").toString();
+
+            if (code != 200) {
+                //如果判断失败,就读取白名单判断是否在白名单内
+                reason = rootNode.at("/msg").toString();
+                if (whitename) {
+                    reason = "使用本地白名单跳过检查";
+                    return true;
+                }
+                return false;
+            }
+
+        }
 
         //再判断是否一号多登
         //判断是否IP多登或者一号多登
@@ -113,6 +121,7 @@ public class Check extends Thread {
 
         return true;
     }
+
     public void run() {
         String state = "登录成功";
         if (!check()) {
@@ -123,6 +132,6 @@ public class Check extends Thread {
             logger.warn("{} 玩家 [{}] ID [{}] {} 来自 {} {} {}", client.getAddress(), client.getUsername(), client.getUserid(), userstate, IP_info, reason, state);
         }
         logger.info("{} 玩家 [{}] ID [{}] {} 来自 {} {} {}", client.getAddress(), client.getUsername(), client.getUserid(), userstate, IP_info, reason, state);
-        Cloud.postlogin(checkid,client.getServer().name(),state,reason);
+        Cloud.postlogin(checkid, client.getServer().name(), state, reason);
     }
 }
