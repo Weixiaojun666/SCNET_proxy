@@ -76,6 +76,7 @@ public class Command extends Thread {
                                 System.out.printf("%s 登录用户名 %s 社区ID %s 通过 %s 连接到 %s %n", client.getKey(), client.getValue().getUsername(), client.getValue().getUserid(), client.getValue().getTo_server_socket().getLocalPort(), client.getValue().getServer().name());
                             }
                             System.out.println("======================================================");
+
                 }
                 case "info" -> {
                     System.out.println("=====================统计信息======================");
