@@ -2,15 +2,16 @@
   "connection_limit": 1,
   "time_out": 8,
   "cache_time": 60,
-  "token": "D2DhIaiLLm3P6fbrURsPIvDdyzPlT2Sw",
+  "token": "3c54675aa37589ec2808ad436d5d272b",
   "timeout_retry":5,
   "cloud": true,
   "verification": true,
   "whitelist": false,
+  "Monitor": false,
   "server_list": [
     {
       "name": "测试",
-      "address": "10.0.0.150",
+      "address": "127.0.0.1",
       "port": 28887,
       "proxy_port": 30000
     }
