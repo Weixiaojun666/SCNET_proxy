@@ -6,10 +6,12 @@
   "timeout_retry":5,
   "cloud": true,
   "verification": true,
+  "whitelist": false,
+  "Monitor": false,
   "server_list": [
     {
       "name": "测试",
-      "address": "10.0.0.150",
+      "address": "127.0.0.1",
       "port": 28887,
       "proxy_port": 30000
     }

@@ -16,7 +16,7 @@ public class Client {
     private String username;
     private Thread thread;
 
-    private String Weiid;
+    private String Checkid;
 
 
     public Client(DatagramSocket to_server_socket, DatagramSocket to_client_socket, Server server, InetAddress address, int port) {
@@ -25,7 +25,7 @@ public class Client {
         this.server = server;
         this.address = address;
         this.port = port;
-        this.userid="0";
+        this.userid = "0";
     }
 
     public long getTime() {
@@ -80,12 +80,12 @@ public class Client {
         this.username = username;
     }
 
-    public String getWeiid() {
-        return Weiid;
+    public String getCheckid() {
+        return Checkid;
     }
 
-    public void setWeiid(String Weiid) {
-        this.Weiid = Weiid;
+    public void setCheckid(String Checkid) {
+        this.Checkid = Checkid;
     }
 
 }

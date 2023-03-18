@@ -15,7 +15,6 @@ public class Cache extends Thread {
 
     private final Motd motd;
 
-
     public Cache(Motd motd) {
         this.motd = motd;
     }

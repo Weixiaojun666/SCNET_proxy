@@ -8,6 +8,9 @@ import com.weiservers.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Map;
+import java.util.Objects;
+
 import static com.weiservers.Core.HttpClient.HttpClient;
 import static com.weiservers.Core.Tools.disconnect;
 
@@ -19,7 +22,6 @@ public class Check extends Thread {
     private static boolean whitename = false;
     private static String reason = "";
     private static String IP_info = "";
-    private final String checkid = "";
 
     public Check(Client client, String token) {
         Check.client = client;
@@ -47,17 +49,20 @@ public class Check extends Thread {
             String isp = rootNodeIp.at("/ipdata/isp").toString().replace("\"", "");
 
             IP_info = info1;
-            if (info2 != "") IP_info = IP_info + " " + info2;
-            if (info3 != "") IP_info = IP_info + " " + info3;
-            if (isp != "") IP_info = IP_info + " 运营商:" + isp;
+            if (!info2.equals("")) IP_info = IP_info + " " + info2;
+            if (!info3.equals("")) IP_info = IP_info + " " + info3;
+            if (!isp.equals("")) IP_info = IP_info + " 运营商:" + isp;
         } else logger.warn("{} 拉取IP地址信息失败！不影响WeiServer的区域封禁", client.getAddress().toString());
 
         //读取白名单
-        for (Whitelist whitelist : Tools.readWhitelist()) {
-            if ((client.getUserid()).equals(whitelist.id() + "")) {
-                whitename = true;
-                break;
+        try {
+            for (Whitelist whitelist : Objects.requireNonNull(Tools.readWhitelist())) {
+                if ((client.getUserid()).equals(whitelist.id() + "")) {
+                    whitename = true;
+                    break;
+                }
             }
+        } catch (Exception ignored) {
         }
         //开启只限白名单进入
         if ((boolean) Main.getSetting().get("whitelist") && (!whitename)) {
@@ -66,20 +71,18 @@ public class Check extends Thread {
         }
         if ((boolean) Main.getSetting().get("verification")) {
             //连接WeiServers 询问是否可放行
-            String url = "https://api.weiservers.com/scnet/apply/check?userid=" + client.getUserid() + "&username=" + client.getUsername() + "&ip=" + client.getAddress().toString().substring(1);
+            String url = "https://api.weiservers.com/scnet/apply/check?token=" + Main.getSetting().get("token") + "&userid=" + client.getUserid() + "&username=" + client.getUsername() + "&servername=" + client.getServer().name() + "&ip=" + client.getAddress().toString().substring(1);
             JsonNode rootNode = HttpClient(url, false);
             if (rootNode == null) {
                 logger.error("{} 检查失败 无法连接到WeiServers 将默认放行", client.getUsername());
                 return true;
             }
             int code = rootNode.at("/code").intValue();
-            client.setWeiid(rootNode.at("/data/check").toString());
-
-            reason = rootNode.at("/msg").toString();
-
+            client.setCheckid(rootNode.at("/data/check").toString().replace("\"", ""));
+            reason = rootNode.at("/msg").toString().replace("\"", "");
             if (code != 200) {
                 //如果判断失败,就读取白名单判断是否在白名单内
-                reason = rootNode.at("/msg").toString();
+                reason = rootNode.at("/msg").toString().replace("\"", "");
                 if (whitename) {
                     reason = "使用本地白名单跳过检查";
                     return true;
@@ -89,35 +92,35 @@ public class Check extends Thread {
 
         }
 
-        //再判断是否一号多登
-        //判断是否IP多登或者一号多登
-//        try {
-//            int num = 0;
-//            int numuser = 0;
-//            for (Map.Entry<String, Client> client0 : Main.Clients.entrySet()) {
-//                if (client0.getKey().substring(0, client0.getKey().indexOf(":")).equals(client.getAddress().toString())) {
-//                    //同ip 同id的为断线重连 不阻止
-//                    if (!client0.getValue().getUserid().equals(client.getUserid())) num++;
-//                }
-////                if (client0.getValue().getUserid().equals(client.getUserid())) {
-////                    if(!client0.equals("0")) numuser++;
-////                }
-//            }
-//            //if (numuser > (int) Main.getSetting().get("connection_limit")) {
-//            //  reason = "存在一号多登行为";
-//            //disconnect(client);
-//            //Main.info.addAbnormal();
-//            //return false;
-//            //}
-//            if (num > (int) Main.getSetting().get("connection_limit")) {
-//                reason = "连接数超过" + Main.getSetting().get("connection_limit");
-//                disconnect(client);
-//                Main.info.addAbnormal();
-//                return false;
-//            }
-//        } catch (Exception e) {
-//            logger.info("来自{}的连接,检查失败,此次请求检查已临时停止,此次将被默认允许{}", client.getAddress(), e);
-//        }
+        //阻止一号多登或同IP多登
+        try {
+            int num = 0;
+            for (Map.Entry<String, Client> client0 : Main.Clients.entrySet()) {
+
+//                if (client0.getKey().substring(0, client0.getKey().indexOf(":")).equals(client.getAddress().toString()))
+                if (client0.getValue().getAddress().toString().equals(client.getAddress().toString())) {
+                    num++;
+                    //同ip 同id的 连接到同服务器的 为断线重连 不阻止
+                    if (client0.getValue().getUserid().equals(client.getUserid()))
+                        if (client0.getValue().getServer().name().equals(client.getServer().name()))
+                            num--;
+                }
+
+                if (client0.getValue().getUserid().equals(client.getUserid())) {
+                    if (!client0.getValue().getUserid().equals("0")) num++;
+                    if (client0.getValue().getAddress().toString().equals(client.getAddress().toString())) {
+                        if (client0.getValue().getServer().name().equals(client.getServer().name())) num--;
+                    }
+                }
+            }
+            if (num >= (int) Main.getSetting().get("connection_limit")) {
+                reason = "连接数超过" + Main.getSetting().get("connection_limit");
+                disconnect(client);
+                return false;
+            }
+        } catch (Exception e) {
+            logger.info("来自{}的连接,检查失败,此次请求检查已临时停止,此次将被默认允许{}", client.getAddress(), e);
+        }
 
         return true;
     }
@@ -130,8 +133,8 @@ public class Check extends Thread {
             Main.info.getAbnormal_ip().add(client.getAddress());
             Main.info.addAbnormal();
             logger.warn("{} 玩家 [{}] ID [{}] {} 来自 {} {} {}", client.getAddress(), client.getUsername(), client.getUserid(), userstate, IP_info, reason, state);
-        }
-        logger.info("{} 玩家 [{}] ID [{}] {} 来自 {} {} {}", client.getAddress(), client.getUsername(), client.getUserid(), userstate, IP_info, reason, state);
-        Cloud.postlogin(checkid, client.getServer().name(), state, reason);
+        } else
+            logger.info("{} 玩家 [{}] ID [{}] {} 来自 {} {} {}", client.getAddress(), client.getUsername(), client.getUserid(), userstate, IP_info, reason, state);
+        Cloud.postlogin(client.getCheckid(), state, reason);
     }
 }
