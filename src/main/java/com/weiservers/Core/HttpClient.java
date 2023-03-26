@@ -62,7 +62,7 @@ public class HttpClient {
                         if (code.equals("200")) {
                             return rootNode;
                         } else {
-                            logger.warn("服务器返回值不是预期:{} {}", code, msg);
+                            logger.warn("{}返回值不是预期:{} {}",url, code, msg);
                             return null;
                         }
                     } else return rootNode;

@@ -12,8 +12,14 @@
     {
       "name": "测试",
       "address": "127.0.0.1",
-      "port": 28887,
-      "proxy_port": 30000
+      "port": 40600,
+      "proxy_port": 30600
+    },
+    {
+      "name": "联通",
+      "address": "127.0.0.1",
+      "port": 40200,
+      "proxy_port": 30200
     }
   ]
 }
