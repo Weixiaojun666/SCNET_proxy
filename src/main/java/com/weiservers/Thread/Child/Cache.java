@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 
 import java.net.DatagramPacket;
 
-import static com.weiservers.Cloud.Cloud.postmotd;
 import static com.weiservers.Core.Tools.getServerInfo;
 
 public class Cache extends Thread {
@@ -31,7 +30,7 @@ public class Cache extends Thread {
                 motd.setMotd(bytes);
                 motd.setTime(System.currentTimeMillis());
                 getServerInfo(motd);
-                postmotd(motd);
+                //postmotd(motd);
             }
         } catch (Exception e) {
             if (!isInterrupted()) {
