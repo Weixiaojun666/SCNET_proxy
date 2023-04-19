@@ -1,1 +1,0 @@
-java -server -Xmx8196M -Xms1024M -jar SCNET_proxy.jar

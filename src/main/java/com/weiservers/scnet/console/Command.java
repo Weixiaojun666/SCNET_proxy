@@ -1,11 +1,11 @@
 package com.weiservers.scnet.console;
 
+import com.weiservers.scnet.Main;
 import com.weiservers.scnet.base.Client;
 import com.weiservers.scnet.base.Motd;
 import com.weiservers.scnet.base.ServerThread;
-import com.weiservers.scnet.utils.ThreadPool;
-import com.weiservers.scnet.Main;
 import com.weiservers.scnet.thread.Child.Clean;
+import com.weiservers.scnet.utils.ThreadPool;
 
 import java.util.Map;
 
@@ -18,8 +18,6 @@ public class Command extends Thread {
     public Command(String command) {
         this.command = command.trim().toLowerCase();
     }
-
-
 
 
     public void run() {
