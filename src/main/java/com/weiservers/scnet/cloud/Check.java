@@ -65,10 +65,10 @@ public class Check extends Thread {
         } catch (Exception ignored) {
         }
         //开启只限白名单进入
-       // if ((boolean) Main.getSetting().get("whitelist") && (!whitename)) {
+        // if ((boolean) Main.getSetting().get("whitelist") && (!whitename)) {
         //    reason = "服务器只允许本地白名单进入";
         //    return false;
-       // }
+        // }
 //        if ((boolean) Main.getSetting().get("verification")) {
 //            //连接WeiServers 询问是否可放行
 //            String url = "https://api.weiservers.com/scnet/apply/check?token=" + Main.getSetting().get("token") + "&userid=" + client.getUserid() + "&username=" + client.getUsername() + "&servername=" + client.getServer().name() + "&ip=" + client.getAddress().toString().substring(1);

@@ -1,23 +1,23 @@
 package com.weiservers.scnet;
 
-import com.weiservers.scnet.bean.*;
+import com.weiservers.scnet.bean.Client;
+import com.weiservers.scnet.bean.Info;
+import com.weiservers.scnet.bean.Invalid;
+import com.weiservers.scnet.bean.ServerThread;
 import com.weiservers.scnet.config.SpringConfig;
 import com.weiservers.scnet.console.Console;
-import com.weiservers.scnet.thread.Listening;
 import com.weiservers.scnet.thread.TimeTask;
-import com.weiservers.scnet.utils.ConfigLoad;
 import com.weiservers.scnet.utils.ThreadPool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import static com.weiservers.scnet.console.Console.ServerLoad;
 
@@ -32,11 +32,12 @@ public class Main {
 
     public static void main(String[] args) {
         logger.info("加载中...");
-        if (Integer.parseInt(System.getProperty("java.version")) <20) {
+        if (Integer.parseInt(System.getProperty("java.version")) < 20) {
             logger.error("请使用java20以上版本运行");
             System.exit(0);
         }
-        if (Integer.parseInt(System.getProperty("sun.arch.data.model")) !=64) logger.warn("您正在使用32位Java！为保证性能请改用64位java");
+        if (Integer.parseInt(System.getProperty("sun.arch.data.model")) != 64)
+            logger.warn("您正在使用32位Java！为保证性能请改用64位java");
         ApplicationContext ioc = new AnnotationConfigApplicationContext(SpringConfig.class);
         ThreadPool.LoadThreadPool();
         //ConfigLoad();

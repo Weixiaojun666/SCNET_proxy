@@ -58,8 +58,8 @@ public class Command extends Thread {
                 case "reload" -> {
                     System.out.println("========================重载配置文件=========================");
                     stopservice();
-                  //  Main.ConfigLoad();
-                   // Main.ServerLoad(Main.serverlist);
+                    //  Main.ConfigLoad();
+                    // Main.ServerLoad(Main.serverlist);
                     System.out.println("======================================================");
                 }
                 case "cache" -> {

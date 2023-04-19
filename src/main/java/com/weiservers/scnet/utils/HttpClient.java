@@ -2,7 +2,6 @@ package com.weiservers.scnet.utils;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.weiservers.scnet.Main;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.impl.classic.BasicHttpClientResponseHandler;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;

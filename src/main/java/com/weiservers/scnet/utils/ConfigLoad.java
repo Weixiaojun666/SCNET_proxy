@@ -20,9 +20,10 @@ public class ConfigLoad {
     private final static Logger logger = LoggerFactory.getLogger(ConfigLoad.class);
     public static List<Server> serverlist;
     private static Map<String, Object> setting;
+
     static {
         File folder = new File(".//Config");// 输出文件的父目录
-        if (!folder.exists()&& !folder.isDirectory()) {// 父目录不存在时先创建
+        if (!folder.exists() && !folder.isDirectory()) {// 父目录不存在时先创建
             if (folder.mkdirs()) {
                 logger.error("尝试创建配置文件夹失败");
                 System.exit(0);
@@ -48,14 +49,14 @@ public class ConfigLoad {
     }
 
 
-    public static void CheckConfig(String fileName){
+    public static void CheckConfig(String fileName) {
         try {
             File file = new File("./Config/" + fileName);
             if (!file.exists()) {
                 try (InputStream is = Main.class.getResourceAsStream("/Config/" + fileName)) {
-                    if (!file.exists() &&!file.createNewFile() ) {
-                            logger.error("尝试创建配置文件失败：{}", fileName);
-                            System.exit(0);
+                    if (!file.exists() && !file.createNewFile()) {
+                        logger.error("尝试创建配置文件失败：{}", fileName);
+                        System.exit(0);
                     }
                     OutputStream os = new FileOutputStream(file);// 创建输出流
                     int index;
@@ -75,9 +76,10 @@ public class ConfigLoad {
         }
     }
 
-    public static  List<Server>  getServerlist() {
+    public static List<Server> getServerlist() {
         return serverlist;
     }
+
     public static Map<String, Object> getSetting() {
         return setting;
     }

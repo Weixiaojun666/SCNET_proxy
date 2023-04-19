@@ -1,6 +1,5 @@
 package com.weiservers.scnet.cloud;
 
-import com.weiservers.scnet.Main;
 import com.weiservers.scnet.bean.Motd;
 import com.weiservers.scnet.utils.ConfigLoad;
 

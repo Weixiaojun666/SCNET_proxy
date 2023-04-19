@@ -1,6 +1,5 @@
 package com.weiservers.scnet.console;
 
-import com.weiservers.scnet.Main;
 import com.weiservers.scnet.bean.Server;
 import com.weiservers.scnet.thread.Listening;
 import com.weiservers.scnet.utils.ConfigLoad;
@@ -14,12 +13,7 @@ import java.util.Scanner;
 
 public class Console extends Thread {
     private final static Logger logger = LoggerFactory.getLogger(Console.class);
-    public void run() {
-        while (!isInterrupted()) {
-            Scanner scanner = new Scanner(System.in);
-            ThreadPool.execute(new Command(scanner.nextLine()));
-        }
-    }
+
     public static void ServerLoad() {
         List<Server> serverlist = ConfigLoad.getServerlist();
         logger.info("已加载{}个服务器", serverlist.size());
@@ -33,5 +27,12 @@ public class Console extends Thread {
         }
         logger.info("======================================================");
         logger.info("所有服务器监听均已启动");
+    }
+
+    public void run() {
+        while (!isInterrupted()) {
+            Scanner scanner = new Scanner(System.in);
+            ThreadPool.execute(new Command(scanner.nextLine()));
+        }
     }
 }
