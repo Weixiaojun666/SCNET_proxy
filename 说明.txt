@@ -1,6 +1,6 @@
 项目地址 https://github.com/Weixiaojun666/SCNET_proxy 新版本可在此页面获取
 
-本项目基于JDK19
+本项目基于JDK20
 配置文件详解
 
 [setting.json]

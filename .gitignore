@@ -2,4 +2,5 @@
 /out/
 /target/
 /log/
-setting.json
+/config
+

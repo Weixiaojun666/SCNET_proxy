@@ -20,7 +20,7 @@ public class Tools {
     public static List<Whitelist> readWhitelist() {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode rootNode = objectMapper.readTree(new File("./whitelist.json"));
+            JsonNode rootNode = objectMapper.readTree(new File("Config/whitelist.json"));
             List<Whitelist> whitelists = objectMapper.readValue(rootNode.toString(), new TypeReference<>() {
             });
             return whitelists;
@@ -55,7 +55,7 @@ public class Tools {
         try {
             String info = bytesToHexString(motd.getMotd());
             int length = info.length();
-            String model = "未知";
+            String model;
             switch (info.substring(length - 14, length - 12)) {
                 case "00" -> model = "创造";
                 case "01" -> model = "无害";

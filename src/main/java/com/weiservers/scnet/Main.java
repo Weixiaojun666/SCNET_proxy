@@ -32,7 +32,7 @@ public class Main {
     public static void ConfigLoad() {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode rootNode = objectMapper.readTree(new File("./setting.json"));
+            JsonNode rootNode = objectMapper.readTree(new File("Config/setting.json"));
             setting = objectMapper.readValue(rootNode.toString(), new TypeReference<>() {
             });
             serverlist = objectMapper.readValue(rootNode.get("server_list").toString(), new TypeReference<>() {
@@ -50,7 +50,7 @@ public class Main {
         int num = 0;
         for (Server server : serverlist) {
             num++;
-            logger.info(String.format("%-12s %-18s %-18s %-12s %-12s", num + "", server.name(), server.address(), server.port() + "", server.proxy_port() + ""));
+            logger.info(String.format("%-12s %-18s %-18s %-12s %-12s", String.valueOf(num), server.name(), server.address(), String.valueOf(server.port()), server.proxy_port() + ""));
             ThreadPool.execute(new Listening(server));
         }
         logger.info("======================================================");
