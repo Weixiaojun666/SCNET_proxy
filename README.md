@@ -47,7 +47,7 @@ WeiSCNET_proxy
 ## 运行
 
 ~~~
-将example_setting.json重命名为setting.json
+首先启动一次插件,会自动生成配置文件,按照说明修改配置文件
 ~~~
 
 ~~~

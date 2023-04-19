@@ -1,6 +1,6 @@
 package com.weiservers.scnet.thread.Child;
 
-import com.weiservers.scnet.base.Client;
+import com.weiservers.scnet.bean.Client;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

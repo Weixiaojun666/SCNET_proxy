@@ -1,4 +1,4 @@
-package com.weiservers.scnet.base;
+package com.weiservers.scnet.bean;
 
 public class Invalid {
     private final long create_time;

@@ -1,8 +1,9 @@
 package com.weiservers.scnet.thread.Child;
 
 import com.weiservers.scnet.Main;
-import com.weiservers.scnet.base.Motd;
-import com.weiservers.scnet.base.Server;
+import com.weiservers.scnet.bean.Motd;
+import com.weiservers.scnet.bean.Server;
+import com.weiservers.scnet.utils.ConfigLoad;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +32,7 @@ public class ReceiveCache extends Thread {
 
     public void run() {
         try {
-            if ((motd.getTime() + (int) Main.getSetting().get("cache_time") * 1000L) < System.currentTimeMillis()) {
+            if ((motd.getTime() + (int) ConfigLoad.getSetting().get("cache_time") * 1000L) < System.currentTimeMillis()) {
                 //刷新缓存
                 ReloadCache(motd, server);
             }

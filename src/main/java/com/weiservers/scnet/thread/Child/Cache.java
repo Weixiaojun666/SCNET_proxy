@@ -1,6 +1,6 @@
 package com.weiservers.scnet.thread.Child;
 
-import com.weiservers.scnet.base.Motd;
+import com.weiservers.scnet.bean.Motd;
 import com.weiservers.scnet.utils.ThreadPool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

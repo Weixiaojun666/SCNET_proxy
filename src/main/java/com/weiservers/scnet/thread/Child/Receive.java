@@ -1,9 +1,9 @@
 package com.weiservers.scnet.thread.Child;
 
 import com.weiservers.scnet.Main;
-import com.weiservers.scnet.base.Client;
-import com.weiservers.scnet.base.Motd;
-import com.weiservers.scnet.base.Server;
+import com.weiservers.scnet.bean.Client;
+import com.weiservers.scnet.bean.Motd;
+import com.weiservers.scnet.bean.Server;
 import com.weiservers.scnet.cloud.Check;
 import com.weiservers.scnet.utils.ThreadPool;
 import org.slf4j.Logger;

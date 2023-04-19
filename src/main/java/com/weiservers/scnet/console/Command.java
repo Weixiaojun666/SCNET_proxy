@@ -1,9 +1,9 @@
 package com.weiservers.scnet.console;
 
 import com.weiservers.scnet.Main;
-import com.weiservers.scnet.base.Client;
-import com.weiservers.scnet.base.Motd;
-import com.weiservers.scnet.base.ServerThread;
+import com.weiservers.scnet.bean.Client;
+import com.weiservers.scnet.bean.Motd;
+import com.weiservers.scnet.bean.ServerThread;
 import com.weiservers.scnet.thread.Child.Clean;
 import com.weiservers.scnet.utils.ThreadPool;
 
@@ -58,8 +58,8 @@ public class Command extends Thread {
                 case "reload" -> {
                     System.out.println("========================重载配置文件=========================");
                     stopservice();
-                    Main.ConfigLoad();
-                    Main.ServerLoad(Main.serverlist);
+                  //  Main.ConfigLoad();
+                   // Main.ServerLoad(Main.serverlist);
                     System.out.println("======================================================");
                 }
                 case "cache" -> {

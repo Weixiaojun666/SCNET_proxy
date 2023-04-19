@@ -2,8 +2,8 @@ package com.weiservers.scnet.cloud;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.weiservers.scnet.Main;
-import com.weiservers.scnet.base.Client;
-import com.weiservers.scnet.base.Whitelist;
+import com.weiservers.scnet.bean.Client;
+import com.weiservers.scnet.bean.Whitelist;
 import com.weiservers.scnet.utils.Tools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,32 +65,32 @@ public class Check extends Thread {
         } catch (Exception ignored) {
         }
         //开启只限白名单进入
-        if ((boolean) Main.getSetting().get("whitelist") && (!whitename)) {
-            reason = "服务器只允许本地白名单进入";
-            return false;
-        }
-        if ((boolean) Main.getSetting().get("verification")) {
-            //连接WeiServers 询问是否可放行
-            String url = "https://api.weiservers.com/scnet/apply/check?token=" + Main.getSetting().get("token") + "&userid=" + client.getUserid() + "&username=" + client.getUsername() + "&servername=" + client.getServer().name() + "&ip=" + client.getAddress().toString().substring(1);
-            JsonNode rootNode = HttpClient(url, false);
-            if (rootNode == null) {
-                logger.error("{} 检查失败 无法连接到WeiServers 将默认放行", client.getUsername());
-                return true;
-            }
-            int code = rootNode.at("/code").intValue();
-            client.setCheckid(rootNode.at("/data/check").toString().replace("\"", ""));
-            reason = rootNode.at("/msg").toString().replace("\"", "");
-            if (code != 200) {
-                //如果判断失败,就读取白名单判断是否在白名单内
-                reason = rootNode.at("/msg").toString().replace("\"", "");
-                if (whitename) {
-                    reason = "使用本地白名单跳过检查";
-                    return true;
-                }
-                return false;
-            }
-
-        }
+       // if ((boolean) Main.getSetting().get("whitelist") && (!whitename)) {
+        //    reason = "服务器只允许本地白名单进入";
+        //    return false;
+       // }
+//        if ((boolean) Main.getSetting().get("verification")) {
+//            //连接WeiServers 询问是否可放行
+//            String url = "https://api.weiservers.com/scnet/apply/check?token=" + Main.getSetting().get("token") + "&userid=" + client.getUserid() + "&username=" + client.getUsername() + "&servername=" + client.getServer().name() + "&ip=" + client.getAddress().toString().substring(1);
+//            JsonNode rootNode = HttpClient(url, false);
+//            if (rootNode == null) {
+//                logger.error("{} 检查失败 无法连接到WeiServers 将默认放行", client.getUsername());
+//                return true;
+//            }
+//            int code = rootNode.at("/code").intValue();
+//            client.setCheckid(rootNode.at("/data/check").toString().replace("\"", ""));
+//            reason = rootNode.at("/msg").toString().replace("\"", "");
+//            if (code != 200) {
+//                //如果判断失败,就读取白名单判断是否在白名单内
+//                reason = rootNode.at("/msg").toString().replace("\"", "");
+//                if (whitename) {
+//                    reason = "使用本地白名单跳过检查";
+//                    return true;
+//                }
+//                return false;
+//            }
+//
+//        }
 
         //阻止一号多登或同IP多登
         try {
@@ -113,11 +113,11 @@ public class Check extends Thread {
                     }
                 }
             }
-            if (num >= (int) Main.getSetting().get("connection_limit")) {
-                reason = "连接数超过" + Main.getSetting().get("connection_limit");
-                disconnect(client);
-                return false;
-            }
+//            if (num >= (int) Main.getSetting().get("connection_limit")) {
+//                reason = "连接数超过" + Main.getSetting().get("connection_limit");
+//                disconnect(client);
+//                return false;
+//            }
         } catch (Exception e) {
             logger.info("来自{}的连接,检查失败,此次请求检查已临时停止,此次将被默认允许{}", client.getAddress(), e);
         }

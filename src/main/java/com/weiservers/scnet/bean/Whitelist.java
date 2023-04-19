@@ -1,4 +1,4 @@
-package com.weiservers.scnet.base;
+package com.weiservers.scnet.bean;
 
 public record Whitelist(int id, String name) {
 }

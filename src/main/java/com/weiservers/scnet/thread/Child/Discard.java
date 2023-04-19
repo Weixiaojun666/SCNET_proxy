@@ -1,7 +1,7 @@
 package com.weiservers.scnet.thread.Child;
 
 import com.weiservers.scnet.Main;
-import com.weiservers.scnet.base.Invalid;
+import com.weiservers.scnet.bean.Invalid;
 
 import java.net.InetAddress;
 

@@ -45,7 +45,7 @@ public class HttpClient {
         int num = 0;
         while (true) {
             num++;
-            if (num > (int) Main.getSetting().get("timeout_retry")) {
+            if (num > (int) ConfigLoad.getSetting().get("timeout_retry")) {
                 return null;
             }
             try (httpClient) {

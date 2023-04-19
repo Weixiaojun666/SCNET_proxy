@@ -1,4 +1,4 @@
-package com.weiservers.scnet.base;
+package com.weiservers.scnet.bean;
 
 import java.net.DatagramSocket;
 import java.net.InetAddress;

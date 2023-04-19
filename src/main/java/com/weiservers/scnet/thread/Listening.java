@@ -1,9 +1,9 @@
 package com.weiservers.scnet.thread;
 
 import com.weiservers.scnet.Main;
-import com.weiservers.scnet.base.Motd;
-import com.weiservers.scnet.base.Server;
-import com.weiservers.scnet.base.ServerThread;
+import com.weiservers.scnet.bean.Motd;
+import com.weiservers.scnet.bean.Server;
+import com.weiservers.scnet.bean.ServerThread;
 import com.weiservers.scnet.thread.Child.Cache;
 import com.weiservers.scnet.thread.Child.Receive;
 import com.weiservers.scnet.utils.ThreadPool;
