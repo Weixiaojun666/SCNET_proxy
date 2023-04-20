@@ -34,7 +34,7 @@ public class Cache extends Thread {
             }
         } catch (Exception e) {
             if (!isInterrupted()) {
-                logger.error("尝试刷新缓存时出现错误 在端口{} : {}", motd.getSocket().getPort(), e);
+                logger.error("尝试刷新缓存时出现错误 在端口{} : ", motd.getSocket().getPort(), e);
                 logger.error("=========================================");
                 logger.error("已尝试自动重启");
                 if (!motd.getSocket().isClosed()) motd.getSocket().close();

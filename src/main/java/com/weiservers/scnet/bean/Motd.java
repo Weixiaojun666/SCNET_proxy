@@ -1,7 +1,9 @@
 package com.weiservers.scnet.bean;
 
-import java.net.DatagramSocket;
+import lombok.Data;
 
+import java.net.DatagramSocket;
+@Data
 public class Motd {
     private final DatagramSocket socket;
     private final String servername;
@@ -26,54 +28,6 @@ public class Motd {
         this.onlineplayer = onlineplayer;
         this.maxplayer = maxplayer;
         this.version = version;
-    }
-
-    public byte[] getMotd() {
-        return motd;
-    }
-
-    public void setMotd(byte[] motd) {
-        this.motd = motd;
-    }
-
-    public long getTime() {
-        return time;
-    }
-
-    public void setTime(long time) {
-        this.time = time;
-    }
-
-    public DatagramSocket getSocket() {
-        return socket;
-    }
-
-    public Thread getThread() {
-        return thread;
-    }
-
-    public void setThread(Thread thread) {
-        this.thread = thread;
-    }
-
-    public int getMaxplayer() {
-        return maxplayer;
-    }
-
-    public int getOnlineplayer() {
-        return onlineplayer;
-    }
-
-    public String getModel() {
-        return model;
-    }
-
-    public String getVersion() {
-        return version;
-    }
-
-    public String getServername() {
-        return servername;
     }
 
 }

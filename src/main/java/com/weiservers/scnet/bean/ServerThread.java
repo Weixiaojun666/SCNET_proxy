@@ -1,7 +1,10 @@
 package com.weiservers.scnet.bean;
 
-import java.net.DatagramSocket;
+import com.weiservers.scnet.bean.record.Server;
+import lombok.Getter;
 
+import java.net.DatagramSocket;
+@Getter
 public class ServerThread {
 
     private final Thread thread;
@@ -16,19 +19,4 @@ public class ServerThread {
         this.server = server;
     }
 
-    public DatagramSocket getDatagramSocket() {
-        return datagramSocket;
-    }
-
-    public Thread getThread() {
-        return thread;
-    }
-
-    public Motd getMotd() {
-        return motd;
-    }
-
-    public Server getServer() {
-        return server;
-    }
 }

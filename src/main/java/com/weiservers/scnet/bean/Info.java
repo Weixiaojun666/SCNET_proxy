@@ -1,8 +1,12 @@
 package com.weiservers.scnet.bean;
 
+import lombok.Data;
+import org.springframework.stereotype.Component;
+
 import java.net.InetAddress;
 import java.util.HashSet;
-
+//@Component
+@Data
 public class Info {
     //正常ip列表
     private final HashSet<InetAddress> normal_ip = new HashSet<>();

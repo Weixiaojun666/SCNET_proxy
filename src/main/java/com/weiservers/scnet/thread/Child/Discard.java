@@ -15,7 +15,7 @@ public class Discard extends Thread {
     public void run() {
         Main.info.addInvalid();
         if (!Main.Invalids.containsKey(ClientAddress)) {
-            Invalid invalid = new Invalid(System.currentTimeMillis());
+            Invalid invalid = new Invalid();
             Main.Invalids.put(ClientAddress, invalid);
         } else {
             Invalid invalid = Main.Invalids.get(ClientAddress);

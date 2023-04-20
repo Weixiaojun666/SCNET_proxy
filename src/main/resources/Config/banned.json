@@ -1,0 +1,26 @@
+{
+  "banned-areas": [{
+    "userid": 0,
+    "ip": "0.0.0.0",
+    "info1": "xx省",
+    "info2": "xx市",
+    "info3": "xx区",
+    "isp": "联通",
+    "created": "2022-01-01 22:00:00",
+    "expires": "forever",
+    "reason": ""
+  }],
+  "banned-ips": [{
+    "ip": "0.0.0.0",
+    "userid": "",
+    "created": "2022-01-01 22:00:00",
+    "expires": "forever",
+    "reason": ""
+  }],
+  "banned-playes": [  {
+    "userid": "",
+    "created": "2022-01-01 22:00:00",
+    "expires": "forever",
+    "reason": ""
+  }]
+}

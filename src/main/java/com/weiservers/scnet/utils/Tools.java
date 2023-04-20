@@ -1,34 +1,18 @@
 package com.weiservers.scnet.utils;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.weiservers.scnet.Main;
 import com.weiservers.scnet.bean.*;
+import com.weiservers.scnet.bean.record.Server;
 import com.weiservers.scnet.cloud.Cloud;
 import com.weiservers.scnet.thread.Child.Clean;
 
-import java.io.File;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 import java.util.Map;
 
 
 public class Tools {
-    public static List<Whitelist> readWhitelist() {
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode rootNode = objectMapper.readTree(new File("Config/whitelist.json"));
-            List<Whitelist> whitelists = objectMapper.readValue(rootNode.toString(), new TypeReference<>() {
-            });
-            return whitelists;
-        } catch (Exception e) {
-
-        }
-        return null;
-    }
 
     public static String hexStringToString(String s) {
         if (s == null || s.equals("")) {

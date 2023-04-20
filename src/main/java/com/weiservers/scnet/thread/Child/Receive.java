@@ -3,7 +3,7 @@ package com.weiservers.scnet.thread.Child;
 import com.weiservers.scnet.Main;
 import com.weiservers.scnet.bean.Client;
 import com.weiservers.scnet.bean.Motd;
-import com.weiservers.scnet.bean.Server;
+import com.weiservers.scnet.bean.record.Server;
 import com.weiservers.scnet.cloud.Check;
 import com.weiservers.scnet.utils.ThreadPool;
 import org.slf4j.Logger;
@@ -65,7 +65,7 @@ public class Receive extends Thread {
                 ThreadPool.execute(new ReceiveClient(packet, client));
             }
         } catch (Exception e) {
-            logger.error("处理时来自  {}  {} 的数据包发生错误 {}", ClientAddress, ClientPort, e);
+            logger.error("处理时来自  {}  {} 的数据包发生错误", ClientAddress, ClientPort, e);
         }
     }
 }

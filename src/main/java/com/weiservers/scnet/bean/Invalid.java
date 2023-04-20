@@ -1,5 +1,12 @@
 package com.weiservers.scnet.bean;
 
+import lombok.Data;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+@Component
+@Scope("prototype")
+@Data
 public class Invalid {
     private final long create_time;
     private int num;
@@ -7,7 +14,8 @@ public class Invalid {
 
     private long check_time;
 
-    public Invalid(long create_time) {
+    public Invalid() {
+        long create_time=System.currentTimeMillis();
         this.create_time = create_time;
         this.update_time = create_time;
         this.check_time = create_time;
@@ -16,29 +24,5 @@ public class Invalid {
 
     public void addNum() {
         this.num += 1;
-    }
-
-    public int getNum() {
-        return num;
-    }
-
-    public long getCreate_time() {
-        return create_time;
-    }
-
-    public long getUpdate_time() {
-        return update_time;
-    }
-
-    public void setUpdate_time(long update_time) {
-        this.update_time = update_time;
-    }
-
-    public long getCheck_time() {
-        return check_time;
-    }
-
-    public void setCheck_time(long check_time) {
-        this.check_time = check_time;
     }
 }

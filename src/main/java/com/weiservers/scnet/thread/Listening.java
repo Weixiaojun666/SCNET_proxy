@@ -2,7 +2,7 @@ package com.weiservers.scnet.thread;
 
 import com.weiservers.scnet.Main;
 import com.weiservers.scnet.bean.Motd;
-import com.weiservers.scnet.bean.Server;
+import com.weiservers.scnet.bean.record.Server;
 import com.weiservers.scnet.bean.ServerThread;
 import com.weiservers.scnet.thread.Child.Cache;
 import com.weiservers.scnet.thread.Child.Receive;
@@ -39,7 +39,7 @@ public class Listening extends Thread {
             }
         } catch (IOException e) {
             if (!isInterrupted()) {
-                logger.error("无法继续建立监听在端口{} : {}", this.server.proxy_port(), e);
+                logger.error("无法继续建立监听在端口{} : ", this.server.proxy_port(), e);
                 logger.error("=========================================");
                 logger.error("已尝试自动重启");
                 if (!to_client_socket.isClosed()) to_client_socket.close();

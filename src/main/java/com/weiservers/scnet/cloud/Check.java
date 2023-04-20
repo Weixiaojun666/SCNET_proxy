@@ -3,8 +3,8 @@ package com.weiservers.scnet.cloud;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.weiservers.scnet.Main;
 import com.weiservers.scnet.bean.Client;
-import com.weiservers.scnet.bean.Whitelist;
-import com.weiservers.scnet.utils.Tools;
+import com.weiservers.scnet.bean.record.Whitelist;
+import com.weiservers.scnet.utils.ConfigLoad;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,8 +56,8 @@ public class Check extends Thread {
 
         //读取白名单
         try {
-            for (Whitelist whitelist : Objects.requireNonNull(Tools.readWhitelist())) {
-                if ((client.getUserid()).equals(whitelist.id() + "")) {
+            for (Whitelist whitelist : Objects.requireNonNull(ConfigLoad.readWhitelist())) {
+                if ((client.getUserid()).equals(String.valueOf(whitelist.userid()))) {
                     whitename = true;
                     break;
                 }
@@ -119,7 +119,7 @@ public class Check extends Thread {
 //                return false;
 //            }
         } catch (Exception e) {
-            logger.info("来自{}的连接,检查失败,此次请求检查已临时停止,此次将被默认允许{}", client.getAddress(), e);
+            logger.info("来自{}的连接,检查失败,此次请求检查已临时停止,此次将被默认允许", client.getAddress(), e);
         }
 
         return true;

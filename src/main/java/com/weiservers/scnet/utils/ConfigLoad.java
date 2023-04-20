@@ -4,8 +4,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.weiservers.scnet.Main;
-import com.weiservers.scnet.bean.Server;
-import com.weiservers.scnet.bean.Whitelist;
+import com.weiservers.scnet.bean.record.Server;
+import com.weiservers.scnet.bean.record.Whitelist;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,7 +21,7 @@ public class ConfigLoad {
     public static List<Server> serverlist;
     private static Map<String, Object> setting;
 
-    static {
+    public static void Load(){
         File folder = new File(".//Config");// 输出文件的父目录
         if (!folder.exists() && !folder.isDirectory()) {// 父目录不存在时先创建
             if (folder.mkdirs()) {
@@ -29,9 +29,7 @@ public class ConfigLoad {
                 System.exit(0);
             }
         }
-        CheckConfig("banned-areas.json");
-        CheckConfig("banned-ips.json");
-        CheckConfig("banned-players.json");
+        CheckConfig("banned.json");
         CheckConfig("players-choose.json");
         CheckConfig("setting.json");
         CheckConfig("whitelist.json");
@@ -48,7 +46,6 @@ public class ConfigLoad {
         }
     }
 
-
     public static void CheckConfig(String fileName) {
         try {
             File file = new File("./Config/" + fileName);
@@ -60,7 +57,7 @@ public class ConfigLoad {
                     }
                     OutputStream os = new FileOutputStream(file);// 创建输出流
                     int index;
-                    byte[] bytes = new byte[4096];
+                    byte[] bytes = new byte[1024];
                     if (is != null) {
                         while ((index = is.read(bytes)) != -1) {
                             os.write(bytes, 0, index);
@@ -88,10 +85,9 @@ public class ConfigLoad {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode rootNode = objectMapper.readTree(new File("Config/whitelist.json"));
-            List<Whitelist> whitelists = objectMapper.readValue(rootNode.toString(), new TypeReference<>() {
+            return objectMapper.readValue(rootNode.toString(), new TypeReference<>() {
             });
-            return whitelists;
-        } catch (Exception e) {
+        } catch (Exception ignored) {
 
         }
         return null;

@@ -1,4 +1,4 @@
-package com.weiservers.scnet.console;
+package com.weiservers.scnet.thread.Child;
 
 import com.weiservers.scnet.Main;
 import com.weiservers.scnet.bean.Client;

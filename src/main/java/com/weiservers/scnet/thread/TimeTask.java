@@ -10,7 +10,6 @@ public class TimeTask extends Thread {
             if ((time + 3000L) < System.currentTimeMillis()) {
                 //回收垃圾
                 ThreadPool.execute(new Clean());
-
                 time = System.currentTimeMillis();
             }
         }
