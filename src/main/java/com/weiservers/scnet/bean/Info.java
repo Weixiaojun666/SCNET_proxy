@@ -1,7 +1,6 @@
 package com.weiservers.scnet.bean;
 
 import lombok.Data;
-import org.springframework.stereotype.Component;
 
 import java.net.InetAddress;
 import java.util.HashSet;
@@ -28,37 +27,6 @@ public class Info {
         this.time = time;
     }
 
-    public HashSet<InetAddress> getNormal_ip() {
-        return normal_ip;
-    }
-
-    public HashSet<InetAddress> getAbnormal_ip() {
-        return abnormal_ip;
-    }
-
-    public int getRespond() {
-        return respond;
-    }
-
-    public int getRefresh() {
-        return refresh;
-    }
-
-    public int getAbnormal() {
-        return abnormal;
-    }
-
-    public int getInvalid() {
-        return invalid;
-    }
-
-    public int getNormal() {
-        return normal;
-    }
-
-    public long getTime() {
-        return time;
-    }
 
     public void addInvalid() {
         invalid++;

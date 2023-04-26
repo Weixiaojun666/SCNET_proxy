@@ -1,8 +1,10 @@
 package com.weiservers.scnet;
 
-import com.weiservers.scnet.bean.*;
+import com.weiservers.scnet.bean.Client;
+import com.weiservers.scnet.bean.Info;
+import com.weiservers.scnet.bean.Invalid;
+import com.weiservers.scnet.bean.ServerThread;
 import com.weiservers.scnet.bean.record.Server;
-import com.weiservers.scnet.config.SpringConfig;
 import com.weiservers.scnet.thread.Console;
 import com.weiservers.scnet.thread.Listening;
 import com.weiservers.scnet.thread.TimeTask;
@@ -10,8 +12,6 @@ import com.weiservers.scnet.utils.ConfigLoad;
 import com.weiservers.scnet.utils.ThreadPool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.net.InetAddress;
 import java.util.ArrayList;
@@ -28,7 +28,6 @@ public class Main {
     private final static Logger logger = LoggerFactory.getLogger(Main.class);
     public static List<ServerThread> serverThreads = new ArrayList<>();
 
-    public static ApplicationContext ioc= new AnnotationConfigApplicationContext(SpringConfig.class);
     public static void ServersLoad() {
         List<Server> serverlist = ConfigLoad.getServerlist();
         logger.info("已加载{}个服务器", serverlist.size());
@@ -58,8 +57,4 @@ public class Main {
         ThreadPool.execute(new TimeTask());
         ServersLoad();
     }
-
-
-
-
 }

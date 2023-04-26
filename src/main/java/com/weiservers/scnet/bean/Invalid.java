@@ -1,11 +1,8 @@
 package com.weiservers.scnet.bean;
 
 import lombok.Data;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
-@Component
-@Scope("prototype")
+
 @Data
 public class Invalid {
     private final long create_time;

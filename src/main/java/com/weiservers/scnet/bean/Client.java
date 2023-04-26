@@ -9,7 +9,6 @@ import java.net.InetAddress;
 public class  Client {
 
     private final DatagramSocket to_server_socket;
-
     private final DatagramSocket to_client_socket;
     private final Server server;
     private final InetAddress address;

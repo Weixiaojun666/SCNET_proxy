@@ -4,7 +4,6 @@ import com.weiservers.scnet.Main;
 import com.weiservers.scnet.bean.Client;
 import com.weiservers.scnet.bean.Motd;
 import com.weiservers.scnet.bean.ServerThread;
-import com.weiservers.scnet.thread.Child.Clean;
 import com.weiservers.scnet.utils.ThreadPool;
 
 import java.util.Map;
@@ -22,10 +21,7 @@ public class Command extends Thread {
 
     public void run() {
         try {
-
-
             String[] commands = command.split("\\s+");
-
             String command2 = "";
             String command3 = "";
             if (commands.length > 1) {

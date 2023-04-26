@@ -18,5 +18,4 @@ public class ServerThread {
         this.motd = motd;
         this.server = server;
     }
-
 }
