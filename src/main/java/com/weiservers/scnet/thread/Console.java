@@ -1,6 +1,6 @@
 package com.weiservers.scnet.thread;
 
-import com.weiservers.scnet.thread.Child.Command;
+import com.weiservers.scnet.thread.child.Command;
 import com.weiservers.scnet.utils.ThreadPool;
 
 import java.util.Scanner;

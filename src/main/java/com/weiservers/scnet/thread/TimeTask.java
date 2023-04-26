@@ -1,6 +1,6 @@
 package com.weiservers.scnet.thread;
 
-import com.weiservers.scnet.thread.Child.Clean;
+import com.weiservers.scnet.thread.child.Clean;
 import com.weiservers.scnet.utils.ThreadPool;
 
 public class TimeTask extends Thread {

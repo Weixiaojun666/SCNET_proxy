@@ -1,4 +1,4 @@
-package com.weiservers.scnet.thread.Child;
+package com.weiservers.scnet.thread.child;
 
 import com.weiservers.scnet.Main;
 import com.weiservers.scnet.bean.Client;
@@ -26,7 +26,8 @@ public class Clean extends Thread {
             Iterator<Map.Entry<String, Client>> it = Main.Clients.entrySet().iterator();
             while (it.hasNext()) {
                 Map.Entry<String, Client> client = it.next();
-                if ((client.getValue().getTime() + (int) ConfigLoad.getSetting().get("time_out") * 1000L) < System.currentTimeMillis()) {
+
+                if ((client.getValue().getTime() + ConfigLoad.getSetting().base().time_out() * 1000L) < System.currentTimeMillis()) {
                     logger.info("[断开连接]   {} {}", client.getKey(), client.getValue().getUsername());
                     if (!client.getValue().getThread().isAlive()) client.getValue().getThread().interrupt();
                     if (!client.getValue().getTo_server_socket().isClosed())

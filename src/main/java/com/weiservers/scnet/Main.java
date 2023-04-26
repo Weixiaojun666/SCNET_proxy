@@ -29,7 +29,10 @@ public class Main {
     public static List<ServerThread> serverThreads = new ArrayList<>();
 
     public static void ServersLoad() {
-        List<Server> serverlist = ConfigLoad.getServerlist();
+
+
+        List<Server> serverlist = ConfigLoad.getSetting().server_list().server_list();
+
         logger.info("已加载{}个服务器", serverlist.size());
         logger.info("======================================================");
         logger.info(String.format("%-8s %-18s %-12s %-8s %-8s", "序号", "服务器名称", "服务器地址", "服务器端口", "转发端口"));
@@ -41,9 +44,13 @@ public class Main {
         }
         logger.info("======================================================");
         logger.info("所有服务器监听均已启动");
+        logger.info("======================================================");
+
+
     }
 
     public static void main(String[] args) {
+
         logger.info("加载中...");
         if (Integer.parseInt(System.getProperty("java.version")) < 20) {
             logger.error("请使用java20以上版本运行");
@@ -53,6 +60,7 @@ public class Main {
             logger.warn("您正在使用32位Java！为保证性能请改用64位java");
         ThreadPool.LoadThreadPool();
         ConfigLoad.Load();
+
         ThreadPool.execute(new Console());
         ThreadPool.execute(new TimeTask());
         ServersLoad();

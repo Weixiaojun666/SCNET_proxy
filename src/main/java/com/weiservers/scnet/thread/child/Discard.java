@@ -1,4 +1,4 @@
-package com.weiservers.scnet.thread.Child;
+package com.weiservers.scnet.thread.child;
 
 import com.weiservers.scnet.Main;
 import com.weiservers.scnet.bean.Invalid;

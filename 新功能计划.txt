@@ -31,23 +31,16 @@
             reload banned 重载本地banned配置文件
             reload whitelist 重载本地whitelist配置文件
 
-2. 添加服务器自我维护线上白名单   [服务器自注册]
-        添加 【功能】
-            从WeiSCNET平台获取本服务器线上白名单信息
 
-3.允许玩家选择进入服务器【添加玩家进服列表】 添加端口聚合功能
+2.允许玩家选择进入服务器【添加玩家进服列表】 添加端口聚合功能
     添加 【配置文件】
         player-choose.json
     添加指令
-
     choose change [userid] [server-id]更改玩家某玩家进入的服务器
     choose default [server-id] 设置默认进入服务器[所有玩家]
 
     list choose 查看玩家选择服务器信息
     reload choose 重载choose配置文件
-
-
-
 
 4.修复玩家进服日志记录功能 优化进服检查流程
         修复日志记录失败功能
@@ -61,10 +54,8 @@
         5.只允许白名单进入
     WeiSCNET云服务功能:
         1.token
-        2.开启 验证和线上白名单
-        3.连接云服务平台超时重试次数0
-            aggregation:true
-
+        2.开启 验证
+        3.连接云服务平台超时重试
     服务器信息:
         {
         "id": [自己规定一个id 启用云服务后可以用来下方指令和查看统计, ,重复必出BUG]

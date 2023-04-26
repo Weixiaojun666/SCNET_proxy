@@ -2,10 +2,10 @@ package com.weiservers.scnet.thread;
 
 import com.weiservers.scnet.Main;
 import com.weiservers.scnet.bean.Motd;
-import com.weiservers.scnet.bean.record.Server;
 import com.weiservers.scnet.bean.ServerThread;
-import com.weiservers.scnet.thread.Child.Cache;
-import com.weiservers.scnet.thread.Child.Receive;
+import com.weiservers.scnet.bean.record.Server;
+import com.weiservers.scnet.thread.child.Cache;
+import com.weiservers.scnet.thread.child.Receive;
 import com.weiservers.scnet.utils.ThreadPool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +26,8 @@ public class Listening extends Thread {
 
     public void run() {
         try {
+            //端口为-1不启用转发
+            if (this.server.proxy_port() <= 0) return;
             to_client_socket = new DatagramSocket(this.server.proxy_port());
             motd = new Motd(new DatagramSocket(0), server.name());
             motd.setTime(0);
@@ -35,6 +37,7 @@ public class Listening extends Thread {
                 byte[] buf = new byte[1024];
                 DatagramPacket packet = new DatagramPacket(buf, buf.length);  //创建DatagramPacket对象
                 to_client_socket.receive(packet);
+
                 ThreadPool.execute(new Receive(packet, to_client_socket, server, motd));
             }
         } catch (IOException e) {
