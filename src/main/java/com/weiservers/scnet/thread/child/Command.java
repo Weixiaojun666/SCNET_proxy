@@ -4,11 +4,11 @@ import com.weiservers.scnet.Main;
 import com.weiservers.scnet.bean.Client;
 import com.weiservers.scnet.bean.Motd;
 import com.weiservers.scnet.bean.ServerThread;
-import com.weiservers.scnet.utils.ThreadPool;
 
 import java.util.Map;
 
-import static com.weiservers.scnet.utils.Tools.*;
+import static com.weiservers.scnet.utils.Command.*;
+import static com.weiservers.scnet.utils.Tools.getDatePoor;
 
 public class Command extends Thread {
     private final String command;
@@ -18,122 +18,233 @@ public class Command extends Thread {
         this.command = command.trim().toLowerCase();
     }
 
+    public void hint() {
+        hint(true);
+    }
+
+    public void hint_error(String error, String command) {
+        System.out.printf("\u001B[31m执行命令时出错: %s%n：\u001B[0m\u001B[33m%s%n\u001B[0m", error, command);
+    }
+
+    public void hint(Boolean options) {
+        if (options) {
+            System.out.println("======================================================");
+        } else {
+            System.out.println("------------------------------------------------------");
+        }
+    }
+
+    public void hint(String title) {
+        System.out.printf("========================%s%n=========================", title);
+    }
+
+    public void hint(String command, String hint) {
+        System.out.printf("\u001B[33m%-36s \u001B[32m%s\u001B[0m%n", command, hint);
+    }
 
     public void run() {
         try {
             String[] commands = command.split("\\s+");
+
             String command2 = "";
             String command3 = "";
+            String command4 = "";
+            String command5= "";
             if (commands.length > 1) {
                 command2 = commands[1];
             }
             if (commands.length > 2) {
                 command3 = commands[2];
             }
+            if (commands.length > 3) {
+                command4 = commands[3];
+            }
+            if (commands.length > 4) {
+                command5 = commands[4];
+            }
+            if (commands.length > 5) {
+                command5 = commands[6];
+            }
             switch (commands[0]) {
                 case "" -> {
                 }
                 case "help" -> {
-                    System.out.println("========================帮助列表=========================");
-                    System.out.printf("\u001B[33m%-36s \u001B[32m%s\u001B[0m%n", "list", "查看当前在线用户");
-                    System.out.printf("\u001B[33m%-36s \u001B[32m%s\u001B[0m%n", "clean", "立即回收垃圾");
-                    System.out.printf("\u001B[33m%-36s \u001B[32m%s\u001B[0m%n", "cache", "立即刷新缓存");
-                    System.out.printf("\u001B[33m%-36s \u001B[32m%s\u001B[0m%n", "info", "查看统计信息");
-                    System.out.printf("\u001B[33m%-36s \u001B[32m%s\u001B[0m%n", "servers", "查看服务器缓存信息");
-                    System.out.printf("\u001B[33m%-36s \u001B[32m%s\u001B[0m%n", "kick user [user]", "踢出此用户");
-                    System.out.printf("\u001B[33m%-36s \u001B[32m%s\u001B[0m%n", "kick ip [ip]", "断开此IP的所有连接");
-                    System.out.printf("\u001B[33m%-36s \u001B[32m%s\u001B[0m%n", "reload", "重载配置文件");
-                    System.out.printf("\u001B[33m%-36s \u001B[32m%s\u001B[0m%n", "stop", "停止");
-                    System.out.println("======================================================");
-                }
-                case "clean" -> {
-                    System.out.println("========================回收垃圾=========================");
-                    ThreadPool.execute(new Clean());
-                    System.out.println("======================================================");
-                }
-                case "reload" -> {
-                    System.out.println("========================重载配置文件=========================");
-                    stopservice();
-                    //  Main.ConfigLoad();
-                    // Main.ServerLoad(Main.serverlist);
-                    System.out.println("======================================================");
-                }
-                case "cache" -> {
-                    System.out.println("====================刷新缓存[被动]=========================");
-                    for (ServerThread serverThread : Main.serverThreads) {
-                        ReloadCache(serverThread.getMotd(), serverThread.getServer());
-                    }
-                    System.out.println("缓存刷新请求已发出");
-                    System.out.println("======================================================");
-
+                    hint("帮助列表");
+                    //已将除列表类指令外全部拆分出去,为远程调用做准备[列表类指令不允许远程调用]
+                    hint("list", "查看各种列表信息");
+                    hint("clean", "立即回收垃圾");
+                    hint("cache", "立即刷新缓存");
+                    hint(false);
+                    hint("whitelist", "查看白名单相关指令");
+                    hint("kick", "踢出用户");
+                    hint("ban", "封禁用户");
+                    hint(false);
+                    hint("reload", "重新加载");
+                    hint("stop", "停止");
+                    hint();
                 }
                 case "list" -> {
-                    System.out.println("=====================在线连接列表======================");
-                    System.out.printf("当前存在%s个连接%n", Main.Clients.size());
-                    for (Map.Entry<String, Client> client : Main.Clients.entrySet()) {
-                        //result = result + System.out.format("%s 登录用户名 %s 社区ID %s 通过 %s 连接到 %s %n", client.getKey(), client.getValue().getUsername(), client.getValue().getUserid(), client.getValue().getTo_server_socket().getLocalPort(), client.getValue().getServer().name()) + "\n";
-                        System.out.printf("%s 登录用户名 %s 社区ID %s 通过 %s 连接到 %s %n", client.getKey(), client.getValue().getUsername(), client.getValue().getUserid(), client.getValue().getTo_server_socket().getLocalPort(), client.getValue().getServer().name());
-                    }
-                    System.out.println("======================================================");
+                    if (command2.equals("")) {
+                        hint("列表相关");
+                        hint("list ban", "查看封禁列表");
+                        hint("list ips", "查看封禁的IP列表");
+                        hint("list area", "查看封禁地区列表");
+                        hint("list whitelist", "查看白名单列表");
+                        hint("list servers", "查看服务器缓存信息");
+                        hint("list info", "查看服务器统计信息");
+                        hint("list online", "查看在线用户列表");
+                        hint();
+                    } else list(command2);
+                }
+                case "ban" -> {
+                    switch (commands[1]) {
+                        case ""-> {
+                            hint("封禁相关");
+                            hint("ban add user  [reason] [duration]", "封禁用户");
+                            hint("ban add ip  [reason] [duration]", "封禁IP");
+                            hint("ban add area  [reason] [duration]", "封禁地区");
+                            hint("ban remove user", "解封用户");
+                            hint("ban remove ip", "解封IP");
+                            hint("ban remove area", "解封地区");hint();
+                        }
+                        case "add" -> {
+                            switch (command3){
+                                case "" ->{
+                                    int expires;
+                                    if (command5!="")
+                                        expires = Integer.parseInt(command5);
+                                    else
+                                        expires = 0;
+                                    //有错误
+                                    Wbanadduser(command4, expires, command5);
+                                }
+                                case "user"->{
 
-                }
-                case "info" -> {
-                    System.out.println("=====================统计信息======================");
-                    System.out.printf("\u001B[32m正常运行\u001B[0m \u001B[33m%s \u001B[0m%n", getDatePoor(Main.info.getTime(), System.currentTimeMillis()));
-                    System.out.println("      \033[32m放行\033[0m      \033[31m拦截\033[0m");
-                    System.out.printf("连接   \u001B[32m%s\u001B[0m       \u001B[31m%s\u001B[0m%n", Main.info.getNormal(), Main.info.getAbnormal());
-                    System.out.printf("IP   \u001B[32m%s\u001B[0m       \u001B[31m%s\u001B[0m%n", Main.info.getNormal_ip().size(), Main.info.getAbnormal_ip().size());
-                    System.out.printf("\u001B[32m缓存情况\u001B[0m  \u001B[32m%s\u001B[0m/\u001B[32m%s\u001B[0m [\u001B[32m穿透\u001B[0m/\u001B[32m应答\u001B[0m]%n", Main.info.getRefresh(), Main.info.getRespond());
-                    System.out.printf("\u001B[33m丢弃无效数据包\u001B[0m \u001B[31m%s\u001B[0m%n", Main.info.getInvalid());
-                    System.out.println("======================================================");
+                                }
+                                case "ip"->{
 
-                }
-                case "servers" -> {
-                    System.out.println("=====================服务器信息======================");
-                    System.out.printf("\u001B[32m %-18s\u001B[0m \u001B[33m%-8s \u001B[0m \u001B[32m %-6s %-6s\u001B[0m  \u001B[32m %-8s\u001B[0m%n", "名称", "模式", "在线玩家", "最大玩家", "版本");
-                    for (ServerThread serverThread : Main.serverThreads) {
-                        Motd motd = serverThread.getMotd();
-                        //result = result + motd.getServername() + " " + motd.getModel() + " " + motd.getOnlineplayer() + " " + motd.getMaxplayer() + " " + motd.getVersion() + "\n";
-                        System.out.printf("\u001B[32m %-18s\u001B[0m \u001B[33m%-8s \u001B[0m \u001B[32m %-6s %-6s\u001B[0m  \u001B[32m %-8s\u001B[0m%n", motd.getServername(), motd.getModel(), motd.getOnlineplayer(), motd.getMaxplayer(), motd.getVersion());
+                                }
+                                case "area"->{
+
+                                }
+                                default -> hint_error("命令不存在", command);
+
+                            }
+
+                        }
+                        case "remove" -> {
+
+                        }
+                        default -> hint_error("命令不存在", command);
+
                     }
-                    System.out.println("======================================================");
-                }
-                case "stop" -> {
-                    System.out.println("========================停止程序=========================");
-                    stopservice();
-                    ThreadPool.shutdown();
-                    System.exit(0);
                 }
                 case "kick" -> {
-                    switch (command2) {
+
+                    switch (command2){
+                        case ""->{
+                            hint("踢人相关");
+                            hint("kick user <username>", "踢出用户");
+                            hint("kick ip <ip>", "踢出ip相同的用户");
+                            hint("kick all", "踢出所有用户");
+                            hint();
+                        }
                         case "user" -> {
-                            System.out.printf("========================踢出%s=========================%n", commands[1]);
-                            for (Map.Entry<String, Client> client : Main.Clients.entrySet()) {
-                                if (client.getValue().getUsername().equals(command3)) {
-                                    disconnect(client.getValue());
-                                    System.out.printf("已踢出 %s%n", client.getValue().getUsername());
-                                    //result = result + client.getValue().getUsername() + "\n";
-                                }
-                            }
+
                         }
                         case "ip" -> {
-                            System.out.printf("========================踢出%s=========================%n", commands[1]);
-                            for (Map.Entry<String, Client> client : Main.Clients.entrySet()) {
-                                if (client.getKey().substring(1, client.getKey().indexOf(":")).equals(command3)) {
-                                    disconnect(client.getValue());
-                                    System.out.printf("已踢出 %s%n", client.getKey());
-                                    //result = result + client.getKey() + "\n";
-                                }
-                            }
-                            System.out.println("======================================================");
+
                         }
-                        default -> System.out.printf("\u001B[31m命令缺少参数：%s\u001B[0m%n", command);
+                        case "all" -> {
+
+                        }
+
                     }
                 }
-                default -> System.out.printf("\u001B[31m命令不存在：\u001B[0m\u001B[33m%s%n\u001B[0m", command);
+                case "whitelist" -> {
+
+                    switch (command2){
+                        case ""->{
+                            hint("白名单相关");
+                            hint("whitelist add <user/ip>", "添加白名单");
+                            hint("whitelist remove <user/ip>", "移除白名单");
+                            hint();
+                        }
+                        case "add" -> {
+
+                        }
+                        case "remove" -> {
+
+                        }
+                        default -> hint_error("命令不存在", command);
+                    }
+                }
+                case "clean" -> {
+                    hint("回收垃圾");
+                    Wclean();
+                    hint();
+                }
+                case "reload" -> {
+                    hint("重载配置文件");
+                    Wreload();
+                    hint();
+                }
+                case "cache" -> {
+                    hint("刷新缓存");
+                    Wcache();
+                    hint();
+                }
+                case "stop" -> {
+                    hint("停止程序");
+                    Wstop();
+                }
+                default -> hint_error("命令不存在", command);
             }
         } catch (Exception e) {
-            System.out.printf("执行命令时出错 %s%n", e);
+            hint_error(e.toString(), command);
+        }
+    }
+    public void list(String list) {
+        switch (list) {
+            case "ban" -> {
+
+            }
+            case "ip" -> {
+
+            }
+            case "area" -> {
+
+            }
+            case "whitelist" -> {
+
+            }
+            case "servers" -> {
+                System.out.printf("\u001B[32m %-18s\u001B[0m \u001B[33m%-8s \u001B[0m \u001B[32m %-6s %-6s\u001B[0m  \u001B[32m %-8s\u001B[0m%n", "名称", "模式", "在线玩家", "最大玩家", "版本");
+                for (ServerThread serverThread : Main.serverThreads) {
+                    Motd motd = serverThread.getMotd();
+                    System.out.printf("\u001B[32m %-18s\u001B[0m \u001B[33m%-8s \u001B[0m \u001B[32m %-6s %-6s\u001B[0m  \u001B[32m %-8s\u001B[0m%n", motd.getServername(), motd.getModel(), motd.getOnlineplayer(), motd.getMaxplayer(), motd.getVersion());
+                }
+            }
+            case "info" -> {
+                hint("统计信息");
+                System.out.printf("\u001B[32m正常运行\u001B[0m \u001B[33m%s \u001B[0m%n", getDatePoor(Main.info.getTime(), System.currentTimeMillis()));
+                System.out.println("      \033[32m放行\033[0m      \033[31m拦截\033[0m");
+                System.out.printf("连接   \u001B[32m%s\u001B[0m       \u001B[31m%s\u001B[0m%n", Main.info.getNormal(), Main.info.getAbnormal());
+                System.out.printf("IP   \u001B[32m%s\u001B[0m       \u001B[31m%s\u001B[0m%n", Main.info.getNormal_ip().size(), Main.info.getAbnormal_ip().size());
+                System.out.printf("\u001B[32m缓存情况\u001B[0m  \u001B[32m%s\u001B[0m/\u001B[32m%s\u001B[0m [\u001B[32m穿透\u001B[0m/\u001B[32m应答\u001B[0m]%n", Main.info.getRefresh(), Main.info.getRespond());
+                System.out.printf("\u001B[33m丢弃无效数据包\u001B[0m \u001B[31m%s\u001B[0m%n", Main.info.getInvalid());
+                hint();
+            }
+            case "online" -> {
+                hint("在线用户列表");
+                    System.out.printf("当前存在%s个连接%n", Main.Clients.size());
+                    for (Map.Entry<String, Client> client : Main.Clients.entrySet()) {
+                       System.out.printf("%s 登录用户名 %s 社区ID %s 通过 %s 连接到 %s %n", client.getKey(), client.getValue().getUsername(), client.getValue().getUserid(), client.getValue().getTo_server_socket().getLocalPort(), client.getValue().getServer().name());
+                    }
+                    hint();
+
+            }
+            default -> hint_error("命令不存在", command);
         }
     }
 }

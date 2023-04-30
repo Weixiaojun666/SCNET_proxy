@@ -1,8 +1,8 @@
+0.添加本地userid 和username  对照表
+
 1.允许本地维护白名单列表和封禁列表 【IP封禁 用户精准封禁 区域封禁】
         添加 【配置文件】
-            banned-ips.json
-            banned-players.json
-            banded-areas.json
+            banned.json
             whitelist.json
         添加 【命令】
             ban [user] [时间] [理由] 封禁某玩家

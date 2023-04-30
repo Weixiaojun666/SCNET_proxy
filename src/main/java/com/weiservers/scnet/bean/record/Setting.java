@@ -15,10 +15,6 @@ public record Setting(Base base, Cloud cloud, Aggregation aggregation, List<Serv
 
     }
 
-//    public record Server_list(List<Server> server_list) {
-//
-//    }
-
     public record Server(int id, String name, String address, int port, int proxy_port) {
 
     }

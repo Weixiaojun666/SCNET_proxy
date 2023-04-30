@@ -15,7 +15,7 @@ public class Client {
     private final InetAddress address;
     private final int port;
     private long time;
-    private String userid;
+    private int userid;
     private String username;
     private Thread thread;
     private String Checkid;
@@ -27,6 +27,6 @@ public class Client {
         this.server = server;
         this.address = address;
         this.port = port;
-        this.userid = "0";
+        this.userid = 0;
     }
 }
