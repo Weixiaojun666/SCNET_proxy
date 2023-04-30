@@ -19,7 +19,7 @@ public class Check extends Thread {
     private static final String userstate = "";
     private static Client client;
     private static String token;
-    private static boolean whitename = false;
+    private static final boolean whitename = false;
     private static String reason = "";
     private static String IP_info = "";
 
@@ -57,10 +57,10 @@ public class Check extends Thread {
         //读取白名单
         try {
             for (Whitelist whitelist : Objects.requireNonNull(ConfigLoad.readWhitelist())) {
-                if ((client.getUserid()).equals(String.valueOf(whitelist.userid()))) {
-                    whitename = true;
-                    break;
-                }
+//                if ((client.getUserid()).equals(String.valueOf(whitelist.userid()))) {
+//                    whitename = true;
+//                    break;
+//                }
             }
         } catch (Exception ignored) {
         }

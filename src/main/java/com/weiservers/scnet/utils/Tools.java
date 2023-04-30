@@ -5,17 +5,38 @@ import com.weiservers.scnet.bean.Client;
 import com.weiservers.scnet.bean.Invalid;
 import com.weiservers.scnet.bean.Motd;
 import com.weiservers.scnet.bean.ServerThread;
-import com.weiservers.scnet.bean.record.Server;
+import com.weiservers.scnet.bean.record.Setting.Server;
 import com.weiservers.scnet.cloud.Cloud;
 import com.weiservers.scnet.thread.child.Clean;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.zip.DataFormatException;
+import java.util.zip.Inflater;
 
 
 public class Tools {
+    public static String decompress(byte[] compressedData) throws IOException, DataFormatException {
+        Inflater inflater = new Inflater(true);
+        inflater.setInput(compressedData);
+
+        byte[] buffer = new byte[1024];
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        while (!inflater.finished()) {
+            int count = inflater.inflate(buffer);
+            out.write(buffer, 0, count);
+        }
+        inflater.end();
+        out.close();
+
+
+        return bytesToHexString(out.toByteArray());
+    }
 
     public static String hexStringToString(String s) {
         if (s == null || s.equals("")) {

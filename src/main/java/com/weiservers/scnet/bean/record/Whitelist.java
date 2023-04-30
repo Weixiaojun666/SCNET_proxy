@@ -1,4 +1,9 @@
 package com.weiservers.scnet.bean.record;
 
-public record Whitelist(int userid, String username,int serverid) {
+import java.util.List;
+
+public record Whitelist(List<White> whiteList) {
+    public record White(int userid, String username, int serverid) {
+
+    }
 }

@@ -4,7 +4,7 @@ import com.weiservers.scnet.bean.Client;
 import com.weiservers.scnet.bean.Info;
 import com.weiservers.scnet.bean.Invalid;
 import com.weiservers.scnet.bean.ServerThread;
-import com.weiservers.scnet.bean.record.Server;
+import com.weiservers.scnet.bean.record.Setting.Server;
 import com.weiservers.scnet.thread.Console;
 import com.weiservers.scnet.thread.Listening;
 import com.weiservers.scnet.thread.TimeTask;
@@ -22,6 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class Main {
     public static final Map<String, Client> Clients = new ConcurrentHashMap<>();
+    //public static final Map<String, Client> Clients = new ConcurrentHashMap<>();
 
     public static final Map<InetAddress, Invalid> Invalids = new ConcurrentHashMap<>();
     public final static Info info = new Info(System.currentTimeMillis());
@@ -31,21 +32,32 @@ public class Main {
     public static void ServersLoad() {
 
 
-        List<Server> serverlist = ConfigLoad.getSetting().server_list().server_list();
+        List<Server> serverlist = ConfigLoad.getSetting().server_list();
 
-        logger.info("已加载{}个服务器", serverlist.size());
-        logger.info("======================================================");
-        logger.info(String.format("%-8s %-18s %-12s %-8s %-8s", "序号", "服务器名称", "服务器地址", "服务器端口", "转发端口"));
-        int num = 0;
-        for (Server server : serverlist) {
-            num++;
-            logger.info(String.format("%-12s %-18s %-18s %-12s %-12s", num, server.name(), server.address(), server.port(), server.proxy_port()));
-            ThreadPool.execute(new Listening(server));
+
+        if (serverlist.size() == 0)
+            logger.warn("未加载任何服务器，您可能需要在config.json中添加服务器");
+        else {
+            logger.info("已加载{}个服务器", serverlist.size());
+            logger.info("======================================================");
+            logger.info(String.format("%-8s  %-8s %-18s %-12s %-8s %-8s", "序号", "服务器ID", "服务器名称", "服务器地址", "服务器端口", "转发端口"));
+            int num = 0;
+            for (Server server : serverlist) {
+                num++;
+                logger.info(String.format("%-12s %-12s %-18s %-18s %-12s %-12s", num, server.id(), server.name(), server.address(), server.port(), server.proxy_port()));
+                ThreadPool.execute(new Listening(server));
+            }
+            logger.info("======================================================");
+            logger.info("所有服务器监听均已启动");
+            logger.info("======================================================");
+            if (ConfigLoad.getSetting().aggregation().enable()) {
+                logger.info("已启用聚合模式 聚合模式端口:{}  默认进入服务器ID:{}", ConfigLoad.getSetting().aggregation().port(), ConfigLoad.getSetting().aggregation().default_server());
+                logger.info("======================================================");
+
+                Server server = new Server(0, null, null, 0, ConfigLoad.getSetting().aggregation().port());
+                ThreadPool.execute(new Listening(server));
+            }
         }
-        logger.info("======================================================");
-        logger.info("所有服务器监听均已启动");
-        logger.info("======================================================");
-
 
     }
 

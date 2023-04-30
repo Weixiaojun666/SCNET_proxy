@@ -12,7 +12,7 @@ public class Invalid {
     private long check_time;
 
     public Invalid() {
-        long create_time=System.currentTimeMillis();
+        long create_time = System.currentTimeMillis();
         this.create_time = create_time;
         this.update_time = create_time;
         this.check_time = create_time;

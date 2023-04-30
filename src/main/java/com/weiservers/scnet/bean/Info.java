@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.net.InetAddress;
 import java.util.HashSet;
+
 //@Component
 @Data
 public class Info {

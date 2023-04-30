@@ -3,7 +3,7 @@ package com.weiservers.scnet.thread;
 import com.weiservers.scnet.Main;
 import com.weiservers.scnet.bean.Motd;
 import com.weiservers.scnet.bean.ServerThread;
-import com.weiservers.scnet.bean.record.Server;
+import com.weiservers.scnet.bean.record.Setting.Server;
 import com.weiservers.scnet.thread.child.Cache;
 import com.weiservers.scnet.thread.child.Receive;
 import com.weiservers.scnet.utils.ThreadPool;
@@ -20,6 +20,8 @@ public class Listening extends Thread {
     private Motd motd;
     private DatagramSocket to_client_socket;
 
+    private Boolean Aggregation = false;
+
     public Listening(Server server) {
         this.server = server;
     }
@@ -33,12 +35,18 @@ public class Listening extends Thread {
             motd.setTime(0);
             Main.serverThreads.add(new ServerThread(this, to_client_socket, motd, server));
             ThreadPool.execute(new Cache(motd));
+            if (server.id() == 0 && server.name() == null && server.address() == null && server.port() == 0) {
+                Aggregation = true;
+            }
             while (!isInterrupted()) {
                 byte[] buf = new byte[1024];
                 DatagramPacket packet = new DatagramPacket(buf, buf.length);  //创建DatagramPacket对象
                 to_client_socket.receive(packet);
+                if (Aggregation) {
 
-                ThreadPool.execute(new Receive(packet, to_client_socket, server, motd));
+
+                    //ThreadPool.execute(new ReceiveAggregation(packet, to_client_socket, server, motd));
+                } else ThreadPool.execute(new Receive(packet, to_client_socket, server, motd));
             }
         } catch (IOException e) {
             if (!isInterrupted()) {
@@ -52,7 +60,7 @@ public class Listening extends Thread {
                 }
                 try {
                     sleep(1000);
-                } catch (InterruptedException ex) {
+                } catch (InterruptedException ignored) {
                 }
                 ThreadPool.execute(new Listening(this.server));
             }

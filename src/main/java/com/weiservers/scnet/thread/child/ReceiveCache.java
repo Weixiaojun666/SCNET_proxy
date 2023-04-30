@@ -2,7 +2,7 @@ package com.weiservers.scnet.thread.child;
 
 import com.weiservers.scnet.Main;
 import com.weiservers.scnet.bean.Motd;
-import com.weiservers.scnet.bean.record.Server;
+import com.weiservers.scnet.bean.record.Setting.Server;
 import com.weiservers.scnet.utils.ConfigLoad;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

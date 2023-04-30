@@ -1,9 +1,10 @@
 package com.weiservers.scnet.bean;
 
-import com.weiservers.scnet.bean.record.Server;
+import com.weiservers.scnet.bean.record.Setting.Server;
 import lombok.Getter;
 
 import java.net.DatagramSocket;
+
 @Getter
 public class ServerThread {
 

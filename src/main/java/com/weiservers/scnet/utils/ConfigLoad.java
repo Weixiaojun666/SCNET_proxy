@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.weiservers.scnet.Main;
+import com.weiservers.scnet.bean.record.Banned;
+import com.weiservers.scnet.bean.record.Selectlist;
 import com.weiservers.scnet.bean.record.Setting;
 import com.weiservers.scnet.bean.record.Whitelist;
 import org.slf4j.Logger;
@@ -17,9 +19,9 @@ import java.util.List;
 
 public class ConfigLoad {
     private final static Logger logger = LoggerFactory.getLogger(ConfigLoad.class);
-    //public static List<Server> serverlist;
-
-    //private static Map<String, Object> setting;
+    private static Banned Banned;
+    private static Whitelist Whitelist;
+    private static Selectlist Selectlist;
     private static Setting Setting;
 
     public static void Load() {
@@ -31,21 +33,16 @@ public class ConfigLoad {
             }
         }
         CheckConfig("banned.json");
-        CheckConfig("players-choose.json");
+        CheckConfig("selectlist.json");
         CheckConfig("setting.json");
         CheckConfig("whitelist.json");
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-
-
             Setting = objectMapper.readValue(new File("./config/setting.json"), Setting.class);
+            Whitelist = objectMapper.readValue(new File("./config/whitelist.json"), Whitelist.class);
+            //  Banned = objectMapper.readValue(new File("./config/banned.json"), Banned.class);
+            // Selectlist = objectMapper.readValue(new File("./config/players-choose.json"), Selectlist.class);
 
-
-//            JsonNode rootNode = objectMapper.readTree();
-//            setting = objectMapper.readValue(rootNode.toString(), new TypeReference<>() {
-//            });
-//            serverlist = objectMapper.readValue(rootNode.get("server_list").toString(), new TypeReference<>() {
-//            });
         } catch (Exception e) {
             logger.error("读取配置文件失败", e);
             System.exit(0);
@@ -83,13 +80,17 @@ public class ConfigLoad {
         return Setting;
     }
 
-//    public static List<Server> getServerlist() {
-//        return serverlist;
-//    }
-//
-//    public static Map<String, Object> getSetting() {
-//        return setting;
-//    }
+    public static Whitelist getWhitelist() {
+        return Whitelist;
+    }
+
+    public static com.weiservers.scnet.bean.record.Banned getBanned() {
+        return Banned;
+    }
+
+    public static com.weiservers.scnet.bean.record.Selectlist getSelectlist() {
+        return Selectlist;
+    }
 
     public static List<Whitelist> readWhitelist() {
         try {

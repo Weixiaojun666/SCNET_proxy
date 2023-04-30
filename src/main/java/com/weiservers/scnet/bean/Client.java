@@ -1,12 +1,13 @@
 package com.weiservers.scnet.bean;
 
-import com.weiservers.scnet.bean.record.Server;
+import com.weiservers.scnet.bean.record.Setting.Server;
 import lombok.Data;
 
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+
 @Data
-public class  Client {
+public class Client {
 
     private final DatagramSocket to_server_socket;
     private final DatagramSocket to_client_socket;
@@ -18,6 +19,7 @@ public class  Client {
     private String username;
     private Thread thread;
     private String Checkid;
+    private Boolean Aggregation;
 
     public Client(DatagramSocket to_server_socket, DatagramSocket to_client_socket, Server server, InetAddress address, int port) {
         this.to_server_socket = to_server_socket;

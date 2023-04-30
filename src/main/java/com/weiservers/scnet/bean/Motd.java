@@ -3,6 +3,7 @@ package com.weiservers.scnet.bean;
 import lombok.Data;
 
 import java.net.DatagramSocket;
+
 @Data
 public class Motd {
     private final DatagramSocket socket;

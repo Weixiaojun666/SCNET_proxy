@@ -3,7 +3,7 @@ package com.weiservers.scnet.thread.child;
 import com.weiservers.scnet.Main;
 import com.weiservers.scnet.bean.Client;
 import com.weiservers.scnet.bean.Motd;
-import com.weiservers.scnet.bean.record.Server;
+import com.weiservers.scnet.bean.record.Setting.Server;
 import com.weiservers.scnet.cloud.Check;
 import com.weiservers.scnet.utils.ThreadPool;
 import org.slf4j.Logger;
@@ -13,7 +13,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
-import static com.weiservers.scnet.utils.Tools.bytesToHexString;
+import static com.weiservers.scnet.utils.Tools.*;
 
 public class Receive extends Thread {
 
@@ -35,16 +35,21 @@ public class Receive extends Thread {
         int ClientPort = packet.getPort();
         try {
             DatagramSocket to_server_socket;
-
             if (!Main.Clients.containsKey(ClientAddress + ":" + ClientPort)) {
                 //新连接 判断是否是查询请求
                 byte[] ans = new byte[packet.getLength()];
                 System.arraycopy(packet.getData(), 0, ans, 0, packet.getLength());
                 String string = bytesToHexString(ans);
-                if (string.equals("0804")) {
+                if (string.equals("0805000000eb60600400")) {
                     //查询请求交给缓存类处理
                     ThreadPool.execute(new ReceiveCache(ClientAddress, ClientPort, to_client_socket, server, motd));
                 } else if (string.startsWith("050b000000")) {
+                    //新版本服务器数据包经过压缩 需要先解压缩
+                    System.out.println(string.substring(68));
+                    string = decompress(hexStringToByteArray(string.substring(68)));
+                    System.out.println(string);
+
+
                     //客户端连接请求打到服务器
                     to_server_socket = new DatagramSocket(0);
                     Client client = new Client(to_server_socket, to_client_socket, server, ClientAddress, ClientPort);
@@ -53,7 +58,7 @@ public class Receive extends Thread {
                     ThreadPool.execute(new ReceiveServer(client));
                     ThreadPool.execute(new ReceiveClient(packet, client));
                     logger.info("[新客户端连接]   {}  {}  =>  {}  {} 通过端口{} 连接到[{}]", ClientAddress, ClientPort, server.address(), server.port(), to_server_socket.getLocalPort(), server.name());
-                    ThreadPool.execute(new Check(client, string.substring(78, 110)));
+                    ThreadPool.execute(new Check(client, string.substring(14, 46)));
                     Main.info.getNormal_ip().add(ClientAddress);
                     Main.info.addNormal();
                 } else {
