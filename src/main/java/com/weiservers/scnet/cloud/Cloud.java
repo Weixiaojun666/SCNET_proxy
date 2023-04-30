@@ -1,7 +1,7 @@
 package com.weiservers.scnet.cloud;
 
 import com.weiservers.scnet.bean.Motd;
-import com.weiservers.scnet.utils.ConfigLoad;
+import com.weiservers.scnet.config.Configuration;
 
 import static com.weiservers.scnet.utils.HttpClient.HttpClient;
 
@@ -14,22 +14,22 @@ public class Cloud {
     }
 
     public static void postmotd(Motd motd) {
-        if (!ConfigLoad.getSetting().cloud().enable()) return;
+        if (!Configuration.getSetting().cloud().enable()) return;
         if (motd.getModel().equals("未知")) return;
-        String url = "token=" + ConfigLoad.getSetting().cloud().token() + "&servername=" + motd.getServername() + "&onlineplayer=" + motd.getOnlineplayer() + "&maxplayer=" + motd.getMaxplayer() + "&model=" + motd.getModel() + "&version=" + motd.getVersion();
+        String url = "token=" + Configuration.getSetting().cloud().token() + "&servername=" + motd.getServername() + "&onlineplayer=" + motd.getOnlineplayer() + "&maxplayer=" + motd.getMaxplayer() + "&model=" + motd.getModel() + "&version=" + motd.getVersion();
         HttpClient("https://api.weiservers.com/scnet/apply/serverInfo?" + url);
     }
 
     public static void postinvalid(String ip, long start_time, long end_time, int num) {
-        if (!ConfigLoad.getSetting().cloud().enable()) return;
-        String url = "token=" + ConfigLoad.getSetting().cloud().token() + "&ip=" + ip + "&start_time=" + start_time + "&end_time=" + end_time + "&num=" + num;
+        if (!Configuration.getSetting().cloud().enable()) return;
+        String url = "token=" + Configuration.getSetting().cloud().token() + "&ip=" + ip + "&start_time=" + start_time + "&end_time=" + end_time + "&num=" + num;
         HttpClient("https://api.weiservers.com/scnet/apply/invalid?" + url);
     }
 
     public static void postlogout(String id) {
-        if (!ConfigLoad.getSetting().cloud().enable()) return;
+        if (!Configuration.getSetting().cloud().enable()) return;
 
-        String url = "checkid=" + id + "&token=" + ConfigLoad.getSetting().cloud().token();
+        String url = "checkid=" + id + "&token=" + Configuration.getSetting().cloud().token();
         HttpClient("https://api.weiservers.com/scnet/apply/logout?" + url);
     }
 
@@ -37,8 +37,8 @@ public class Cloud {
     // servername  id
     //String state
     public static void postlogin(String checkid, String state, String reason) {
-        if (!ConfigLoad.getSetting().cloud().enable()) return;
-        String url = "checkid=" + checkid + "&state=" + state + "&reason=" + reason + "&token=" + ConfigLoad.getSetting().cloud().token();
+        if (!Configuration.getSetting().cloud().enable()) return;
+        String url = "checkid=" + checkid + "&state=" + state + "&reason=" + reason + "&token=" + Configuration.getSetting().cloud().token();
         HttpClient("https://api.weiservers.com/scnet/apply/login?" + url);
     }
 }

@@ -5,10 +5,10 @@ import com.weiservers.scnet.bean.Info;
 import com.weiservers.scnet.bean.Invalid;
 import com.weiservers.scnet.bean.ServerThread;
 import com.weiservers.scnet.bean.record.Setting.Server;
+import com.weiservers.scnet.config.Configuration;
 import com.weiservers.scnet.thread.Console;
 import com.weiservers.scnet.thread.Listening;
 import com.weiservers.scnet.thread.TimeTask;
-import com.weiservers.scnet.utils.ConfigLoad;
 import com.weiservers.scnet.utils.ThreadPool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,8 +22,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class Main {
     public static final Map<String, Client> Clients = new ConcurrentHashMap<>();
-    //public static final Map<String, Client> Clients = new ConcurrentHashMap<>();
-
     public static final Map<InetAddress, Invalid> Invalids = new ConcurrentHashMap<>();
     public final static Info info = new Info(System.currentTimeMillis());
     private final static Logger logger = LoggerFactory.getLogger(Main.class);
@@ -32,7 +30,7 @@ public class Main {
     public static void ServersLoad() {
 
 
-        List<Server> serverlist = ConfigLoad.getSetting().server_list();
+        List<Server> serverlist = Configuration.getSetting().server_list();
 
 
         if (serverlist.size() == 0)
@@ -50,11 +48,11 @@ public class Main {
             logger.info("======================================================");
             logger.info("所有服务器监听均已启动");
             logger.info("======================================================");
-            if (ConfigLoad.getSetting().aggregation().enable()) {
-                logger.info("已启用聚合模式 聚合模式端口:{}  默认进入服务器ID:{}", ConfigLoad.getSetting().aggregation().port(), ConfigLoad.getSetting().aggregation().default_server());
+            if (Configuration.getSetting().aggregation().enable()) {
+                logger.info("已启用聚合模式 聚合模式端口:{}  默认进入服务器ID:{}", Configuration.getSetting().aggregation().port(), Configuration.getSetting().aggregation().default_server());
                 logger.info("======================================================");
 
-                Server server = new Server(0, null, null, 0, ConfigLoad.getSetting().aggregation().port());
+                Server server = new Server(0, null, null, 0, Configuration.getSetting().aggregation().port());
                 ThreadPool.execute(new Listening(server));
             }
         }
@@ -71,7 +69,7 @@ public class Main {
         if (Integer.parseInt(System.getProperty("sun.arch.data.model")) != 64)
             logger.warn("您正在使用32位Java！为保证性能请改用64位java");
         ThreadPool.LoadThreadPool();
-        ConfigLoad.Load();
+        Configuration.Load();
 
         ThreadPool.execute(new Console());
         ThreadPool.execute(new TimeTask());

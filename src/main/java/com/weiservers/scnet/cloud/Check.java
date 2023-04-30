@@ -4,11 +4,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.weiservers.scnet.Main;
 import com.weiservers.scnet.bean.Client;
 import com.weiservers.scnet.bean.record.Whitelist;
-import com.weiservers.scnet.utils.ConfigLoad;
+import com.weiservers.scnet.config.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
 import java.util.Objects;
 
 import static com.weiservers.scnet.utils.HttpClient.HttpClient;
@@ -17,9 +16,9 @@ import static com.weiservers.scnet.utils.Tools.disconnect;
 public class Check extends Thread {
     private final static Logger logger = LoggerFactory.getLogger(Check.class);
     private static final String userstate = "";
+    private static final boolean whitename = false;
     private static Client client;
     private static String token;
-    private static final boolean whitename = false;
     private static String reason = "";
     private static String IP_info = "";
 
@@ -37,7 +36,7 @@ public class Check extends Thread {
             logger.error("{} 社区检查失败", client.getAddress().toString());
             return false;
         }
-        client.setUserid(rootNodeUser.at("/data/id").toString().replace("\"", ""));
+        client.setUserid(Integer.parseInt(rootNodeUser.at("/data/id").toString().replace("\"", "")));
         client.setUsername(rootNodeUser.at("/data/nickname").toString().replace("\"", ""));
 
         //连接到公开IP地址API获取IP信息[不再从WeiServer拉取]  接口由VORE-API(https://api.vore.top/)免费提供
@@ -56,7 +55,7 @@ public class Check extends Thread {
 
         //读取白名单
         try {
-            for (Whitelist whitelist : Objects.requireNonNull(ConfigLoad.readWhitelist())) {
+            for (Whitelist whitelist : Objects.requireNonNull(Configuration.readWhitelist())) {
 //                if ((client.getUserid()).equals(String.valueOf(whitelist.userid()))) {
 //                    whitename = true;
 //                    break;
@@ -94,25 +93,25 @@ public class Check extends Thread {
 
         //阻止一号多登或同IP多登
         try {
-            int num = 0;
-            for (Map.Entry<String, Client> client0 : Main.Clients.entrySet()) {
-
-//                if (client0.getKey().substring(0, client0.getKey().indexOf(":")).equals(client.getAddress().toString()))
-                if (client0.getValue().getAddress().toString().equals(client.getAddress().toString())) {
-                    num++;
-                    //同ip 同id的 连接到同服务器的 为断线重连 不阻止
-                    if (client0.getValue().getUserid().equals(client.getUserid()))
-                        if (client0.getValue().getServer().name().equals(client.getServer().name()))
-                            num--;
-                }
-
-                if (client0.getValue().getUserid().equals(client.getUserid())) {
-                    if (!client0.getValue().getUserid().equals("0")) num++;
-                    if (client0.getValue().getAddress().toString().equals(client.getAddress().toString())) {
-                        if (client0.getValue().getServer().name().equals(client.getServer().name())) num--;
-                    }
-                }
-            }
+//            int num = 0;
+//            for (Map.Entry<String, Client> client0 : Main.Clients.entrySet()) {
+//
+////                if (client0.getKey().substring(0, client0.getKey().indexOf(":")).equals(client.getAddress().toString()))
+//                if (client0.getValue().getAddress().toString().equals(client.getAddress().toString())) {
+//                    num++;
+//                    //同ip 同id的 连接到同服务器的 为断线重连 不阻止
+//                    if (client0.getValue().getUserid().equals(client.getUserid()))
+//                        if (client0.getValue().getServer().name().equals(client.getServer().name()))
+//                            num--;
+//                }
+//
+//                if (client0.getValue().getUserid.equals(client.getUserid())) {
+//                    if (!client0.getValue().getUserid().equals("0")) num++;
+//                    if (client0.getValue().getAddress().toString().equals(client.getAddress().toString())) {
+//                        if (client0.getValue().getServer().name().equals(client.getServer().name())) num--;
+//                    }
+//                }
+//            }
 //            if (num >= (int) Main.getSetting().get("connection_limit")) {
 //                reason = "连接数超过" + Main.getSetting().get("connection_limit");
 //                disconnect(client);
@@ -135,6 +134,6 @@ public class Check extends Thread {
             logger.warn("{} 玩家 [{}] ID [{}] {} 来自 {} {} {}", client.getAddress(), client.getUsername(), client.getUserid(), userstate, IP_info, reason, state);
         } else
             logger.info("{} 玩家 [{}] ID [{}] {} 来自 {} {} {}", client.getAddress(), client.getUsername(), client.getUserid(), userstate, IP_info, reason, state);
-        Cloud.postlogin(client.getCheckid(), state, reason);
+        Cloud.postlogin(String.valueOf(client.getCheckid()), state, reason);
     }
 }

@@ -2,6 +2,7 @@ package com.weiservers.scnet.utils;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.weiservers.scnet.config.Configuration;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.impl.classic.BasicHttpClientResponseHandler;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
@@ -44,7 +45,7 @@ public class HttpClient {
         int num = 0;
         while (true) {
             num++;
-            if (num > ConfigLoad.getSetting().cloud().timeout_retry()) {
+            if (num > Configuration.getSetting().cloud().timeout_retry()) {
                 return null;
             }
             try (httpClient) {

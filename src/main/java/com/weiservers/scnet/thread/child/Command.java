@@ -7,6 +7,8 @@ import com.weiservers.scnet.bean.ServerThread;
 
 import java.util.Map;
 
+import static com.weiservers.scnet.utils.Command.Cache;
+import static com.weiservers.scnet.utils.Command.Clean;
 import static com.weiservers.scnet.utils.Command.*;
 import static com.weiservers.scnet.utils.Tools.getDatePoor;
 
@@ -49,7 +51,9 @@ public class Command extends Thread {
             String command2 = "";
             String command3 = "";
             String command4 = "";
-            String command5= "";
+            String command5 = "";
+            String command6 = "";
+
             if (commands.length > 1) {
                 command2 = commands[1];
             }
@@ -64,6 +68,11 @@ public class Command extends Thread {
             }
             if (commands.length > 5) {
                 command5 = commands[6];
+
+
+            }
+            if (commands.length > 6) {
+                command6 = commands[7];
             }
             switch (commands[0]) {
                 case "" -> {
@@ -98,73 +107,69 @@ public class Command extends Thread {
                 }
                 case "ban" -> {
                     switch (commands[1]) {
-                        case ""-> {
+                        case "" -> {
                             hint("封禁相关");
-                            hint("ban add user  [reason] [duration]", "封禁用户");
-                            hint("ban add ip  [reason] [duration]", "封禁IP");
-                            hint("ban add area  [reason] [duration]", "封禁地区");
+                            hint("ban add user <id/name/ip>  [reason] [duration]", "封禁用户");
+                            hint("ban add ip  <id/name/ip> [reason] [duration]", "封禁IP");
+                            hint("ban add area  <id/name/ip> [level] [reason] [duration]", "封禁地区");
                             hint("ban remove user", "解封用户");
                             hint("ban remove ip", "解封IP");
-                            hint("ban remove area", "解封地区");hint();
+                            hint("ban remove area", "解封地区");
+                            hint();
                         }
                         case "add" -> {
-                            switch (command3){
-                                case "" ->{
-                                    int expires;
-                                    if (command5!="")
-                                        expires = Integer.parseInt(command5);
-                                    else
-                                        expires = 0;
-                                    //有错误
-                                    Wbanadduser(command4, expires, command5);
+                            int expires = 0;
+                            if (!command5.equals("")) expires = Integer.parseInt(command5);
+                            switch (command3) {
+                                case "" -> {
                                 }
-                                case "user"->{
-
-                                }
-                                case "ip"->{
-
-                                }
-                                case "area"->{
-
-                                }
+                                case "user" -> BanAddUser(command4, expires, command6);
+                                case "ip" -> BanAddIp(command4, expires, command6);
+                                case "area" -> BanAddArea(command4, expires, command6);
                                 default -> hint_error("命令不存在", command);
-
                             }
 
                         }
                         case "remove" -> {
-
+                            switch (command3) {
+                                case "" -> {
+                                }
+                                case "user" -> BanRemoveUser(command4);
+                                case "ip" -> BanRemoveIp(command4);
+                                case "area" -> BanRemoveArea(command4);
+                                default -> hint_error("命令不存在", command);
+                            }
                         }
                         default -> hint_error("命令不存在", command);
-
                     }
                 }
                 case "kick" -> {
 
-                    switch (command2){
-                        case ""->{
+                    switch (command2) {
+                        case "" -> {
                             hint("踢人相关");
-                            hint("kick user <username>", "踢出用户");
-                            hint("kick ip <ip>", "踢出ip相同的用户");
+                            hint("kick user <id/name/ip>", "踢出用户");
+                            hint("kick area <id/name/ip> [level]", "踢出地区相同的用户");
                             hint("kick all", "踢出所有用户");
                             hint();
                         }
                         case "user" -> {
+                            KickUser(command3);
 
                         }
-                        case "ip" -> {
+                        case "area" -> {
+                            int level = 3;
+                            if (!command4.equals("")) level = Integer.parseInt(command4);
+                            KickArea(command3, level);
 
                         }
-                        case "all" -> {
-
-                        }
-
+                        case "all" -> KickAll();
                     }
                 }
                 case "whitelist" -> {
 
-                    switch (command2){
-                        case ""->{
+                    switch (command2) {
+                        case "" -> {
                             hint("白名单相关");
                             hint("whitelist add <user/ip>", "添加白名单");
                             hint("whitelist remove <user/ip>", "移除白名单");
@@ -181,22 +186,22 @@ public class Command extends Thread {
                 }
                 case "clean" -> {
                     hint("回收垃圾");
-                    Wclean();
+                    Clean();
                     hint();
                 }
                 case "reload" -> {
                     hint("重载配置文件");
-                    Wreload();
+                    Reload();
                     hint();
                 }
                 case "cache" -> {
                     hint("刷新缓存");
-                    Wcache();
+                    Cache();
                     hint();
                 }
                 case "stop" -> {
                     hint("停止程序");
-                    Wstop();
+                    Stop();
                 }
                 default -> hint_error("命令不存在", command);
             }
@@ -204,6 +209,7 @@ public class Command extends Thread {
             hint_error(e.toString(), command);
         }
     }
+
     public void list(String list) {
         switch (list) {
             case "ban" -> {
@@ -237,11 +243,11 @@ public class Command extends Thread {
             }
             case "online" -> {
                 hint("在线用户列表");
-                    System.out.printf("当前存在%s个连接%n", Main.Clients.size());
-                    for (Map.Entry<String, Client> client : Main.Clients.entrySet()) {
-                       System.out.printf("%s 登录用户名 %s 社区ID %s 通过 %s 连接到 %s %n", client.getKey(), client.getValue().getUsername(), client.getValue().getUserid(), client.getValue().getTo_server_socket().getLocalPort(), client.getValue().getServer().name());
-                    }
-                    hint();
+                System.out.printf("当前存在%s个连接%n", Main.Clients.size());
+                for (Map.Entry<String, Client> client : Main.Clients.entrySet()) {
+                    System.out.printf("%s 登录用户名 %s 社区ID %s 通过 %s 连接到 %s %n", client.getKey(), client.getValue().getUsername(), client.getValue().getUserid(), client.getValue().getTo_server_socket().getLocalPort(), client.getValue().getServer().name());
+                }
+                hint();
 
             }
             default -> hint_error("命令不存在", command);

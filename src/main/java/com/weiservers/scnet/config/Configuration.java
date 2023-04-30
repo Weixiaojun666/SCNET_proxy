@@ -1,4 +1,4 @@
-package com.weiservers.scnet.utils;
+package com.weiservers.scnet.config;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -17,8 +17,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 
-public class ConfigLoad {
-    private final static Logger logger = LoggerFactory.getLogger(ConfigLoad.class);
+public class Configuration {
+    private final static Logger logger = LoggerFactory.getLogger(Configuration.class);
     private static Banned Banned;
     private static Whitelist Whitelist;
     private static Selectlist Selectlist;
@@ -40,8 +40,8 @@ public class ConfigLoad {
             ObjectMapper objectMapper = new ObjectMapper();
             Setting = objectMapper.readValue(new File("./config/setting.json"), Setting.class);
             Whitelist = objectMapper.readValue(new File("./config/whitelist.json"), Whitelist.class);
-              Banned = objectMapper.readValue(new File("./config/banned.json"), Banned.class);
-             Selectlist = objectMapper.readValue(new File("./config/players-choose.json"), Selectlist.class);
+            Banned = objectMapper.readValue(new File("./config/banned.json"), Banned.class);
+            Selectlist = objectMapper.readValue(new File("./config/players-choose.json"), Selectlist.class);
 
         } catch (Exception e) {
             logger.error("读取配置文件失败", e);

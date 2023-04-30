@@ -4,7 +4,7 @@ import com.weiservers.scnet.Main;
 import com.weiservers.scnet.bean.Client;
 import com.weiservers.scnet.bean.Invalid;
 import com.weiservers.scnet.cloud.Cloud;
-import com.weiservers.scnet.utils.ConfigLoad;
+import com.weiservers.scnet.config.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,12 +27,12 @@ public class Clean extends Thread {
             while (it.hasNext()) {
                 Map.Entry<String, Client> client = it.next();
 
-                if ((client.getValue().getTime() + ConfigLoad.getSetting().base().time_out() * 1000L) < System.currentTimeMillis()) {
+                if ((client.getValue().getTime() + Configuration.getSetting().base().time_out() * 1000L) < System.currentTimeMillis()) {
                     logger.info("[断开连接]   {} {}", client.getKey(), client.getValue().getUsername());
                     if (!client.getValue().getThread().isAlive()) client.getValue().getThread().interrupt();
                     if (!client.getValue().getTo_server_socket().isClosed())
                         client.getValue().getTo_server_socket().close();
-                    Cloud.postlogout(client.getValue().getCheckid());
+                    Cloud.postlogout(String.valueOf(client.getValue().getCheckid()));
                     it.remove();
                 }
             }

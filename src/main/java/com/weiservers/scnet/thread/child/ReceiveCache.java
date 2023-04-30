@@ -3,7 +3,7 @@ package com.weiservers.scnet.thread.child;
 import com.weiservers.scnet.Main;
 import com.weiservers.scnet.bean.Motd;
 import com.weiservers.scnet.bean.record.Setting.Server;
-import com.weiservers.scnet.utils.ConfigLoad;
+import com.weiservers.scnet.config.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,7 +33,7 @@ public class ReceiveCache extends Thread {
     public void run() {
         try {
 
-            if ((motd.getTime() + ConfigLoad.getSetting().base().cache_time() * 1000L) < System.currentTimeMillis()) {
+            if ((motd.getTime() + Configuration.getSetting().base().cache_time() * 1000L) < System.currentTimeMillis()) {
                 //刷新缓存
                 ReloadCache(motd, server);
             }

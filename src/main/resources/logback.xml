@@ -7,7 +7,7 @@
 <!-- scanPeriod="30 seconds" : 配置自动扫面时间间隔（单位可以是：milliseconds, seconds, minutes
     or hours，默认为：milliseconds）， 默认为1分钟，scan="true"时该配置才会生效 -->
 <configuration debug="false" scan="true" scanPeriod="30 seconds" packagingData="true">
-    <conversionRule conversionWord="highlightex" converterClass="com.weiservers.scnet.config.Logback"/>
+    <conversionRule conversionWord="highlightex" converterClass="com.weiservers.scnet.config.ColorConverter"/>
 
     <!-- 设置变量。定义变量后，可以使“${}”来使用变量。 -->
 
