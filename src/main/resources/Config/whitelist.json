@@ -1,10 +1,12 @@
-[{
-  "userid": "22473000",
-  "username": "Weixiaojun",
-  "serverid": 0
-},{
-  "userid": "22400073",
-  "username": "Weixiaojun",
-  "serverid": 0
-
-}]
+[
+  {
+    "userid": "22473000",
+    "username": "Weixiaojun",
+    "serverid": 0
+  },
+  {
+    "userid": "22400073",
+    "username": "Weixiaojun",
+    "serverid": 0
+  }
+]

@@ -18,9 +18,10 @@
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <!-- encoder class为空时, 默认也为 ch.qos.logback.classic.encoder.PatternLayoutEncoder -->
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-<!--            <pattern>%green(%date{yyyy-MM-dd HH:mm:ss}) %highlightex(%-5level) %red([%thread]) %boldMagenta(%logger{50}) %highlightex(%msg%n))</pattern>-->
+            <!--            <pattern>%green(%date{yyyy-MM-dd HH:mm:ss}) %highlightex(%-5level) %red([%thread]) %boldMagenta(%logger{50}) %highlightex(%msg%n))</pattern>-->
 
-            <pattern>%green(%date{yyyy-MM-dd HH:mm:ss}) %highlightex(%-5level) %red([%thread]) %highlightex(%msg%n))</pattern>
+            <pattern>%green(%date{yyyy-MM-dd HH:mm:ss}) %highlightex(%-5level) %red([%thread]) %highlightex(%msg%n))
+            </pattern>
         </encoder>
     </appender>
 
@@ -29,9 +30,9 @@
         <!-- 文件滚动策略根据%d{patter}中的“patter”而定，此处为每天产生一个文件 -->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- 归档文件名“.zip或.gz结尾”,表示归档文件自动压缩 -->
-            <FileNamePattern>${LOG_FILE_LOCATION}/log.log.%d{yyyy-MM-dd}.log</FileNamePattern>
+            <FileNamePattern>${LOG_FILE_LOCATION}/%d{yyyy-MM-dd}.log</FileNamePattern>
             <!--日志文件保留天数-->
-            <maxHistory>30</maxHistory>
+            <maxHistory>-1</maxHistory>
         </rollingPolicy>
         <!--日志文件最大的大小-->
         <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">

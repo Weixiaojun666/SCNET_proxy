@@ -3,7 +3,7 @@ package com.weiservers.scnet.bean.record;
 import java.util.List;
 
 public record Setting(Base base, Cloud cloud, Aggregation aggregation, List<Server> server_list) {
-    public record Base(int connection_limit, int time_out, int cache_time, Boolean whitelist) {
+    public record Base(int connection_limit, int time_out, int cache_time, Boolean whitelist, int area_leave) {
 
     }
 

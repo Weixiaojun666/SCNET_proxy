@@ -47,33 +47,12 @@ public class Command extends Thread {
     public void run() {
         try {
             String[] commands = command.split("\\s+");
+            String[] commandParams = new String[6];
 
-            String command2 = "";
-            String command3 = "";
-            String command4 = "";
-            String command5 = "";
-            String command6 = "";
+            for (int i = 0; i <= commandParams.length && i <= commands.length; i++) {
+                commandParams[i] = commands[i];
+            }
 
-            if (commands.length > 1) {
-                command2 = commands[1];
-            }
-            if (commands.length > 2) {
-                command3 = commands[2];
-            }
-            if (commands.length > 3) {
-                command4 = commands[3];
-            }
-            if (commands.length > 4) {
-                command5 = commands[4];
-            }
-            if (commands.length > 5) {
-                command5 = commands[6];
-
-
-            }
-            if (commands.length > 6) {
-                command6 = commands[7];
-            }
             switch (commands[0]) {
                 case "" -> {
                 }
@@ -93,7 +72,7 @@ public class Command extends Thread {
                     hint();
                 }
                 case "list" -> {
-                    if (command2.equals("")) {
+                    if (commandParams[1].equals("")) {
                         hint("列表相关");
                         hint("list ban", "查看封禁列表");
                         hint("list ips", "查看封禁的IP列表");
@@ -103,7 +82,7 @@ public class Command extends Thread {
                         hint("list info", "查看服务器统计信息");
                         hint("list online", "查看在线用户列表");
                         hint();
-                    } else list(command2);
+                    } else list(commandParams[1]);
                 }
                 case "ban" -> {
                     switch (commands[1]) {
@@ -112,31 +91,31 @@ public class Command extends Thread {
                             hint("ban add user <id/name/ip>  [reason] [duration]", "封禁用户");
                             hint("ban add ip  <id/name/ip> [reason] [duration]", "封禁IP");
                             hint("ban add area  <id/name/ip> [level] [reason] [duration]", "封禁地区");
-                            hint("ban remove user", "解封用户");
-                            hint("ban remove ip", "解封IP");
-                            hint("ban remove area", "解封地区");
+                            hint("ban remove user <user>", "解封用户");
+                            hint("ban remove ip <ip>", "解封IP");
+                            hint("ban remove area <暂未实现>", "解封地区");
                             hint();
                         }
                         case "add" -> {
                             int expires = 0;
-                            if (!command5.equals("")) expires = Integer.parseInt(command5);
-                            switch (command3) {
+                            if (!commandParams[4].equals("")) expires = Integer.parseInt(commandParams[4]);
+                            switch (commandParams[2]) {
                                 case "" -> {
                                 }
-                                case "user" -> BanAddUser(command4, expires, command6);
-                                case "ip" -> BanAddIp(command4, expires, command6);
-                                case "area" -> BanAddArea(command4, expires, command6);
+                                case "user" -> BanAddUser(commandParams[3], expires, commandParams[5]);
+                                case "ip" -> BanAddIp(commandParams[3], expires, commandParams[5]);
+                                case "area" -> BanAddArea(commandParams[3], expires, commandParams[5]);
                                 default -> hint_error("命令不存在", command);
                             }
 
                         }
                         case "remove" -> {
-                            switch (command3) {
+                            switch (commandParams[2]) {
                                 case "" -> {
                                 }
-                                case "user" -> BanRemoveUser(command4);
-                                case "ip" -> BanRemoveIp(command4);
-                                case "area" -> BanRemoveArea(command4);
+                                case "user" -> BanRemoveUser(commandParams[3]);
+                                case "ip" -> BanRemoveIp(commandParams[3]);
+                                case "area" -> System.out.println("暂未实现");
                                 default -> hint_error("命令不存在", command);
                             }
                         }
@@ -145,7 +124,7 @@ public class Command extends Thread {
                 }
                 case "kick" -> {
 
-                    switch (command2) {
+                    switch (commandParams[1]) {
                         case "" -> {
                             hint("踢人相关");
                             hint("kick user <id/name/ip>", "踢出用户");
@@ -153,34 +132,22 @@ public class Command extends Thread {
                             hint("kick all", "踢出所有用户");
                             hint();
                         }
-                        case "user" -> {
-                            KickUser(command3);
-
-                        }
-                        case "area" -> {
-                            int level = 3;
-                            if (!command4.equals("")) level = Integer.parseInt(command4);
-                            KickArea(command3, level);
-
-                        }
+                        case "user" -> KickUser(commandParams[3]);
+                        case "area" -> KickArea(commandParams[3]);
                         case "all" -> KickAll();
                     }
                 }
                 case "whitelist" -> {
 
-                    switch (command2) {
+                    switch (commandParams[1]) {
                         case "" -> {
                             hint("白名单相关");
                             hint("whitelist add <user/ip>", "添加白名单");
                             hint("whitelist remove <user/ip>", "移除白名单");
                             hint();
                         }
-                        case "add" -> {
-
-                        }
-                        case "remove" -> {
-
-                        }
+                        case "add" -> WhitelistAdd(commandParams[2]);
+                        case "remove" -> WhitelistRemove(commandParams[2]);
                         default -> hint_error("命令不存在", command);
                     }
                 }
@@ -212,18 +179,19 @@ public class Command extends Thread {
 
     public void list(String list) {
         switch (list) {
-            case "ban" -> {
-
-            }
-            case "ip" -> {
-
-            }
-            case "area" -> {
-
-            }
-            case "whitelist" -> {
-
-            }
+//            case "ban" -> {
+//
+//
+//            }
+//            case "ip" -> {
+//
+//            }
+//            case "area" -> {
+//
+//            }
+//            case "whitelist" -> {
+//
+//            }
             case "servers" -> {
                 System.out.printf("\u001B[32m %-18s\u001B[0m \u001B[33m%-8s \u001B[0m \u001B[32m %-6s %-6s\u001B[0m  \u001B[32m %-8s\u001B[0m%n", "名称", "模式", "在线玩家", "最大玩家", "版本");
                 for (ServerThread serverThread : Main.serverThreads) {

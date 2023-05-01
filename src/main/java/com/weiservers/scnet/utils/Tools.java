@@ -14,12 +14,18 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
 
 
 public class Tools {
+    public static String GetTime() {
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+    }
+
     public static String decompress(byte[] compressedData) throws IOException, DataFormatException {
         Inflater inflater = new Inflater(true);
         inflater.setInput(compressedData);

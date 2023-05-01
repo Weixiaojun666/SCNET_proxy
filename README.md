@@ -9,6 +9,7 @@ WeiSCNET_proxy
 ~~~
 
 ## 功能
+
 ~~~
 提供用户,IP,区域封禁功能
 ~~~
@@ -30,7 +31,8 @@ WeiSCNET_proxy
 ~~~
 
 ## 云服务
->[云服务]由WeiServers提供 构建玩家小数据平台
+
+> [云服务]由WeiServers提供 构建玩家小数据平台
 
 ~~~
 统计玩家进服记录
@@ -59,6 +61,7 @@ java -server -Xmx8196M -Xms1024M -jar SCNET_proxy.jar
 ~~~
 
 ## 备注
->在windos下彩色日志需要插件支持
+
+> 在windos下彩色日志需要插件支持
 [彩色插件](https://github.com/adoxa/ansicon/)
 
