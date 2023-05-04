@@ -26,6 +26,7 @@ public class Listening extends Thread {
         this.server = server;
     }
 
+    @Override
     public void run() {
         try {
             //端口为-1不启用转发

@@ -2,5 +2,5 @@
 /out/
 /target/
 /log/
-/config
-
+/config/
+/.idea/

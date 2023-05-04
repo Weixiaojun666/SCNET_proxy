@@ -30,6 +30,7 @@ public class Receive extends Thread {
         this.motd = motd;
     }
 
+    @Override
     public void run() {
         InetAddress ClientAddress = packet.getAddress();
         int ClientPort = packet.getPort();

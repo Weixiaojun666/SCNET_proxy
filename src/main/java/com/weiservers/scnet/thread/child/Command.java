@@ -44,6 +44,7 @@ public class Command extends Thread {
         System.out.printf("\u001B[33m%-36s \u001B[32m%s\u001B[0m%n", command, hint);
     }
 
+    @Override
     public void run() {
         try {
             String[] commands = command.split("\\s+");

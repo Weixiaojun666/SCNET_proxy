@@ -18,6 +18,7 @@ public class Cache extends Thread {
         this.motd = motd;
     }
 
+    @Override
     public void run() {
         motd.setThread(this);
         try {

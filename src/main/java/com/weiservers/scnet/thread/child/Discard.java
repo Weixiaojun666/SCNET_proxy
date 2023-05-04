@@ -12,6 +12,7 @@ public class Discard extends Thread {
         this.ClientAddress = ClientAddress;
     }
 
+    @Override
     public void run() {
         Main.info.addInvalid();
         if (!Main.Invalids.containsKey(ClientAddress)) {

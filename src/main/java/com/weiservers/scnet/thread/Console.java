@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 
 public class Console extends Thread {
+    @Override
     public void run() {
         while (!isInterrupted()) {
             Scanner scanner = new Scanner(System.in);

@@ -1,9 +1,9 @@
 package com.weiservers.scnet;
 
 
-public class Test {
+ class Test {
     @org.junit.jupiter.api.Test
-    public void test() {
+        void test() {
 
     }
 }
