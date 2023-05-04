@@ -28,13 +28,15 @@
             whitelist remove [user]  给某玩家移除白名单
             whitelist 查看本地白名单列表
 
-            reload banned 重载本地banned配置文件
-            reload whitelist 重载本地whitelist配置文件
+            reload configs 重载所有配置文件
+
+
+
 
 
 2.允许玩家选择进入服务器【添加玩家进服列表】 添加端口聚合功能
     添加 【配置文件】
-        player-choose.json
+        selectlist.json
     添加指令
     choose change [userid] [server-id]更改玩家某玩家进入的服务器
     choose default [server-id] 设置默认进入服务器[所有玩家]

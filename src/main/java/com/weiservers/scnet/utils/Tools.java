@@ -14,7 +14,10 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
+import java.util.Base64;
 import java.util.Date;
 import java.util.Map;
 import java.util.zip.DataFormatException;
@@ -24,6 +27,19 @@ import java.util.zip.Inflater;
 public class Tools {
     public static String GetTime() {
         return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+    }
+
+
+    public static String MD5(String str) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] inputBytes = str.getBytes();
+            byte[] hashBytes = md.digest(inputBytes);
+            return Base64.getEncoder().encodeToString(hashBytes);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public static String decompress(byte[] compressedData) throws IOException, DataFormatException {

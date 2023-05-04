@@ -36,7 +36,7 @@ public class Receive extends Thread {
         int ClientPort = packet.getPort();
         try {
             DatagramSocket to_server_socket;
-            if (!Main.Clients.containsKey(ClientAddress + ":" + ClientPort)) {
+            if (!Main.Clients.containsKey(ClientAddress.getHostAddress() + ":" + ClientPort)) {
                 //新连接 判断是否是查询请求
                 byte[] ans = new byte[packet.getLength()];
                 System.arraycopy(packet.getData(), 0, ans, 0, packet.getLength());
@@ -46,19 +46,15 @@ public class Receive extends Thread {
                     ThreadPool.execute(new ReceiveCache(ClientAddress, ClientPort, to_client_socket, server, motd));
                 } else if (string.startsWith("050b000000")) {
                     //新版本服务器数据包经过压缩 需要先解压缩
-                    System.out.println(string.substring(68));
                     string = decompress(hexStringToByteArray(string.substring(68)));
-                    System.out.println(string);
-
-
                     //客户端连接请求打到服务器
                     to_server_socket = new DatagramSocket(0);
                     Client client = new Client(to_server_socket, to_client_socket, server, ClientAddress, ClientPort);
                     client.setTime(System.currentTimeMillis());
-                    Main.Clients.put(ClientAddress + ":" + ClientPort, client);
+                    Main.Clients.put(ClientAddress.getHostAddress() + ":" + ClientPort, client);
                     ThreadPool.execute(new ReceiveServer(client));
                     ThreadPool.execute(new ReceiveClient(packet, client));
-                    logger.info("[新客户端连接]   {}  {}  =>  {}  {} 通过端口{} 连接到[{}]", ClientAddress, ClientPort, server.address(), server.port(), to_server_socket.getLocalPort(), server.name());
+                    logger.info("[新客户端连接]   {}  {}  =>  {}  {} 通过端口{} 连接到[{}]", ClientAddress.getHostAddress(), ClientPort, server.address(), server.port(), to_server_socket.getLocalPort(), server.name());
                     ThreadPool.execute(new Check(client, string.substring(14, 46)));
                     Main.info.getNormal_ip().add(ClientAddress);
                     Main.info.addNormal();
@@ -67,7 +63,7 @@ public class Receive extends Thread {
                     ThreadPool.execute(new Discard(ClientAddress));
                 }
             } else {
-                Client client = Main.Clients.get(ClientAddress + ":" + ClientPort);
+                Client client = Main.Clients.get(ClientAddress.getHostAddress() + ":" + ClientPort);
                 ThreadPool.execute(new ReceiveClient(packet, client));
             }
         } catch (Exception e) {

@@ -31,4 +31,8 @@ public class Motd {
         this.version = version;
     }
 
+    public void close() {
+        if (!thread.isAlive()) thread.interrupt();
+        if (!socket.isClosed()) socket.close();
+    }
 }

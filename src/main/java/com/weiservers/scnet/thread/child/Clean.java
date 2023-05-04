@@ -34,6 +34,7 @@ public class Clean extends Thread {
                     if (!client.getValue().getTo_server_socket().isClosed())
                         client.getValue().getTo_server_socket().close();
                     Cloud.postlogout(String.valueOf(client.getValue().getCheckid()));
+                    Main.Servers.remove(client.getKey());
                     it.remove();
                 }
             }
