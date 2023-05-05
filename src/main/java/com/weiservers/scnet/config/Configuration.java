@@ -41,7 +41,7 @@ public class Configuration {
             Setting = objectMapper.readValue(new File("./config/setting.json"), Setting.class);
             Whitelist = objectMapper.readValue(new File("./config/whitelist.json"), Whitelist.class);
             Banned = objectMapper.readValue(new File("./config/banned.json"), Banned.class);
-            Selectlist = objectMapper.readValue(new File("./config/players-choose.json"), Selectlist.class);
+            Selectlist = objectMapper.readValue(new File("./config/selectlist.json"), Selectlist.class);
 
         } catch (Exception e) {
             logger.error("读取配置文件失败", e);
