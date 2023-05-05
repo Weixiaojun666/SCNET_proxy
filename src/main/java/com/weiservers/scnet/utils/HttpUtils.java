@@ -16,8 +16,8 @@ import java.net.URLEncoder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class HttpClient {
-    private final static Logger logger = LoggerFactory.getLogger(HttpClient.class);
+public class HttpUtils {
+    private final static Logger logger = LoggerFactory.getLogger(HttpUtils.class);
 
     public static String encodeChinese(String str, String charset) throws UnsupportedEncodingException {
         //匹配中文和空格的正则表达式

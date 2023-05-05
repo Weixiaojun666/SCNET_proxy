@@ -13,7 +13,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
-import static com.weiservers.scnet.utils.Tools.*;
+import static com.weiservers.scnet.utils.DataConvertUtils.*;
 
 public class Receive extends Thread {
 

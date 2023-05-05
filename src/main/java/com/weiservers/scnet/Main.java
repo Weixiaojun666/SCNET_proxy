@@ -27,8 +27,8 @@ public class Main {
 
     public static final Map<InetAddress, Invalid> Invalids = new ConcurrentHashMap<>();
     public final static Info info = new Info(System.currentTimeMillis());
+    public static final List<ServerThread> serverThreads = new ArrayList<>();
     private final static Logger logger = LoggerFactory.getLogger(Main.class);
-    public static List<ServerThread> serverThreads = new ArrayList<>();
 
     public static void ServersLoad() {
 
@@ -63,7 +63,7 @@ public class Main {
     public static void main(String[] args) {
 
         logger.info("加载中...");
-        if (Integer.parseInt(System.getProperty("java.version")) < 20) {
+        if (Integer.parseInt(System.getProperty("java.version").substring(0,2)) < 20) {
             logger.error("请使用java20以上版本运行");
             System.exit(0);
         }

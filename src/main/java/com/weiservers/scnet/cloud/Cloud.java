@@ -3,7 +3,7 @@ package com.weiservers.scnet.cloud;
 import com.weiservers.scnet.bean.Motd;
 import com.weiservers.scnet.config.Configuration;
 
-import static com.weiservers.scnet.utils.HttpClient.HttpClient;
+import static com.weiservers.scnet.utils.HttpUtils.HttpClient;
 
 public class Cloud {
 

@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 
-import static com.weiservers.scnet.utils.HttpClient.HttpClient;
+import static com.weiservers.scnet.utils.HttpUtils.HttpClient;
 import static com.weiservers.scnet.utils.Tools.disconnect;
 
 public class Check extends Thread {
@@ -71,7 +71,7 @@ public class Check extends Thread {
 //        if ((boolean) Main.getSetting().get("verification")) {
 //            //连接WeiServers 询问是否可放行
 //            String url = "https://api.weiservers.com/scnet/apply/check?token=" + Main.getSetting().get("token") + "&userid=" + client.getUserid() + "&username=" + client.getUsername() + "&servername=" + client.getServer().name() + "&ip=" + client.getAddress().toString().substring(1);
-//            JsonNode rootNode = HttpClient(url, false);
+//            JsonNode rootNode = HttpUtils(url, false);
 //            if (rootNode == null) {
 //                logger.error("{} 检查失败 无法连接到WeiServers 将默认放行", client.getUsername());
 //                return true;

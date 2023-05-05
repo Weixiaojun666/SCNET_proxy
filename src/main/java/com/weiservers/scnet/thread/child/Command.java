@@ -196,7 +196,7 @@ public class Command extends Thread {
             case "servers" -> {
                 System.out.printf("\u001B[32m %-18s\u001B[0m \u001B[33m%-8s \u001B[0m \u001B[32m %-6s %-6s\u001B[0m  \u001B[32m %-8s\u001B[0m%n", "名称", "模式", "在线玩家", "最大玩家", "版本");
                 for (ServerThread serverThread : Main.serverThreads) {
-                    Motd motd = serverThread.getMotd();
+                    Motd motd = serverThread.motd();
                     System.out.printf("\u001B[32m %-18s\u001B[0m \u001B[33m%-8s \u001B[0m \u001B[32m %-6s %-6s\u001B[0m  \u001B[32m %-8s\u001B[0m%n", motd.getServername(), motd.getModel(), motd.getOnlineplayer(), motd.getMaxplayer(), motd.getVersion());
                 }
             }

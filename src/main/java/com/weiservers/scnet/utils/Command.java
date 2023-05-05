@@ -33,7 +33,7 @@ public class Command {
 
     public static void Cache() {
         for (ServerThread serverThread : Main.serverThreads) {
-            ReloadCache(serverThread.getMotd(), serverThread.getServer());
+            ReloadCache(serverThread.motd(), serverThread.server());
         }
     }
 
@@ -62,7 +62,6 @@ public class Command {
                     clients.add(client.getValue());
                 }
             }
-            return clients;
         } else {
             for (Map.Entry<String, Client> client : Main.Clients.entrySet()) {
                 if (client.getValue().getUsername().equals(input)) {
@@ -72,8 +71,8 @@ public class Command {
             if (clients.size() == 0) {
                 System.out.println("未找到符合条件的用户,请检查用户名/用户ID/ip地址是否正确,并确保在线");
             }
-            return clients;
         }
+        return clients;
     }
 
     public static void KickUser(String str) {
@@ -162,7 +161,7 @@ public class Command {
     }
 
     public static void BanRemoveIp(String ip) {
-        Boolean isbanned = false;
+        boolean isbanned = false;
         for (Banned.BannedIps bannedIps : Configuration.getBanned().bannedIps()) {
             if (bannedIps.ip().equals(ip)) {
                 Configuration.getBanned().bannedIps().remove(bannedIps);
