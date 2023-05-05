@@ -31,18 +31,13 @@
             reload configs 重载所有配置文件
 
 
-
-
-
-2.允许玩家选择进入服务器【添加玩家进服列表】 添加端口聚合功能
+2.允许玩家选择进入服务器【添加玩家进服列表】 添加端口聚合功能【伪跨服】
     添加 【配置文件】
         selectlist.json
     添加指令
     choose change [userid] [server-id]更改玩家某玩家进入的服务器
     choose default [server-id] 设置默认进入服务器[所有玩家]
-
     list choose 查看玩家选择服务器信息
-    reload choose 重载choose配置文件
 
 4.修复玩家进服日志记录功能 优化进服检查流程
         修复日志记录失败功能

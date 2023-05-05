@@ -27,8 +27,8 @@ public class Main {
 
     public static final Map<InetAddress, Invalid> Invalids = new ConcurrentHashMap<>();
     public final static Info info = new Info(System.currentTimeMillis());
+    public static final List<ServerThread> serverThreads = new ArrayList<>();
     private final static Logger logger = LoggerFactory.getLogger(Main.class);
-    public static List<ServerThread> serverThreads = new ArrayList<>();
 
     public static void ServersLoad() {
 
