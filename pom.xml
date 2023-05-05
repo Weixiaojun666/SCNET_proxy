@@ -36,8 +36,8 @@
                 </configuration>
                 <executions>
                     <execution>
-                        <id>make-assembly</id> <!-- this is used for inheritance merges -->
-                        <phase>package</phase> <!-- bind to the packaging phase -->
+                        <id>make-assembly</id>
+                        <phase>package</phase>
                         <goals>
                             <goal>single</goal>
                         </goals>
@@ -50,14 +50,12 @@
                 <version>2.15.0</version>
                 <executions>
                     <execution>
-                        <!-- 检测依赖项是否有更新 -->
                         <id>check-dependencies</id>
                         <goals>
                             <goal>display-dependency-updates</goal>
                         </goals>
                     </execution>
                     <execution>
-                        <!-- 检测插件是否有更新 -->
                         <id>check-plugins</id>
                         <goals>
                             <goal>display-plugin-updates</goal>
@@ -98,7 +96,6 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>1.4.7</version>
-            <!--            <scope>test</scope>-->
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
         <dependency>
@@ -107,19 +104,5 @@
             <version>1.18.26</version>
             <scope>provided</scope>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.springframework/spring-context -->
-        <!--        <dependency>-->
-        <!--            <groupId>org.springframework</groupId>-->
-        <!--            <artifactId>spring-context</artifactId>-->
-        <!--            <version>6.0.7</version>-->
-        <!--        </dependency>-->
-
-        <!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.aspectj/aspectjweaver &ndash;&gt;-->
-        <!--        <dependency>-->
-        <!--            <groupId>org.aspectj</groupId>-->
-        <!--            <artifactId>aspectjweaver</artifactId>-->
-        <!--            <version>1.9.19</version>-->
-        <!--            <scope>runtime</scope>-->
-        <!--        </dependency>-->
     </dependencies>
 </project>
