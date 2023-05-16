@@ -11,7 +11,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
-import static com.weiservers.scnet.utils.Tools.ReloadCache;
+import static com.weiservers.scnet.utils.Command.ReloadCache;
 
 public class ReceiveCache extends Thread {
     private final static Logger logger = LoggerFactory.getLogger(ReceiveCache.class);

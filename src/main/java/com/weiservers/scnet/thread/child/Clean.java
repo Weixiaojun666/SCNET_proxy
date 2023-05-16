@@ -3,7 +3,6 @@ package com.weiservers.scnet.thread.child;
 import com.weiservers.scnet.Main;
 import com.weiservers.scnet.bean.Client;
 import com.weiservers.scnet.bean.Invalid;
-import com.weiservers.scnet.cloud.Cloud;
 import com.weiservers.scnet.config.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.Iterator;
 import java.util.Map;
 
-import static com.weiservers.scnet.utils.Tools.getDatePoor;
+import static com.weiservers.scnet.utils.DataConvertUtils.getDatePoor;
 
 public class Clean extends Thread {
     private final static Logger logger = LoggerFactory.getLogger(Clean.class);
@@ -33,7 +32,7 @@ public class Clean extends Thread {
                     if (!client.getValue().getThread().isAlive()) client.getValue().getThread().interrupt();
                     if (!client.getValue().getTo_server_socket().isClosed())
                         client.getValue().getTo_server_socket().close();
-                    Cloud.postlogout(String.valueOf(client.getValue().getCheckid()));
+//                    Cloud.postlogout(String.valueOf(client.getValue().getCheckid()));
                     Main.Servers.remove(client.getKey());
                     it.remove();
                 }
@@ -45,12 +44,12 @@ public class Clean extends Thread {
                 if (invalidEntry.getValue().getUpdate_time() + 8000L < System.currentTimeMillis()) {
                     logger.warn("收到来自 {} 的无效包,数量{} 开始时间 {} 持续 {}", invalidEntry.getKey(), invalidEntry.getValue().getNum(), format.format(invalidEntry.getValue().getCreate_time()), getDatePoor(invalidEntry.getValue().getCreate_time(), invalidEntry.getValue().getUpdate_time()));
                     it0.remove();
-                    Cloud.postinvalid(String.valueOf(invalidEntry.getKey()), invalidEntry.getValue().getCreate_time(), invalidEntry.getValue().getUpdate_time(), invalidEntry.getValue().getNum());
+                    //  Cloud.postinvalid(String.valueOf(invalidEntry.getKey()), invalidEntry.getValue().getCreate_time(), invalidEntry.getValue().getUpdate_time(), invalidEntry.getValue().getNum());
                 }
                 if (invalidEntry.getValue().getCheck_time() + 60000L < System.currentTimeMillis()) {
                     invalidEntry.getValue().setCheck_time(System.currentTimeMillis());
                     logger.error("收到来自 {} 的无效包,数量{} 开始时间 {} 持续 {}", invalidEntry.getKey(), invalidEntry.getValue().getNum(), format.format(invalidEntry.getValue().getCreate_time()), getDatePoor(invalidEntry.getValue().getCreate_time(), invalidEntry.getValue().getUpdate_time()));
-                    Cloud.postinvalid(String.valueOf(invalidEntry.getKey()), invalidEntry.getValue().getCreate_time(), 0L, invalidEntry.getValue().getNum());
+                    //  Cloud.postinvalid(String.valueOf(invalidEntry.getKey()), invalidEntry.getValue().getCreate_time(), 0L, invalidEntry.getValue().getNum());
                 }
             }
         } catch (Exception e) {

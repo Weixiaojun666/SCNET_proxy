@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
 import java.util.Base64;
+import java.util.Date;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
 
@@ -79,5 +81,24 @@ public class DataConvertUtils {
             e1.printStackTrace();
         }
         return s;
+    }
+
+    public static String GetTime() {
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+    }
+
+
+    public static String getDatePoor(Long startTime, Long endTime) {
+        long nd = 1000 * 24 * 60 * 60;
+        long nh = 1000 * 60 * 60;
+        long nm = 1000 * 60;
+        long ns = 1000;
+        // 获得两个时间的毫秒时间差异
+        long diff = endTime - startTime;
+        long day = diff / nd;
+        long hour = diff % nd / nh;
+        long min = diff % nd % nh / nm;
+        long sec = diff % nd % nh % nm / ns;
+        return day + "天" + hour + "小时" + min + "分钟" + sec + "秒";
     }
 }

@@ -10,7 +10,7 @@ import java.util.Map;
 import static com.weiservers.scnet.utils.Command.Cache;
 import static com.weiservers.scnet.utils.Command.Clean;
 import static com.weiservers.scnet.utils.Command.*;
-import static com.weiservers.scnet.utils.Tools.getDatePoor;
+import static com.weiservers.scnet.utils.DataConvertUtils.getDatePoor;
 
 public class Command extends Thread {
     private final String command;

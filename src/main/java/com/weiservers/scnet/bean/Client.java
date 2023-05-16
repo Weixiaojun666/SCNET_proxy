@@ -5,6 +5,7 @@ import lombok.Data;
 
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.util.UUID;
 
 @Data
 public class Client {
@@ -24,7 +25,7 @@ public class Client {
     private String info3;
     private String isp;
 
-    private int Checkid;
+    private UUID CheckId;
 
 
     public Client(DatagramSocket to_server_socket, DatagramSocket to_client_socket, Server server, InetAddress address, int port) {

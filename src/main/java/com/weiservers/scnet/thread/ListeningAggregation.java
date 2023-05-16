@@ -20,7 +20,6 @@ import java.util.Objects;
 import java.util.zip.DataFormatException;
 
 import static com.weiservers.scnet.utils.DataConvertUtils.*;
-import static com.weiservers.scnet.utils.Tools.GetTime;
 
 public class ListeningAggregation extends Thread {
     private static final Logger logger = LoggerFactory.getLogger(Listening.class);

@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import java.net.DatagramPacket;
 
-import static com.weiservers.scnet.utils.Tools.getServerInfo;
+import static com.weiservers.scnet.utils.Command.getServerInfo;
 
 public class Cache extends Thread {
     private static final Logger logger = LoggerFactory.getLogger(Cache.class);

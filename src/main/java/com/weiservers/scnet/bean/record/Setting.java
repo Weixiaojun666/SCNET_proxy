@@ -3,15 +3,15 @@ package com.weiservers.scnet.bean.record;
 import java.util.List;
 
 public record Setting(Base base, Cloud cloud, Aggregation aggregation, List<Server> server_list) {
-    public record Base(int connection_limit, int time_out, int cache_time, Boolean whitelist, int area_leave) {
+    public record Base(int connection_limit, int time_out, int cache_time, boolean whitelist, int area_leave,boolean AllowForeign) {
 
     }
 
-    public record Cloud(Boolean enable, String token, int timeout_retry, Boolean verification) {
+    public record Cloud(boolean enable, String token, int retryNum,int timeOut, boolean verification) {
 
     }
 
-    public record Aggregation(Boolean enable, int port, int default_server) {
+    public record Aggregation(boolean enable, int port, int default_server) {
 
     }
 

@@ -63,7 +63,7 @@ public class Main {
     public static void main(String[] args) {
 
         logger.info("加载中...");
-        if (Integer.parseInt(System.getProperty("java.version").substring(0,2)) < 20) {
+        if (Integer.parseInt(System.getProperty("java.version").substring(0, 2)) < 20) {
             logger.error("请使用java20以上版本运行");
             System.exit(0);
         }
