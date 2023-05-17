@@ -10,7 +10,7 @@ public record Banned(List<BannedAreas> bannedAreas, List<BannedIps> bannedIps, L
     public record BannedIps(String ip, int expires, String reason, String updated) {
     }
 
-    public record BannedPlayers(int userid, String username, int expires, String reason, String updated) {
+    public record BannedPlayers(int userid, int expires, String reason, String updated) {
     }
 
 }

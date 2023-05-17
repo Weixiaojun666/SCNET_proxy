@@ -3,13 +3,11 @@ package com.weiservers.scnet.thread.child;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.weiservers.scnet.Main;
 import com.weiservers.scnet.bean.Client;
-import com.weiservers.scnet.bean.record.Whitelist;
 import com.weiservers.scnet.config.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 
 import static com.weiservers.scnet.utils.Command.disconnect;
@@ -79,7 +77,7 @@ public class Check extends Thread {
         return true;
     }
 
-    public Boolean CheckIp() {
+    public boolean CheckIp() {
         //连接到公开IP地址API获取IP信息[不再从WeiServer拉取]  接口由VORE-API(https://api.vore.top/)免费提供
         JsonNode rootNodeIp = HttpGet("https://api.vore.top/api/IPdata?ip=" + client.getAddress().toString().substring(1));
         if (rootNodeIp != null) {
@@ -109,22 +107,13 @@ public class Check extends Thread {
         //IP检查不通过直接断开链接 [阻止海外用户登录]
         if (!CheckIp()) return false;
         //询问WeiServers平台 [绑定QQ 区域封禁 用户黑名单]
-        CheckWeiServer();
+        boolean CheckWeiServer = CheckWeiServer();
 
         //只允许本地白名单
 
         //使用WeiServer的白名单
 
 
-        try {
-            for (Whitelist whitelist : Objects.requireNonNull(Configuration.readWhitelist())) {
-                // if ((client.getUserid()).equals(String.valueOf(whitelist.userid()))) {
-                // whitename = true;
-                //    break;
-                // }
-            }
-        } catch (Exception ignored) {
-        }
         //开启只限白名单进入
         // if ((boolean) Main.getSetting().get("whitelist") && (!whitename)) {
         //    reason = "服务器只允许本地白名单进入";

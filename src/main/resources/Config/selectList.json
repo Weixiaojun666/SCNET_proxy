@@ -1,10 +1,9 @@
 {
-"selectList":
-[
-  {
-    "token": 23682,
-    "serverid": 100,
-    "updated": "2020-01-01 20:00:00"
-  }
-]
+  "selectList": [
+    {
+      "token": 23682,
+      "serverId": 100,
+      "updated": "2020-01-01 20:00:00"
+    }
+  ]
 }

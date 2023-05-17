@@ -11,7 +11,7 @@ public record Setting(BasicConfig basicConfig, LocalProtection localProtection, 
     public record LocalProtection(boolean denyOverseasLogin, boolean whitelistOnlyLogin) {
     }
 
-    public record CloudProtection(String appKey, String appSecret) {
+    public record CloudProtection(String appKey, String appSecret, boolean loginCheck) {
     }
 
     public record Aggregation(int port, int defaultServer) {

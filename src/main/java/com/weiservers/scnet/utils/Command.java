@@ -11,6 +11,8 @@ import com.weiservers.scnet.bean.record.Whitelist;
 import com.weiservers.scnet.config.Configuration;
 import com.weiservers.scnet.thread.child.Clean;
 import com.weiservers.scnet.thread.child.Cloud;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.DatagramPacket;
 import java.net.InetAddress;
@@ -24,6 +26,7 @@ import static com.weiservers.scnet.utils.DataConvertUtils.*;
 
 public class Command {
     private static final String USERID_REGEX = "^[0-9]+$";
+    private final static Logger logger = LoggerFactory.getLogger(Command.class);
 
     public static void Clean() {
         ThreadPool.execute(new Clean());
@@ -31,9 +34,14 @@ public class Command {
     }
 
     public static void Reload() {
+        Configuration.SaveConfig();
         stopservice();
-//                    //  Main.ConfigLoad();
-//                    // Main.ServerLoad(Main.serverlist);
+        Main.Clients.clear();
+        Main.Servers.clear();
+        Main.Invalids.clear();
+        Main.serverThreads.clear();
+        Configuration.ReadConfig();
+        Main.ServersLoad();
     }
 
 
@@ -45,6 +53,10 @@ public class Command {
 
     public static void Stop() {
         stopservice();
+        Main.Clients.clear();
+        Main.Servers.clear();
+        Main.Invalids.clear();
+        Main.serverThreads.clear();
         ThreadPool.shutdown();
         System.exit(0);
     }
@@ -75,7 +87,7 @@ public class Command {
                 }
             }
             if (clients.size() == 0) {
-                System.out.println("未找到符合条件的用户,请检查用户名/用户ID/ip地址是否正确,并确保在线");
+                logger.warn("未找到符合条件的用户,请检查用户名/用户ID/ip地址是否正确,并确保在线");
             }
         }
         return clients;
@@ -87,7 +99,7 @@ public class Command {
 
         for (Client client : clients) {
             disconnect(client);
-            System.out.printf("已踢出 %s ID: %s %n", client.getUsername(), client.getUserid());
+            logger.info("已踢出 {} ID: {} ", client.getUsername(), client.getUserid());
         }
     }
 
@@ -98,7 +110,7 @@ public class Command {
             for (Map.Entry<String, Client> client : Main.Clients.entrySet()) {
                 if (client0.equalArea(client.getValue(), Configuration.getSetting().basicConfig().regionBlockLevel())) {
                     disconnect(client.getValue());
-                    System.out.printf("已踢出 %s ID: %s %n", client.getValue().getUsername(), client.getValue().getUserid());
+                    logger.info("已踢出 {} ID: {} ", client.getValue().getUsername(), client.getValue().getUserid());
                 }
             }
         }
@@ -107,17 +119,20 @@ public class Command {
     public static void KickAll() {
         for (Map.Entry<String, Client> client : Main.Clients.entrySet()) {
             disconnect(client.getValue());
-            System.out.printf("已踢出 %s ID: %s %n", client.getValue().getUsername(), client.getValue().getUserid());
+            logger.info("已踢出 {} ID: {} ", client.getValue().getUsername(), client.getValue().getUserid());
         }
     }
 
     public static void BanAddUser(String str, int expires, String reason) {
         List<Client> clients = FoundClient(str);
-        if (clients.size() == 0) return;
+        if (clients.size() == 0) {
+            Configuration.getBanned().bannedPlayers().add(new Banned.BannedPlayers(Integer.parseInt(str), expires, reason, GetTime()));
+            logger.info("[user]在玩家未在线情况下拉黑 ID: {} ", Integer.parseInt(str));
+        }
         for (Client client : clients) {
             disconnect(client);
-            Configuration.getBanned().bannedPlayers().add(new Banned.BannedPlayers(client.getUserid(), client.getUsername(), expires, reason, GetTime()));
-            System.out.printf("[user]已踢出并拉黑 %s ID: %s %n", client.getUsername(), client.getUserid());
+            Configuration.getBanned().bannedPlayers().add(new Banned.BannedPlayers(client.getUserid(), expires, reason, GetTime()));
+            logger.info("[user]已踢出并拉黑 {} ID: {} ", client.getUsername(), client.getUserid());
         }
     }
 
@@ -127,9 +142,9 @@ public class Command {
         for (Client client : clients) {
             disconnect(client);
             Configuration.getBanned().bannedIps().add(new Banned.BannedIps(client.getAddress().toString(), expires, reason, GetTime()));
-            Configuration.getBanned().bannedPlayers().add(new Banned.BannedPlayers(client.getUserid(), client.getUsername(), expires, "IP:" + client.getAddress().toString(), GetTime()));
-            System.out.printf("[user]已踢出并拉黑 %s ID: %s %n", client.getUsername(), client.getUserid());
-            System.out.printf("[ip]已添加 %s 到黑名单%n", client.getAddress().toString());
+            Configuration.getBanned().bannedPlayers().add(new Banned.BannedPlayers(client.getUserid(), expires, "IP:" + client.getAddress().toString(), GetTime()));
+            logger.info("[user]已踢出并拉黑 {} ID: {} ", client.getUsername(), client.getUserid());
+            logger.info("[ip]已添加 {} 到黑名单", client.getAddress().toString());
         }
     }
 
@@ -142,10 +157,10 @@ public class Command {
                     disconnect(client.getValue());
                     Configuration.getBanned().bannedAreas().add(new Banned.BannedAreas(client.getValue().getInfo1(), client.getValue().getInfo2(), client.getValue().getInfo3(), client.getValue().getIsp(), expires, reason, GetTime()));
                     Configuration.getBanned().bannedIps().add(new Banned.BannedIps(client.getValue().getAddress().toString(), expires, reason, GetTime()));
-                    Configuration.getBanned().bannedPlayers().add(new Banned.BannedPlayers(client.getValue().getUserid(), client.getValue().getUsername(), expires, "IP:" + client.getValue().getAddress().toString(), GetTime()));
-                    System.out.printf("[user]已踢出并拉黑 %s ID: %s %n", client.getValue().getUsername(), client.getValue().getUserid());
-                    System.out.printf("[ip]已添加 %s 到黑名单%n", client.getValue().getAddress().toString());
-                    System.out.printf("[area]已添加 %s %s %s %s 到黑名单%n", client.getValue().getInfo1(), client.getValue().getInfo2(), client.getValue().getInfo3(), client.getValue().getIsp());
+                    Configuration.getBanned().bannedPlayers().add(new Banned.BannedPlayers(client.getValue().getUserid(), expires, "IP:" + client.getValue().getAddress().toString(), GetTime()));
+                    logger.info("[user]已踢出并拉黑 {} ID: {} ", client.getValue().getUsername(), client.getValue().getUserid());
+                    logger.info("[ip]已添加 {} 到黑名单", client.getValue().getAddress().toString());
+                    logger.info("[area]已添加 {} {} {} {} 到黑名单", client.getValue().getInfo1(), client.getValue().getInfo2(), client.getValue().getInfo3(), client.getValue().getIsp());
                 }
             }
         }
@@ -155,45 +170,38 @@ public class Command {
     public static void BanRemoveUser(String user) {
         boolean isfound = false;
         for (Banned.BannedPlayers bannedPlayers : Configuration.getBanned().bannedPlayers()) {
-            if (bannedPlayers.username().equals(user)) {
+            if (bannedPlayers.userid() == Integer.parseInt(user)) {
                 Configuration.getBanned().bannedPlayers().remove(bannedPlayers);
-                System.out.printf("已移除 %s 的黑名单%n", user);
+                logger.info("已移除 {} 的黑名单", user);
                 isfound = true;
+                break;
             }
         }
-        if (!isfound) System.out.println("未找到该IP,请检查IP是否正确");
-
-
+        if (!isfound) logger.info("未找到该用户,请检查用户ID是否正确");
     }
+
 
     public static void BanRemoveIp(String ip) {
         boolean isbanned = false;
         for (Banned.BannedIps bannedIps : Configuration.getBanned().bannedIps()) {
             if (bannedIps.ip().equals(ip)) {
                 Configuration.getBanned().bannedIps().remove(bannedIps);
-                System.out.printf("已移除 %s 的黑名单%n", ip);
+                logger.info("已移除 {} 的黑名单", ip);
                 isbanned = true;
+                break;
             }
         }
-        if (!isbanned) System.out.println("未找到该IP,请检查IP是否正确");
+        if (!isbanned) logger.info("未找到该IP,请检查IP是否正确");
     }
 
     public static void WhitelistAdd(String str) {
-        List<Client> clients = FoundClient(str);
-        if (clients.size() == 0) return;
-        for (Client client : clients) {
-            Configuration.getWhitelist().whiteList().add(new Whitelist.White(client.getUserid()));
-            System.out.printf("已添加 %s 到白名单%n", str);
-        }
+        Configuration.getWhitelist().whiteList().add(new Whitelist.White((Integer.parseInt(str))));
+        logger.info("已添加 {} 到白名单", str);
     }
 
     public static void WhitelistRemove(String str) {
-        List<Client> clients = FoundClient(str);
-        if (clients.size() == 0) return;
-        for (Client client : clients) {
-            Configuration.getWhitelist().whiteList().remove(new Whitelist.White(client.getUserid()));
-            System.out.printf("已移除 %s 的白名单%n", str);
-        }
+        Configuration.getWhitelist().whiteList().remove(new Whitelist.White(Integer.parseInt(str)));
+        logger.info("已移除 {} 的白名单", str);
     }
 
     public static void getServerInfo(Motd motd) {
@@ -252,6 +260,4 @@ public class Command {
         } catch (Exception e) {
         }
     }
-
-
 }
