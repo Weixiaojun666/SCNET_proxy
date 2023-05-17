@@ -7,7 +7,7 @@
 <!-- scanPeriod="30 seconds" : 配置自动扫面时间间隔（单位可以是：milliseconds, seconds, minutes
     or hours，默认为：milliseconds）， 默认为1分钟，scan="true"时该配置才会生效 -->
 <configuration debug="false" scan="true" scanPeriod="30 seconds" packagingData="true">
-    <conversionRule conversionWord="highlightex" converterClass="com.weiservers.scnet.config.ColorConverter"/>
+    <conversionRule conversionWord="highLighted" converterClass="com.weiservers.scnet.config.ColorConverter"/>
 
     <!-- 设置变量。定义变量后，可以使“${}”来使用变量。 -->
 
@@ -18,9 +18,9 @@
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <!-- encoder class为空时, 默认也为 ch.qos.logback.classic.encoder.PatternLayoutEncoder -->
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <!--            <pattern>%green(%date{yyyy-MM-dd HH:mm:ss}) %highlightex(%-5level) %red([%thread]) %boldMagenta(%logger{50}) %highlightex(%msg%n))</pattern>-->
+            <!--            <pattern>%green(%date{yyyy-MM-dd HH:mm:ss}) %highLighted(%-5level) %red([%thread]) %boldMagenta(%logger{50}) %highlightex(%msg%n))</pattern>-->
 
-            <pattern>%green(%date{yyyy-MM-dd HH:mm:ss}) %highlightex(%-5level) %red([%thread]) %highlightex(%msg%n))
+            <pattern>%green(%date{yyyy-MM-dd HH:mm:ss}) %highLighted(%-5level) %red([%thread]) %highLighted(%msg%n))
             </pattern>
         </encoder>
     </appender>

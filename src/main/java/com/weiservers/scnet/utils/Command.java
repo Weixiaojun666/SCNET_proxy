@@ -35,7 +35,7 @@ public class Command {
 
     public static void Reload() {
         Configuration.SaveConfig();
-        stopservice();
+        stopService();
         Main.Clients.clear();
         Main.Servers.clear();
         Main.Invalids.clear();
@@ -52,7 +52,7 @@ public class Command {
     }
 
     public static void Stop() {
-        stopservice();
+        stopService();
         Main.Clients.clear();
         Main.Servers.clear();
         Main.Invalids.clear();
@@ -168,30 +168,30 @@ public class Command {
 
 
     public static void BanRemoveUser(String user) {
-        boolean isfound = false;
+        boolean isFound = false;
         for (Banned.BannedPlayers bannedPlayers : Configuration.getBanned().bannedPlayers()) {
             if (bannedPlayers.userid() == Integer.parseInt(user)) {
                 Configuration.getBanned().bannedPlayers().remove(bannedPlayers);
                 logger.info("已移除 {} 的黑名单", user);
-                isfound = true;
+                isFound = true;
                 break;
             }
         }
-        if (!isfound) logger.info("未找到该用户,请检查用户ID是否正确");
+        if (!isFound) logger.info("未找到该用户,请检查用户ID是否正确");
     }
 
 
     public static void BanRemoveIp(String ip) {
-        boolean isbanned = false;
+        boolean isBanned = false;
         for (Banned.BannedIps bannedIps : Configuration.getBanned().bannedIps()) {
             if (bannedIps.ip().equals(ip)) {
                 Configuration.getBanned().bannedIps().remove(bannedIps);
                 logger.info("已移除 {} 的黑名单", ip);
-                isbanned = true;
+                isBanned = true;
                 break;
             }
         }
-        if (!isbanned) logger.info("未找到该IP,请检查IP是否正确");
+        if (!isBanned) logger.info("未找到该IP,请检查IP是否正确");
     }
 
     public static void WhitelistAdd(String str) {
@@ -222,11 +222,12 @@ public class Command {
             String version = hexStringToString(info.substring(12, length - 22));
             motd.setString(model, onlineplayer, maxplayer, version);
         } catch (Exception e) {
+            logger.error("解析服务器信息失败");
         }
     }
 
 
-    public static void stopservice() {
+    public static void stopService() {
         for (ServerThread serverThread : Main.serverThreads) {
             if (!serverThread.thread().isAlive()) serverThread.thread().interrupt();
             if (!serverThread.motd().getThread().isAlive()) serverThread.motd().getThread().interrupt();
@@ -258,6 +259,7 @@ public class Command {
             DatagramPacket motd_packet = new DatagramPacket(ans, ans.length, InetAddress.getByName(server.address()), server.port());
             motd.getSocket().send(motd_packet);
         } catch (Exception e) {
+            logger.warn("刷新服务器信息失败");
         }
     }
 }

@@ -75,7 +75,7 @@ public class HttpUtils {
 
     private static String encodeUTF_8(String str) {
         //匹配中文和空格的正则表达式
-        String zhPattern = "[\u4e00-\u9fa5]+";
+        String zhPattern = "[一-龥]+";
         Pattern p = Pattern.compile(zhPattern);
         Matcher m = p.matcher(str);
         StringBuilder b = new StringBuilder();

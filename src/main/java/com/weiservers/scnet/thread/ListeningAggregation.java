@@ -66,28 +66,28 @@ public class ListeningAggregation extends Thread {
                         ThreadPool.execute(new ReceiveCache(ClientAddress, ClientPort, to_client_socket, default_server, motd));
                     } else if (string.startsWith("050b000000")) {
                         string = decompress(hexStringToByteArray(string.substring(68)));
-                        int serverid = default_id;
+                        int serverId = default_id;
                         String token = MD5(string.substring(14, 46));
                         for (SelectList.Select select : Configuration.getSelectlist().selectList()) {
                             if (Objects.equals(token, select.token())) {
-                                serverid = select.serverId();
+                                serverId = select.serverId();
                             }
                         }
                         Setting.Server server = null;
                         for (Setting.Server server0 : Configuration.getSetting().serverList()) {
-                            if (server0.id() == serverid) server = server0;
+                            if (server0.id() == serverId) server = server0;
                         }
                         if (default_server == null) {
-                            logger.error("默认ID:{}服务器未找到,检查配置是否正确?", serverid);
+                            logger.error("默认ID:{}服务器未找到,检查配置是否正确?", serverId);
                             return;
                         }
                         if (server == null) {
-                            logger.warn("未找到ID为{}的服务器,已重置为默认服务器ID:{}", serverid, default_id);
-                            serverid = default_id;
+                            logger.warn("未找到ID为{}的服务器,已重置为默认服务器ID:{}", serverId, default_id);
+                            serverId = default_id;
                             server = default_server;
                         }
                         Main.Servers.put(ClientAddress.getHostAddress() + ":" + ClientPort, server);
-                        Configuration.getSelectlist().selectList().add(new SelectList.Select(token, serverid, GetTime()));
+                        Configuration.getSelectlist().selectList().add(new SelectList.Select(token, serverId, GetTime()));
                         ThreadPool.execute(new Receive(packet, to_client_socket, server, motd));
                     }
                 } else {
