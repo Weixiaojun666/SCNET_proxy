@@ -27,7 +27,7 @@ public class Clean extends Thread {
             while (it.hasNext()) {
                 Map.Entry<String, Client> client = it.next();
 
-                if ((client.getValue().getTime() + Configuration.getSetting().base().time_out() * 1000L) < System.currentTimeMillis()) {
+                if ((client.getValue().getTime() + Configuration.getSetting().basicConfig().playerTimeout() * 1000L) < System.currentTimeMillis()) {
                     logger.info("[断开连接]   {} {}", client.getKey(), client.getValue().getUsername());
                     if (!client.getValue().getThread().isAlive()) client.getValue().getThread().interrupt();
                     if (!client.getValue().getTo_server_socket().isClosed())

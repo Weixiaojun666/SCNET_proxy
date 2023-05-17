@@ -33,42 +33,39 @@ public class Main {
     public static void ServersLoad() {
 
 
-        List<Server> serverlist = Configuration.getSetting().server_list();
+        List<Server> serverlist = Configuration.getSetting().serverList();
 
 
-        if (serverlist.isEmpty())
-            logger.warn("未加载任何服务器，您可能需要在config.json中添加服务器");
-        else {
-            logger.info("已加载{}个服务器", serverlist.size());
-            logger.info("======================================================");
-            logger.info(String.format("%-8s  %-8s %-18s %-12s %-8s %-8s", "序号", "服务器ID", "服务器名称", "服务器地址", "服务器端口", "转发端口"));
-            int num = 0;
-            for (Server server : serverlist) {
-                num++;
-                logger.info(String.format("%-12s %-12s %-18s %-18s %-12s %-12s", num, server.id(), server.name(), server.address(), server.port(), server.proxy_port()));
-                ThreadPool.execute(new Listening(server));
-            }
-            logger.info("======================================================");
-            logger.info("所有服务器监听均已启动");
-            logger.info("======================================================");
-            if (Boolean.TRUE.equals(Configuration.getSetting().aggregation().enable())) {
-                logger.info("已启用聚合模式 聚合模式端口:{}  默认进入服务器ID:{}", Configuration.getSetting().aggregation().port(), Configuration.getSetting().aggregation().default_server());
-                logger.info("======================================================");
-                ThreadPool.execute(new ListeningAggregation(Configuration.getSetting().aggregation().port(), Configuration.getSetting().aggregation().default_server()));
-            }
+        if (serverlist.isEmpty()) {
+            logger.error("No server loaded, you may need to add server in config.json");
+            System.exit(0);
         }
 
+        logger.info("{} servers loaded", serverlist.size());
+        logger.info(String.format("%-8s  %-8s %-18s %-12s %-8s %-8s", "序号", "服务器ID", "服务器名称", "服务器地址", "服务器端口", "转发端口"));
+        int num = 0;
+        for (Server server : serverlist) {
+            num++;
+            logger.info(String.format("%-12s %-12s %-18s %-18s %-12s %-12s", num, server.id(), server.name(), server.address(), server.port(), server.proxyPort()));
+            ThreadPool.execute(new Listening(server));
+        }
+        logger.info("All server listening is started");
+        if (Configuration.getSetting().aggregation().port() > 0) {
+            logger.info("Aggregation mode enabled Aggregation mode port: {} Default access server ID: {}", Configuration.getSetting().aggregation().port(), Configuration.getSetting().aggregation().defaultServer());
+            ThreadPool.execute(new ListeningAggregation(Configuration.getSetting().aggregation().port(), Configuration.getSetting().aggregation().defaultServer()));
+        }
     }
+
 
     public static void main(String[] args) {
 
-        logger.info("加载中...");
+        logger.info("Loading...");
         if (Integer.parseInt(System.getProperty("java.version").substring(0, 2)) < 20) {
-            logger.error("请使用java20以上版本运行");
+            logger.error("Please use java20 or newer version to run");
             System.exit(0);
         }
         if (Integer.parseInt(System.getProperty("sun.arch.data.model")) != 64)
-            logger.warn("您正在使用32位Java！为保证性能请改用64位java");
+            logger.warn("You are using 32-bit Java! To ensure performance, please switch to 64-bit java");
         ThreadPool.LoadThreadPool();
         Configuration.Load();
 

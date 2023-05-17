@@ -8,7 +8,7 @@ public class ThreadPool {
     private static ThreadPoolExecutor executor = null;
 
     public static void LoadThreadPool() {
-        executor = new ThreadPoolExecutor(16, 16000, 30L, TimeUnit.SECONDS, new SynchronousQueue<>());
+        executor = new ThreadPoolExecutor(16, Integer.MAX_VALUE, 30L, TimeUnit.SECONDS, new SynchronousQueue<>());
         executor.allowCoreThreadTimeOut(true);
     }
 

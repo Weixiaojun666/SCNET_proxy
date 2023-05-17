@@ -34,7 +34,7 @@ public class ReceiveCache extends Thread {
     public void run() {
         try {
 
-            if ((motd.getTime() + Configuration.getSetting().base().cache_time() * 1000L) < System.currentTimeMillis()) {
+            if ((motd.getTime() + Configuration.getSetting().basicConfig().cacheTime() * 1000L) < System.currentTimeMillis()) {
                 //刷新缓存
                 ReloadCache(motd, server);
             }

@@ -30,7 +30,7 @@ public class Check extends Thread {
     }
 
     public boolean CheckWeiServer() {
-        String url = "https://api.weiservers.com/scnet/apply/check?token=" +Configuration.getSetting().cloud().token() + "&userid=" + client.getUserid() + "&username=" + client.getUsername() + "&servername=" + client.getServer().name() + "&ip=" + client.getAddress().toString().substring(1);
+        String url = "https://api.weiservers.com/scnet/apply/check?token=" + "&userid=" + client.getUserid() + "&username=" + client.getUsername() + "&servername=" + client.getServer().name() + "&ip=" + client.getAddress().toString().substring(1);
         JsonNode rootNode = HttpGet(url);
         if (rootNode == null) {
             logger.error("{} 检查失败 无法连接到WeiServers 将默认放行", client.getUsername());
@@ -43,7 +43,7 @@ public class Check extends Thread {
     }
 
     public boolean CheckLocal() {
-        if(Configuration.getSetting().base().connection_limit()<=0) return true;
+        if (Configuration.getSetting().basicConfig().maxConnections() <= 0) return true;
         try {
             int num = 0;
             //判断相同IP的有没有重复建立链接
@@ -56,8 +56,8 @@ public class Check extends Thread {
                             num--;
                 }
             }
-            if (num >  Configuration.getSetting().base().connection_limit()) {
-                reason = "连接数超过" + Configuration.getSetting().base().connection_limit();
+            if (num > Configuration.getSetting().basicConfig().maxConnections()) {
+                reason = "连接数超过" + Configuration.getSetting().basicConfig().maxConnections();
                 disconnect(client);
                 return false;
             }
@@ -93,7 +93,7 @@ public class Check extends Thread {
             if (!info3.equals("")) IP_info = IP_info + " " + info3;
             if (!isp.equals("")) IP_info = IP_info + " 运营商:" + isp;
 
-            if(!Configuration.getSetting().base().AllowForeign())
+            if (!Configuration.getSetting().localProtection().denyOverseasLogin())
                 return info1.endsWith("省") || info1.endsWith("市");
 
         } else logger.warn("{} 拉取IP地址信息失败！不影响WeiServer的区域封禁", client.getAddress().toString());
@@ -102,23 +102,26 @@ public class Check extends Thread {
 
     public boolean check() {
         reason = "正常登录";
-        //连接数超限直接断开链接
-        if(!CheckLocal()) return false;
-        //社区检查不通过直接断开链接
-        if(!CheckUser()) return false;
-        //IP检查不通过直接断开链接
-        if(!CheckIp()) return false;
-        //询问WeiServers平台
+        //连接数超限直接断开链接 [防小号]
+        if (!CheckLocal()) return false;
+        //社区检查不通过直接断开链接 [防未注册用户]
+        if (!CheckUser()) return false;
+        //IP检查不通过直接断开链接 [阻止海外用户登录]
+        if (!CheckIp()) return false;
+        //询问WeiServers平台 [绑定QQ 区域封禁 用户黑名单]
         CheckWeiServer();
 
+        //只允许本地白名单
+
+        //使用WeiServer的白名单
 
 
         try {
             for (Whitelist whitelist : Objects.requireNonNull(Configuration.readWhitelist())) {
-               // if ((client.getUserid()).equals(String.valueOf(whitelist.userid()))) {
-                    // whitename = true;
+                // if ((client.getUserid()).equals(String.valueOf(whitelist.userid()))) {
+                // whitename = true;
                 //    break;
-               // }
+                // }
             }
         } catch (Exception ignored) {
         }

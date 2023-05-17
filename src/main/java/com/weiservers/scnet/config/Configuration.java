@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.weiservers.scnet.Main;
 import com.weiservers.scnet.bean.record.Banned;
-import com.weiservers.scnet.bean.record.Selectlist;
+import com.weiservers.scnet.bean.record.SelectList;
 import com.weiservers.scnet.bean.record.Setting;
 import com.weiservers.scnet.bean.record.Whitelist;
 import org.slf4j.Logger;
@@ -21,19 +21,20 @@ public class Configuration {
     private final static Logger logger = LoggerFactory.getLogger(Configuration.class);
     private static Banned Banned;
     private static Whitelist Whitelist;
-    private static Selectlist Selectlist;
+    private static SelectList Selectlist;
     private static Setting Setting;
 
     public static void Load() {
         File folder = new File(".//Config");// 输出文件的父目录
         if (!folder.exists() && !folder.isDirectory()) {// 父目录不存在时先创建
-            if (folder.mkdirs()) {
+            logger.warn("The config folder does not exist, it has been created");
+            if (!folder.mkdirs()) {
                 logger.error("尝试创建配置文件夹失败");
                 System.exit(0);
             }
         }
         CheckConfig("banned.json");
-        CheckConfig("selectlist.json");
+        CheckConfig("selectList.json");
         CheckConfig("setting.json");
         CheckConfig("whitelist.json");
         try {
@@ -41,7 +42,7 @@ public class Configuration {
             Setting = objectMapper.readValue(new File("./config/setting.json"), Setting.class);
             Whitelist = objectMapper.readValue(new File("./config/whitelist.json"), Whitelist.class);
             Banned = objectMapper.readValue(new File("./config/banned.json"), Banned.class);
-            Selectlist = objectMapper.readValue(new File("./config/selectlist.json"), Selectlist.class);
+            Selectlist = objectMapper.readValue(new File("./config/selectList.json"), SelectList.class);
 
         } catch (Exception e) {
             logger.error("读取配置文件失败", e);
@@ -54,9 +55,12 @@ public class Configuration {
             File file = new File("./Config/" + fileName);
             if (!file.exists()) {
                 try (InputStream is = Main.class.getResourceAsStream("/Config/" + fileName)) {
-                    if (!file.exists() && !file.createNewFile()) {
-                        logger.error("尝试创建配置文件失败：{}", fileName);
-                        System.exit(0);
+                    if (!file.exists()) {
+                        logger.warn("{} file does not exist, it has been created,",fileName);
+                        if(!file.createNewFile()) {
+                            logger.error("尝试创建配置文件失败：{}", fileName);
+                            System.exit(0);
+                        }
                     }
                     OutputStream os = new FileOutputStream(file);// 创建输出流
                     int index;
@@ -88,7 +92,7 @@ public class Configuration {
         return Banned;
     }
 
-    public static com.weiservers.scnet.bean.record.Selectlist getSelectlist() {
+    public static SelectList getSelectlist() {
         return Selectlist;
     }
 

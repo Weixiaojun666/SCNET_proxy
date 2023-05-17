@@ -2,7 +2,7 @@ package com.weiservers.scnet.thread;
 
 import com.weiservers.scnet.Main;
 import com.weiservers.scnet.bean.Motd;
-import com.weiservers.scnet.bean.record.Selectlist;
+import com.weiservers.scnet.bean.record.SelectList;
 import com.weiservers.scnet.bean.record.Setting;
 import com.weiservers.scnet.config.Configuration;
 import com.weiservers.scnet.thread.child.Cache;
@@ -33,7 +33,7 @@ public class ListeningAggregation extends Thread {
     public ListeningAggregation(int port, int default_id) {
         this.port = port;
         this.default_id = default_id;
-        for (Setting.Server server0 : Configuration.getSetting().server_list()) {
+        for (Setting.Server server0 : Configuration.getSetting().serverList()) {
             if (server0.id() == default_id) default_server = server0;
 
         }
@@ -68,13 +68,13 @@ public class ListeningAggregation extends Thread {
                         string = decompress(hexStringToByteArray(string.substring(68)));
                         int serverid = default_id;
                         String token = MD5(string.substring(14, 46));
-                        for (Selectlist.Select select : Configuration.getSelectlist().selectlist()) {
+                        for (SelectList.Select select : Configuration.getSelectlist().selectList()) {
                             if (Objects.equals(token, select.token())) {
-                                serverid = select.serverid();
+                                serverid = select.serverId();
                             }
                         }
                         Setting.Server server = null;
-                        for (Setting.Server server0 : Configuration.getSetting().server_list()) {
+                        for (Setting.Server server0 : Configuration.getSetting().serverList()) {
                             if (server0.id() == serverid) server = server0;
                         }
                         if (default_server == null) {
@@ -87,7 +87,7 @@ public class ListeningAggregation extends Thread {
                             server = default_server;
                         }
                         Main.Servers.put(ClientAddress.getHostAddress() + ":" + ClientPort, server);
-                        Configuration.getSelectlist().selectlist().add(new Selectlist.Select(token, serverid, GetTime()));
+                        Configuration.getSelectlist().selectList().add(new SelectList.Select(token, serverid, GetTime()));
                         ThreadPool.execute(new Receive(packet, to_client_socket, server, motd));
                     }
                 } else {

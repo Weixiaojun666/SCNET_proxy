@@ -1,0 +1,23 @@
+{
+  "basicConfig": {
+    "maxConnections": 100,
+    "playerTimeout": 120,
+    "cacheTime": 300,
+    "httpTimeout": 30,
+    "httpRetryCount": 3,
+    "regionBlockLevel": 2
+  },
+  "localProtection": {
+    "denyOverseasLogin": true,
+    "whitelistOnlyLogin": true
+  },
+  "cloudProtection": {
+    "appKey": "your-app-key",
+    "appSecret": "your-app-secret"
+  },
+  "aggregation": {
+    "port": 25565,
+    "defaultServer": 100
+  },
+  "serverList": []
+}

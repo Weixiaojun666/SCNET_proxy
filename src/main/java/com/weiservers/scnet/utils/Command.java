@@ -96,7 +96,7 @@ public class Command {
         if (clients.size() == 0) return;
         for (Client client0 : clients) {
             for (Map.Entry<String, Client> client : Main.Clients.entrySet()) {
-                if (client0.equalArea(client.getValue(), Configuration.getSetting().base().area_leave())) {
+                if (client0.equalArea(client.getValue(), Configuration.getSetting().basicConfig().regionBlockLevel())) {
                     disconnect(client.getValue());
                     System.out.printf("已踢出 %s ID: %s %n", client.getValue().getUsername(), client.getValue().getUserid());
                 }
@@ -138,7 +138,7 @@ public class Command {
         if (clients.size() == 0) return;
         for (Client client0 : clients) {
             for (Map.Entry<String, Client> client : Main.Clients.entrySet()) {
-                if (client0.equalArea(client.getValue(), Configuration.getSetting().base().area_leave())) {
+                if (client0.equalArea(client.getValue(), Configuration.getSetting().basicConfig().regionBlockLevel())) {
                     disconnect(client.getValue());
                     Configuration.getBanned().bannedAreas().add(new Banned.BannedAreas(client.getValue().getInfo1(), client.getValue().getInfo2(), client.getValue().getInfo3(), client.getValue().getIsp(), expires, reason, GetTime()));
                     Configuration.getBanned().bannedIps().add(new Banned.BannedIps(client.getValue().getAddress().toString(), expires, reason, GetTime()));
@@ -182,7 +182,7 @@ public class Command {
         List<Client> clients = FoundClient(str);
         if (clients.size() == 0) return;
         for (Client client : clients) {
-            Configuration.getWhitelist().whiteList().add(new Whitelist.White(client.getUserid(), client.getUsername(), GetTime()));
+            Configuration.getWhitelist().whiteList().add(new Whitelist.White(client.getUserid()));
             System.out.printf("已添加 %s 到白名单%n", str);
         }
     }
@@ -191,7 +191,7 @@ public class Command {
         List<Client> clients = FoundClient(str);
         if (clients.size() == 0) return;
         for (Client client : clients) {
-            Configuration.getWhitelist().whiteList().remove(new Whitelist.White(client.getUserid(), client.getUsername(), GetTime()));
+            Configuration.getWhitelist().whiteList().remove(new Whitelist.White(client.getUserid()));
             System.out.printf("已移除 %s 的白名单%n", str);
         }
     }

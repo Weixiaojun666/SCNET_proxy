@@ -34,7 +34,7 @@ public class HttpUtils {
         connManager.setMaxTotal(1000);
         connManager.setDefaultMaxPerRoute(1000);
         requestConfig = RequestConfig.custom()
-                .setConnectionRequestTimeout(Timeout.ofSeconds(Configuration.getSetting().cloud().timeOut()))
+                .setConnectionRequestTimeout(Timeout.ofSeconds(Configuration.getSetting().basicConfig().httpTimeout()))
                 .build();
     }
 
@@ -57,7 +57,7 @@ public class HttpUtils {
 
     private static JsonNode HttpClient(ClassicHttpRequest request) {
         int num = 0;
-        while (num < Configuration.getSetting().cloud().retryNum()) {
+        while (num < Configuration.getSetting().basicConfig().httpRetryCount()) {
             try (CloseableHttpClient httpClient = HttpClientBuilder.create().setConnectionManager(connManager).build()) {
                 String responseBody = httpClient.execute(request, new BasicHttpClientResponseHandler());
                 ObjectMapper mapper = new ObjectMapper();
