@@ -21,7 +21,7 @@ public class Configuration {
     public static void Load() {
         File folder = new File(".//Config");// 输出文件的父目录
         if (!folder.exists() && !folder.isDirectory()) {// 父目录不存在时先创建
-            logger.warn("The config folder does not exist, it has been created");
+            logger.warn("config目录不存在,正在创建...");
             if (!folder.mkdirs()) {
                 logger.error("尝试创建配置文件夹失败");
                 System.exit(0);
@@ -39,7 +39,7 @@ public class Configuration {
         //保存前备份之前配置 ./config -> ./config/backup
         File folder = new File(".//Config/backup");// 输出文件的父目录
         if (!folder.exists() && !folder.isDirectory()) {// 父目录不存在时先创建
-            logger.warn("The config backup folder does not exist, it has been created");
+            logger.warn("config目录不存在,正在创建...");
             if (!folder.mkdirs()) {
                 logger.error("尝试创建配置文件夹失败");
                 System.exit(0);
@@ -101,7 +101,7 @@ public class Configuration {
             if (!file.exists()) {
                 try (InputStream is = Main.class.getResourceAsStream("/Config/" + fileName)) {
                     if (!file.exists()) {
-                        logger.warn("{} file does not exist, it has been created,", fileName);
+                        logger.warn("配置文件：{} 不存在,正在创建...,", fileName);
                         if (!file.createNewFile()) {
                             logger.error("尝试创建配置文件失败：{}", fileName);
                             System.exit(0);
