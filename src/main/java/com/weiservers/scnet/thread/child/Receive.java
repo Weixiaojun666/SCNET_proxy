@@ -54,7 +54,7 @@ public class Receive extends Thread {
                     ThreadPool.execute(new ReceiveServer(client));
                     ThreadPool.execute(new ReceiveClient(packet, client));
                     logger.info("[新客户端连接]   {}  {}  =>  {}  {} 通过端口{} 连接到[{}]", ClientAddress.getHostAddress(), ClientPort, server.address(), server.port(), to_server_socket.getLocalPort(), server.name());
-                    ThreadPool.execute(new Check(client, string.substring(14, 46)));
+                    //ThreadPool.execute(new Check(client, string.substring(14, 46)));
                     Main.info.getNormal_ip().add(ClientAddress);
                     Main.info.addNormal();
                 } else {

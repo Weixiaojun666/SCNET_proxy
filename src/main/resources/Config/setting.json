@@ -16,7 +16,7 @@
     "appSecret": "your-app-secret"
   },
   "aggregation": {
-    "port": 25565,
+    "port": -1,
     "defaultServer": 100
   },
   "serverList": []
