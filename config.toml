@@ -1,0 +1,36 @@
+
+[[forward]]
+name = "测试"
+type = "tcp"
+localAddress = "localhost"
+localPort = 22
+remoteAddress = "localhost"
+remotePort = 30200
+
+[[forward]]
+name = "测试"
+type = "tcp"
+localAddress = "localhost"
+localPort = 23
+remoteAddress = "localhost"
+remotePort = 30202
+
+[[forward]]
+name = "测试"
+type = "udp"
+localAddress = "localhost"
+localPort = 23
+remoteAddress = "localhost"
+remotePort = 30202
+
+[advanced]
+#高级设置 非专业人员不要修改
+enable = false
+timeout = 10000
+logLevel = "debug"
+ioAcceptThreadNumber = 1000
+ioWorkThreadNumber = 1000
+openLoggingHandler = true
+ioMaxBacklog = 1000
+corePoolSize = 1000
+keepAliveTime = 30
