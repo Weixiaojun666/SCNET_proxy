@@ -34,3 +34,5 @@ openLoggingHandler = true
 ioMaxBacklog = 1000
 corePoolSize = 1000
 keepAliveTime = 30
+HttpTimeout = 10
+HttpRetryCount = 3

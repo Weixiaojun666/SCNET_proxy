@@ -11,15 +11,18 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class Main {
+
     public static void main(String[] args) {
         log.info("Loading ...");
+
         ConfigUtils.readToml();
         ConfigUtils.readAdvanced();
-        EventLoopGroup TCPacceptEventLoopGroup = new NioEventLoopGroup(ConfigMapping.ioAcceptThreadNumber);
-        EventLoopGroup TCPworkEventLoopGroup = new NioEventLoopGroup(ConfigMapping.ioWorkThreadNumber);
-        EventLoopGroup UDPacceptEventLoopGroup = new NioEventLoopGroup(ConfigMapping.ioAcceptThreadNumber);
-        EventLoopGroup UDPworkEventLoopGroup = new NioEventLoopGroup(ConfigMapping.ioWorkThreadNumber);
-
+        try (
+                EventLoopGroup TCPacceptEventLoopGroup = new NioEventLoopGroup(ConfigMapping.ioAcceptThreadNumber);
+                EventLoopGroup TCPworkEventLoopGroup = new NioEventLoopGroup(ConfigMapping.ioWorkThreadNumber);
+                EventLoopGroup UDPacceptEventLoopGroup = new NioEventLoopGroup(ConfigMapping.ioAcceptThreadNumber);
+                EventLoopGroup UDPworkEventLoopGroup = new NioEventLoopGroup(ConfigMapping.ioWorkThreadNumber)
+        ) {
         ThreadPool.LoadThreadPool();
         ConfigUtils.readForwards().forEach(forwardMapping -> {
             if (forwardMapping.getType().equalsIgnoreCase("tcp")) {
@@ -36,5 +39,6 @@ public class Main {
             UDPworkEventLoopGroup.shutdownGracefully();
             ThreadPool.shutdown();
         }));
+        }
     }
 }

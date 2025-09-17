@@ -15,4 +15,6 @@ public class ConfigMapping {
     public static Boolean openLoggingHandler;
     public static Integer corePoolSize;
     public static Long keepAliveTime;
+    public static Integer HttpTimeout;
+    public static Integer HttpRetryCount;
 }

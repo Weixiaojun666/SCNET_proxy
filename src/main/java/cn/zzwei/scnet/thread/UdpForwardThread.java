@@ -50,7 +50,6 @@ public class UdpForwardThread extends Thread {
                     }
             ).sync().channel().closeFuture().sync().channel();
 
-
         } catch (Exception e) {
             log.error("failed {}", forwardMapping, e);
         }

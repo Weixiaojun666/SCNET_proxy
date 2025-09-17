@@ -47,7 +47,6 @@ public class TcpForwardThread extends Thread {
                     pipeline.addLast(new TcpForwardHandler(forwardMapping));
                 }
             });
-            //如果本地地址为localhost 则绑定所有地址
             ChannelFuture channelFuture;
             if (forwardMapping.getLocalAddress().equalsIgnoreCase("localhost")) {
                 channelFuture = bootstrap.bind(forwardMapping.getLocalPort());
@@ -57,7 +56,6 @@ public class TcpForwardThread extends Thread {
                     return;
                 }
                 log.info(String.valueOf(forwardMapping));
-
             });
         } catch (Exception e) {
             log.error("failed {}", forwardMapping, e);

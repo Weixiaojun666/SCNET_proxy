@@ -1,8 +1,8 @@
 package cn.zzwei.scnet.utils;
 
-import com.moandjiezana.toml.Toml;
 import cn.zzwei.scnet.mapping.ConfigMapping;
 import cn.zzwei.scnet.mapping.ForwardMapping;
+import com.moandjiezana.toml.Toml;
 
 import java.io.File;
 import java.util.List;
@@ -39,6 +39,8 @@ public class ConfigUtils {
             ConfigMapping.timeout = toml.getLong("timeout", 10000L).intValue();
             ConfigMapping.corePoolSize = toml.getLong("corePoolSize", (long) Runtime.getRuntime().availableProcessors()).intValue();
             ConfigMapping.keepAliveTime = (long) toml.getLong("keepAliveTime", 30L).intValue();
+            ConfigMapping.HttpTimeout = toml.getLong("HttpTimeout", 10000L).intValue();
+            ConfigMapping.HttpRetryCount = toml.getLong("HttpRetryCount", 10000L).intValue();
         } else {
             ConfigMapping.ioWorkThreadNumber = Runtime.getRuntime().availableProcessors();
             ConfigMapping.ioAcceptThreadNumber = Runtime.getRuntime().availableProcessors();
@@ -48,6 +50,8 @@ public class ConfigUtils {
             ConfigMapping.timeout = 10000;
             ConfigMapping.corePoolSize = Runtime.getRuntime().availableProcessors();
             ConfigMapping.keepAliveTime = 30L;
+            ConfigMapping.HttpTimeout = 5;
+            ConfigMapping.HttpRetryCount = 3;
         }
     }
 }
