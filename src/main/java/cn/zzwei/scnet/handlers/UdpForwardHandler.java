@@ -1,6 +1,8 @@
 package cn.zzwei.scnet.handlers;
 
+import cn.zzwei.scnet.Main;
 import cn.zzwei.scnet.mapping.ForwardMapping;
+import cn.zzwei.scnet.mapping.StateMapping;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import io.netty.bootstrap.Bootstrap;
@@ -39,6 +41,11 @@ public class UdpForwardHandler extends ChannelHandlerAdapter {
         if (clientChannelMap.containsKey(ClientAddress)) {
             remoteChannel = clientChannelMap.get(ClientAddress);
         } else {
+            StateMapping stateMapping = Main.clientAddressList.get(ClientAddress.getHostString());
+            if (stateMapping == StateMapping.DEFAULT){
+                log.info("新链接被拒绝{}", ClientAddress.getHostString());
+                return;
+            }
             log.info("新链接建立{}", ClientAddress.getHostString());
             localChannel = ctx.channel();
             Bootstrap bootstrap = new Bootstrap();

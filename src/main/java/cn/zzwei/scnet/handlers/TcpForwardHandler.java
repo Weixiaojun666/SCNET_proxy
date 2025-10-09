@@ -1,7 +1,9 @@
 package cn.zzwei.scnet.handlers;
 
+import cn.zzwei.scnet.Main;
 import cn.zzwei.scnet.mapping.ConfigMapping;
 import cn.zzwei.scnet.mapping.ForwardMapping;
+import cn.zzwei.scnet.mapping.StateMapping;
 import cn.zzwei.scnet.utils.ChannelUtils;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
@@ -26,6 +28,14 @@ public class TcpForwardHandler extends ChannelHandlerAdapter {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
+
+        StateMapping stateMapping = Main.clientAddressList.get(forwardMapping.getRemoteAddress());
+        if (stateMapping == StateMapping.DEFAULT){
+            log.info("新链接被拒绝{}", forwardMapping.getRemoteAddress());
+            return;
+        }
+        log.info("新链接建立{}", forwardMapping.getRemoteAddress());
+
         // create connect to remote address
         Bootstrap bootstrap = new Bootstrap();
         bootstrap.group(ctx.channel().eventLoop())
