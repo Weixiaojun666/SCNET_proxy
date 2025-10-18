@@ -25,7 +25,6 @@ remotePort = 30202
 
 [advanced]
 #高级设置 非专业人员不要修改
-enable = false
 timeout = 10000
 logLevel = "debug"
 ioAcceptThreadNumber = 1000
@@ -36,3 +35,5 @@ corePoolSize = 1000
 keepAliveTime = 30
 HttpTimeout = 10
 HttpRetryCount = 3
+HttpUrl = "https://api.sckey.net/"
+checkIpInterval = 10

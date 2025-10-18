@@ -30,28 +30,19 @@ public class ConfigUtils {
     }
 
     public static void readAdvanced() {
-        if (toml.getTable("advanced").getBoolean("enable", false)) {
-            ConfigMapping.ioWorkThreadNumber = toml.getLong("ioWorkThreadNumber", (long) Runtime.getRuntime().availableProcessors()).intValue();
-            ConfigMapping.ioAcceptThreadNumber = toml.getLong("ioAcceptThreadNumber", (long) Runtime.getRuntime().availableProcessors()).intValue();
-            ConfigMapping.connectTimeout = toml.getLong("connectTimeout", 10000L).intValue();
-            ConfigMapping.ioMaxBacklog = toml.getLong("ioMaxBacklog", 64L).intValue();
-            ConfigMapping.openLoggingHandler = toml.getBoolean("openLoggingHandler", false);
-            ConfigMapping.timeout = toml.getLong("timeout", 10000L).intValue();
-            ConfigMapping.corePoolSize = toml.getLong("corePoolSize", (long) Runtime.getRuntime().availableProcessors()).intValue();
-            ConfigMapping.keepAliveTime = (long) toml.getLong("keepAliveTime", 30L).intValue();
-            ConfigMapping.HttpTimeout = toml.getLong("HttpTimeout", 10000L).intValue();
-            ConfigMapping.HttpRetryCount = toml.getLong("HttpRetryCount", 10000L).intValue();
-        } else {
-            ConfigMapping.ioWorkThreadNumber = Runtime.getRuntime().availableProcessors();
-            ConfigMapping.ioAcceptThreadNumber = Runtime.getRuntime().availableProcessors();
-            ConfigMapping.connectTimeout = 10000;
-            ConfigMapping.ioMaxBacklog = 64;
-            ConfigMapping.openLoggingHandler = false;
-            ConfigMapping.timeout = 10000;
-            ConfigMapping.corePoolSize = Runtime.getRuntime().availableProcessors();
-            ConfigMapping.keepAliveTime = 30L;
-            ConfigMapping.HttpTimeout = 5;
-            ConfigMapping.HttpRetryCount = 3;
-        }
+          Toml advanced =toml.getTable("advanced");
+            ConfigMapping.ioWorkThreadNumber = advanced.getLong("ioWorkThreadNumber", (long) Runtime.getRuntime().availableProcessors()).intValue();
+            ConfigMapping.ioAcceptThreadNumber = advanced.getLong("ioAcceptThreadNumber", (long) Runtime.getRuntime().availableProcessors()).intValue();
+            ConfigMapping.connectTimeout = advanced.getLong("connectTimeout", 10000L).intValue();
+            ConfigMapping.ioMaxBacklog = advanced.getLong("ioMaxBacklog", 64L).intValue();
+            ConfigMapping.openLoggingHandler = advanced.getBoolean("openLoggingHandler", false);
+            ConfigMapping.timeout = advanced.getLong("timeout", 10000L).intValue();
+            ConfigMapping.corePoolSize = advanced.getLong("corePoolSize", (long) Runtime.getRuntime().availableProcessors()).intValue();
+            ConfigMapping.keepAliveTime = (long) advanced.getLong("keepAliveTime", 30L).intValue();
+            ConfigMapping.HttpTimeout = advanced.getLong("HttpTimeout", 10000L).intValue();
+            ConfigMapping.HttpRetryCount = advanced.getLong("HttpRetryCount", 10000L).intValue();
+            ConfigMapping.HttpUrl = advanced.getString("HttpUrl","https://api.sckey.net/");
+            ConfigMapping.checkIpInterval = advanced.getLong("checkIpInterval",5L).intValue();
+
     }
 }

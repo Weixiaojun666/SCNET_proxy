@@ -17,4 +17,6 @@ public class ConfigMapping {
     public static Long keepAliveTime;
     public static Integer HttpTimeout;
     public static Integer HttpRetryCount;
+    public static String HttpUrl;
+    public static Integer checkIpInterval;
 }

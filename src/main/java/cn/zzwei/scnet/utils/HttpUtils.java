@@ -1,6 +1,7 @@
 package cn.zzwei.scnet.utils;
 
 import cn.zzwei.scnet.mapping.ConfigMapping;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
@@ -20,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -45,12 +47,14 @@ public class HttpUtils {
         return HttpClient(httpGet);
     }
 
-    public static JsonNode HttpPost(String url, String data) {
+    public static JsonNode HttpPost(String url, Map<String, Object> data) throws JsonProcessingException {
         HttpPost httpPost = new HttpPost(encodeUTF_8(url));
         httpPost.setConfig(requestConfig);
         httpPost.addHeader("Accept-Charset", "utf-8");
         httpPost.addHeader("Content-Type", "application/json");
-        StringEntity entity = new StringEntity(data, ContentType.APPLICATION_JSON);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonString = objectMapper.writeValueAsString(data);
+        StringEntity entity = new StringEntity(jsonString, ContentType.APPLICATION_JSON);
         httpPost.setEntity(entity);
         return HttpClient(httpPost);
     }

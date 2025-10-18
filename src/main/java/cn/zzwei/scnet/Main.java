@@ -2,6 +2,7 @@ package cn.zzwei.scnet;
 
 import cn.zzwei.scnet.mapping.ConfigMapping;
 import cn.zzwei.scnet.mapping.StateMapping;
+import cn.zzwei.scnet.thread.CheckIpThread;
 import cn.zzwei.scnet.thread.TcpForwardThread;
 import cn.zzwei.scnet.thread.UdpForwardThread;
 import cn.zzwei.scnet.utils.ConfigUtils;
@@ -11,15 +12,15 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 public class Main {
     public static final ConcurrentHashMap<String, StateMapping> clientAddressList = new ConcurrentHashMap<>();
-
-
     public static void main(String[] args) {
         log.info("Loading ...");
-
         ConfigUtils.readToml();
         ConfigUtils.readAdvanced();
         try (
@@ -37,13 +38,16 @@ public class Main {
                 ThreadPool.execute(new UdpForwardThread(UDPacceptEventLoopGroup, UDPworkEventLoopGroup, forwardMapping));
             }
         });
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             TCPacceptEventLoopGroup.shutdownGracefully();
             TCPworkEventLoopGroup.shutdownGracefully();
             UDPacceptEventLoopGroup.shutdownGracefully();
             UDPworkEventLoopGroup.shutdownGracefully();
             ThreadPool.shutdown();
         }));
+        }
+        try(ScheduledExecutorService scheduledExecutorService=Executors.newSingleThreadScheduledExecutor()){
+            scheduledExecutorService.scheduleAtFixedRate(new CheckIpThread(),0,ConfigMapping.checkIpInterval, TimeUnit.SECONDS);
         }
     }
 }
