@@ -1,7 +1,7 @@
 # [WeiSCNET_proxy](https://github.com/Weixiaojun666/SCNET_proxy)
 
 ![](https://img.shields.io/github/license/Weixiaojun666/SCNET_proxy.svg)
-![](https://img.shields.io/badge/Java-%E2%89%A520-red.svg)
+![](https://img.shields.io/badge/Java-%E2%89%A523-red.svg)
 ![](https://img.shields.io/github/repo-size/Weixiaojun666/SCNET_proxy.svg)
 ![](https://img.shields.io/github/downloads/Weixiaojun666/SCNET_proxy/total.svg)
 
